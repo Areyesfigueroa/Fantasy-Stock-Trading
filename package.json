@@ -1,0 +1,32 @@
+{
+  "name": "tweetfeed",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "server": "nodemon server.js",
+    "client": "npm run watch --prefix client",
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "heroku-prebuild": "npm i --prefix client && npm run build --prefix client",
+    "heroku-postbuild": "echo This runs afterwards."
+  },
+  "keywords": [
+    "heroku"
+  ],
+  "author": "Aliel Reyes",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.20.0",
+    "body-parser": "^1.19.0",
+    "concurrently": "^5.3.0",
+    "cors": "^2.8.5",
+    "date-and-time": "^0.14.1",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "qs": "^6.9.4"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.4"
+  }
+}
