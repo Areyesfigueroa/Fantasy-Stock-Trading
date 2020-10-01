@@ -1,0 +1,24 @@
+.SplashPage {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: calc(100vh - 56px); /* Subtract Header */
+    box-sizing: border-box;
+}
+
+.SplashPage img {
+    width: 100%;
+    min-width: 1066px;
+    height: 100%;
+}
+
+.SplashPage .shadowBox {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.3);
+}
