@@ -2,7 +2,7 @@ import React from 'react';
 import './App.css';
 
 import Header from './components/Header/Header';
-import SplashPage from './components/Layout/SplashPage/SplashPage';
+import SplashPageContainer from './containers/Layout/SplashPageContainer';
 
 // TESTING
 
@@ -10,7 +10,7 @@ function App() {
   return (
     <div className="App">
       <Header />
-      <SplashPage />
+      <SplashPageContainer />
 
       {/* TESTING */}
     </div>

@@ -11,40 +11,8 @@ import Nav from 'react-bootstrap/Nav';
 import LoginForm from '../../Forms/LoginForm/LoginForm';
 import RegisterForm from '../../Forms/RegisterForm/RegisterForm';
 
-const SplashPage = () => {
-
-    const [show, setShow] = useState(false);
-    const [showLoginForm, setLoginForm] = useState(true);
-    const [showRegisterForm, setRegisterForm] = useState(false);
-
-    const FORM_NAV_KEYS = {
-        login: "login-form",
-        register: "register-form"
-    };
-
-    const handleModalClose = () => setShow(false);
-    const handleModalShow = () => setShow(true);
-
-    const handleForm = (eventKey) => {
-        if(eventKey === FORM_NAV_KEYS.login) {
-            setLoginForm(true);
-            setRegisterForm(false);
-        } else if (eventKey === FORM_NAV_KEYS.register) {
-            setLoginForm(false);
-            setRegisterForm(true);
-        }
-    }
-
-    const appendModalFooter = () => {
-        const style = {marginRight: "auto"};
-        if(showLoginForm) {
-            return (<p style={style}>Not a member? <a href="#LoginPage">Sign Up</a></p>);
-        } else if(showRegisterForm) {
-            return (<p style={style}>Already have an account? <a href="#LoginPage">Log In</a></p>);
-        } else {
-            return null;
-        }
-    }
+//TODO: Create a separate container for this component.
+const SplashPage = (props) => {
 
     return (
         <div className={classes.SplashPage}>
@@ -57,13 +25,13 @@ const SplashPage = () => {
                 <p>Sentence 2</p>
                 <p>Sentence 3</p>
 
-                <Button onClick={handleModalShow}>Login/Register</Button>
+                <Button onClick={props.handleModalShow}>Login/Register</Button>
                 <Modal 
-                show={show} 
-                close={handleModalClose} 
+                show={props.showModal} 
+                close={props.handleModalClose} 
                 bodyStyle={{padding: "0"}}
-                footer={appendModalFooter()}>
-                    <Nav variant="tabs" defaultActiveKey="login-form" onSelect={handleForm}>
+                footer={props.modalFooter()}>
+                    <Nav variant="tabs" defaultActiveKey="login-form" onSelect={props.handleForm}>
                         <Nav.Item>
                             <Nav.Link eventKey="login-form">Login</Nav.Link>
                         </Nav.Item>
@@ -71,8 +39,8 @@ const SplashPage = () => {
                             <Nav.Link eventKey="register-form">Register</Nav.Link>
                         </Nav.Item>
                     </Nav>
-                    { showLoginForm ? <LoginForm style={{padding: "16px"}}/> : null }
-                    { showRegisterForm ? <RegisterForm style={{padding: "16px"}}/> : null }
+                    { props.showLoginForm ? <LoginForm style={{padding: "16px"}}/> : null }
+                    { props.showRegisterForm ? <RegisterForm style={{padding: "16px"}}/> : null }
                 </Modal>
 
             </div>
