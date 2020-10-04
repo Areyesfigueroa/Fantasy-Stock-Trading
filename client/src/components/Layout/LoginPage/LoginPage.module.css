@@ -1,0 +1,20 @@
+.LoginPage {
+}
+
+.LoginPage .container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+    text-align: left;
+}
+
+.LoginPage .container h5 {
+    padding: 5px 0;   
+}
+
+.LoginPage .form {
+    min-width: 360px;
+    padding: 20px;
+}
+
