@@ -7,7 +7,8 @@ const TradingCards = (props) => {
             {props.data.map((el) => (
                 <TradingCard 
                     key={el.id}
-                    title={`${el.companyName}: ${el.companySubtitle}`}
+                    title={el.companyName}
+                    subtitle={el.companySubtitle}
                     price={el.currentPrice}
                     percentage={el.percentChange}
                     daily={el.dailyGainLoss}

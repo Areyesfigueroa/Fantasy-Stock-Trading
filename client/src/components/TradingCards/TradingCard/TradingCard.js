@@ -15,7 +15,7 @@ const TradingCard = (props) => {
             <Card style={{ width: "100%" }}>
                 <Card.Title>
                     <div className={classes.cardTitle} >
-                        <strong>{`SPDR S&P 500 ETF Trust: SPY`}</strong>
+                        <strong>{`${props.title}: ${props.subtitle}`}</strong>
                         <InputGroup className="justify-content-end">
                             <Button variant="outline-primary">Buy</Button>
                             <Button variant="outline-primary">Sell</Button>
@@ -24,9 +24,9 @@ const TradingCard = (props) => {
                 </Card.Title>
                 <Card.Body>
                     <div className={classes.container}>
-                        <CardItem style={cardStyle} title={"Current Price:"} subtitle={`$${133}`}/>
-                        <CardItem style={cardStyle} title={"Percent Change:"} subtitle={`${-0.949}%`}/>
-                        <CardItem style={{ height: "90px" }} title={"Daily Gain/Loss:"} subtitle={`$${-3.20}`}/>
+                        <CardItem style={cardStyle} title={"Current Price:"} subtitle={`$${props.price}`}/>
+                        <CardItem style={cardStyle} title={"Percent Change:"} subtitle={`${props.percentage}%`}/>
+                        <CardItem style={{ height: "90px" }} title={"Daily Gain/Loss:"} subtitle={`$${props.daily}`}/>
                     </div>
                 </Card.Body>
             </Card>

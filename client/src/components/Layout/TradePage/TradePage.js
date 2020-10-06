@@ -15,7 +15,7 @@ const TradePage = (props) => {
         <div className={classes.TradePage}>
             <Title subtitle={subtitleText}>Trade</Title>
             <Container>
-                <Searchbar />
+                <Searchbar search={props.search}/>
                 {props.loading ? <LoadingSpinner /> : <TradingCards data={props.data}/>}
             </Container>
         </div>
