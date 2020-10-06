@@ -10,9 +10,11 @@ import Nav from 'react-bootstrap/Nav';
 //Forms
 import LoginForm from '../../Forms/LoginForm/LoginForm';
 import RegisterForm from '../../Forms/RegisterForm/RegisterForm';
+import useModal from '../../../hooks/useModal';
 
 //TODO: Create a separate container for this component.
 const SplashPage = (props) => {
+    const formModal = useModal();
 
     return (
         <div className={classes.SplashPage}>
@@ -25,10 +27,10 @@ const SplashPage = (props) => {
                 <p>Sentence 2</p>
                 <p>Sentence 3</p>
 
-                <Button onClick={props.handleModalShow}>Login/Register</Button>
+                <Button onClick={formModal.handleShowModal}>Login/Register</Button>
                 <Modal 
-                show={props.showModal} 
-                close={props.handleModalClose} 
+                show={formModal.show} 
+                close={formModal.handleCloseModal} 
                 bodyStyle={{padding: "0"}}
                 footer={props.modalFooter()}>
                     <Nav variant="tabs" defaultActiveKey="login-form" onSelect={props.handleForm}>

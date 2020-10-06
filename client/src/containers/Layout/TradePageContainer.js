@@ -6,6 +6,8 @@ import { fetchFakeData, fetchFakeData2 } from '../../http';
 const TradePageContainer = () => {
     const [data, setData]=useState(null);
     const [loading, setLoading]=useState(true);
+    const [showBuyModal, setShowBuyModal]=useState(false);
+    const [showSellModal, setShowSellModal]=useState(false);
     
     useEffect(() => {
         fetchFakeData2()
@@ -22,8 +24,27 @@ const TradePageContainer = () => {
         console.log(search);
     }
 
+    // const handleShowBuyModal = () => setShowBuyModal(true);
+    // const handleCloseBuyModal = () => setShowBuyModal(false);
+
+    // const handleShowSellModal = () => setShowSellModal(true);
+    // const handleCloseSellModal = () => setCloseSellModal(false);
+
     return (
-        <TradePage data={data} loading={loading} search={handleSearch}/>
+        <TradePage 
+            data={data} 
+            loading={loading} 
+            search={handleSearch} 
+
+            // showBuyModal={showBuyModal}
+            // handleShowBuyModal={handleShowBuyModal}
+            // handleCloseBuyModal={handleCloseBuyModal}
+
+            // showSellModal={showSellModal}
+            // handleShowSellModal={handleShowSellModal}
+            // handleCloseSellModal={handleCloseSellModal}
+
+             />
     );
 };
 

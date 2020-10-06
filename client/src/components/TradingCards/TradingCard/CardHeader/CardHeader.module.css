@@ -1,0 +1,13 @@
+.CardHeader {
+    display: flex;
+    text-align: start;
+    padding: 10px;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid #ccc;
+}
+    
+.CardHeader strong {
+    width: 100%;
+}

@@ -5,23 +5,3 @@
     flex-wrap: wrap;
     margin-bottom: 20px;
 }
-
-.TradingCard .container {
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-}
-
-.TradingCard .cardTitle {
-    display: flex;
-    text-align: start;
-    padding: 10px;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    border: 1px solid #ccc;
-}
-
-.TradingCard .cardTitle strong {
-    width: 100%;
-}

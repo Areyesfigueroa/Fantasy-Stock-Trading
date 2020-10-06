@@ -3,7 +3,6 @@ import SplashPage from '../../components/Layout/SplashPage/SplashPage';
 
 const SplashPageContainer = () => {
     
-    const [show, setShow] = useState(false);
     const [showLoginForm, setLoginForm] = useState(true);
     const [showRegisterForm, setRegisterForm] = useState(false);
 
@@ -11,9 +10,6 @@ const SplashPageContainer = () => {
         login: "login-form",
         register: "register-form"
     };
-
-    const handleModalClose = () => setShow(false);
-    const handleModalShow = () => setShow(true);
 
     const handleForm = (eventKey) => {
         if(eventKey === FORM_NAV_KEYS.login) {
@@ -41,9 +37,6 @@ const SplashPageContainer = () => {
         showLoginForm={showLoginForm}
         showRegisterForm={showRegisterForm}
         handleForm={handleForm}
-        showModal={show}
-        handleModalShow={handleModalShow}
-        handleModalClose={handleModalClose}
         modalFooter={appendModalFooter} />
     );
 };

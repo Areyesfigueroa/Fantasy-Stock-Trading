@@ -7,7 +7,6 @@ import Container from 'react-bootstrap/Container';
 import TradingCards from '../../TradingCards/TradingCards';
 import LoadingSpinner from '../../LoadingSpinner/LoadingSpinner';
 
-
 const TradePage = (props) => {
     const subtitleText = 'Search stock symbols and use fake money to trade on the live market and test your skills';
     
@@ -16,7 +15,18 @@ const TradePage = (props) => {
             <Title subtitle={subtitleText}>Trade</Title>
             <Container>
                 <Searchbar search={props.search}/>
-                {props.loading ? <LoadingSpinner /> : <TradingCards data={props.data}/>}
+                {props.loading ? <LoadingSpinner /> 
+                : <TradingCards 
+                    data={props.data} 
+
+                    // showBuyModal={props.showBuyModal}
+                    // handleShowBuyModal={props.handleShowBuyModal}
+                    // handleCloseBuyModal={props.handleCloseBuyModal}
+        
+                    // showSellModal={props.showSellModal}
+                    // handleShowSellModal={props.handleShowSellModal}
+                    // handleCloseSellModal={props.handleCloseSellModal}
+                    />}
             </Container>
         </div>
     );
