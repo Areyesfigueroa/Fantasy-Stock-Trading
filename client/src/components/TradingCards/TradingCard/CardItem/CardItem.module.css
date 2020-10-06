@@ -1,0 +1,11 @@
+.CardItem {
+    margin: auto 0;
+    padding: 10px;
+    text-align: start;
+    width: 100%;
+}
+
+.CardItem p {
+    margin: 0;
+    padding: 0;
+}
