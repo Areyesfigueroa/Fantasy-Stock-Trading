@@ -15,18 +15,7 @@ const TradePage = (props) => {
             <Title subtitle={subtitleText}>Trade</Title>
             <Container>
                 <Searchbar search={props.search}/>
-                {props.loading ? <LoadingSpinner /> 
-                : <TradingCards 
-                    data={props.data} 
-
-                    // showBuyModal={props.showBuyModal}
-                    // handleShowBuyModal={props.handleShowBuyModal}
-                    // handleCloseBuyModal={props.handleCloseBuyModal}
-        
-                    // showSellModal={props.showSellModal}
-                    // handleShowSellModal={props.handleShowSellModal}
-                    // handleCloseSellModal={props.handleCloseSellModal}
-                    />}
+                {props.loading ? <LoadingSpinner />:<TradingCards data={props.data} />}
             </Container>
         </div>
     );

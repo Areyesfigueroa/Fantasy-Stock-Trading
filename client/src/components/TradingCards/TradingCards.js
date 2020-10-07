@@ -12,14 +12,6 @@ const TradingCards = (props) => {
                     price={el.currentPrice}
                     percentage={el.percentChange}
                     daily={el.dailyGainLoss}
-
-                    // showBuyModal={showBuyModal}
-                    // handleShowBuyModal={handleShowBuyModal}
-                    // handleCloseBuyModal={handleCloseBuyModal}
-
-                    // showSellModal={showSellModal}
-                    // handleShowSellModal={handleShowSellModal}
-                    // handleCloseSellModal={handleCloseSellModal}
                 />
             ))}
         </div>

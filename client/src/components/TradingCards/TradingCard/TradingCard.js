@@ -6,8 +6,8 @@ import Modal from '../../Modal/Modal';
 import useModal from '../../../hooks/useModal';
 import CardHeader from './CardHeader/CardHeader';
 import CardBody from './CardBody/CardBody';
+import SharesForm from '../../Forms/SharesForm/SharesForm';
 
-//TODO: Implement range ui for the modals
 const TradingCard = (props) => {
     const title = `${props.title}: ${props.subtitle}`;
     
@@ -33,14 +33,14 @@ const TradingCard = (props) => {
                 close={buyModal.handleCloseModal} 
                 title={title}
                 footer={<Button>Buy</Button>}>
-                    Buy modal body
+                    <SharesForm price={props.price}/>
             </Modal>
             <Modal 
                 show={sellModal.show} 
                 close={sellModal.handleCloseModal} 
                 title={title} 
                 footer={<Button>Sell</Button>}>
-                    Sell Modal body
+                    <SharesForm price={props.price}/>
             </Modal>
         </div>
     );
