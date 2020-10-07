@@ -1,6 +1,8 @@
 import React from 'react';
 import './App.css';
 
+import {Switch, Route} from 'react-router-dom';
+
 import Header from './components/Header/Header';
 import SplashPageContainer from './containers/Layout/SplashPageContainer';
 import LoginPage from './components/Layout/LoginPage/LoginPage';
@@ -11,9 +13,11 @@ function App() {
   return (
     <div className="App">
       <Header />
-      {/* <SplashPageContainer /> */}
-      {/* <LoginPage /> */}
-      <TradePageContainer />
+      <Switch>
+        <Route path='/login' component={LoginPage} />
+        <Route path='/trade' component={TradePageContainer} />
+        <Route path='/' component={SplashPageContainer} />
+      </Switch>
     </div>
   );
 }
