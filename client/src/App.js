@@ -7,6 +7,7 @@ import Header from './components/Header/Header';
 import SplashPageContainer from './containers/Layout/SplashPageContainer';
 import LoginPage from './components/Layout/LoginPage/LoginPage';
 import TradePageContainer from './containers/Layout/TradePageContainer';
+import PortfolioPage from './components/Layout/PortfolioPage/PorfolioPage';
 
 // TESTING
 function App() {
@@ -16,6 +17,7 @@ function App() {
       <Switch>
         <Route path='/login' component={LoginPage} />
         <Route path='/trade' component={TradePageContainer} />
+        <Route path='/portfolio' component={PortfolioPage} />
         <Route path='/' component={SplashPageContainer} />
       </Switch>
     </div>
