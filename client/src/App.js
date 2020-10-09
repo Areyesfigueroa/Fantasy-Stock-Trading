@@ -21,7 +21,7 @@ function App() {
         <Route path='/portfolio' component={PortfolioPage} />
 
         {/* TESTING */}
-        <Route path='/' component={Charts} />
+        <Route path='/charts' component={Charts} /> 
         <Route path='/' component={SplashPageContainer} />
       </Switch>
     </div>
