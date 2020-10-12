@@ -1,48 +1,56 @@
-import React, { useReducer, useState } from 'react';
+import React, { useState } from 'react';
 import RegisterForm from '../../components/Forms/RegisterForm/RegisterForm';
 
+import { getFormElConfig, checkValidity } from '../../utils';
+
 const RegisterFormContainer = (props) => {
-    const initialState = {
-        email: null,
-        fName: null,
-        lName: null,
-        password: null,
-        retypePassword: null,
-        termsCheck: false
-    };
-
-    const reducer = (state, action) => {
-        switch(action.type) {
-            case 'email':
-                return { email: state.email }
-            case 'fName':
-                return { fName: state.fName }
-            case 'lName':
-                return { lName: state.lName }
-            case 'password':
-                return { password: state.password }
-            case 'retypePassword':
-                return { retypePassword: state.retypePassword }
-            case 'termsCheck':
-                return { termsCheck: state.termsCheck }
-            default:
-                throw new Error();
+    const [registerForm, setRegisterForm] = useState(
+        {
+            email: getFormElConfig('email'),
+            fName: getFormElConfig('firstName'),
+            lName: getFormElConfig('lastName'),
+            password: getFormElConfig('password'),
+            retypePassword: getFormElConfig('retypePassword'),
+            registerCheck: getFormElConfig('registerCheck')
         }
+    )
+
+    const handleChange = (event) => {
+
+        let form = { ...registerForm }
+        switch(event.target.id){
+            case (form.email.id):
+                form.email.value = event.target.value;
+                break;
+            case (form.fName.id):
+                form.fName.value = event.target.value;
+                break;
+            case (form.lName.id):
+                form.lName.value = event.target.value;
+                break;
+            case (form.password.id):
+                form.password.value = event.target.value;
+                break;
+            case (form.retypePassword.id):
+                form.retypePassword.value = event.target.value;
+                break;
+        }
+
+        setRegisterForm(form);
     }
-
-    const [state, dispatch] = useReducer(reducer, initialState);
-
-    // const [email, setEmail] = useState(null);
-    // const [fName, setFName] = useState(null);
-    // const [lName, setLName] = useState(null);
-    // const [password, setPassword] = useState(null);
-    // const [retypePassword, setRetypePassword] = useState(null);
-    // const [termsCheck, setTermsCheck] = useState(null);
+    /**
+     * Make sure the required values are not empty
+     * confirm that the email is an email
+     * first and last name need to be text
+     * password needs to be the following:
+     *  - minimum 8 characters long
+     *  - uses one special character
+     * retype password needs to match exactly to password.
+     */
 
     const handleSubmit = (event) => {
-        alert('A name was submitted: ' + state.email);
         event.preventDefault();
-
+        console.log(registerForm);
         // registerUser()
         // .then(res => {
         //     alert(res);
@@ -51,14 +59,16 @@ const RegisterFormContainer = (props) => {
         //     alert(error);
         // })
     }
+
     return (
         <RegisterForm 
             style={props.style}
             disableLabels={props.disableLabels }
             disableFormText={props.disableFormText}
             btnText={props.btnText}
+            formConfig={registerForm}
             submit={handleSubmit}
-            // change={(type) => dispatch({ type })} 
+            change={handleChange} 
             />
     );
 };
