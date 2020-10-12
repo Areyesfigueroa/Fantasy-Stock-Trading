@@ -1,7 +1,7 @@
 import React from 'react';
 import classes from './LoginPage.module.css';
-import RegisterForm from '../../Forms/RegisterForm/RegisterForm';
 import LoginForm from '../../Forms/LoginForm/LoginForm';
+import RegisterFormContainer from '../../../containers/Forms/RegisterFormContainer';
 import Title from '../../Title/Title';
 
 const LoginPage = () => {
@@ -12,7 +12,7 @@ const LoginPage = () => {
             <div className={classes.container}>
                 <div className={classes.form}>
                     <h5>Register Form</h5>
-                    <RegisterForm disableLabels disableFormText btnText="Register"/>   
+                    <RegisterFormContainer disableLabels disableFormText btnText="Register"/>   
                 </div>
                 <div className={classes.form}>
                     <h5>Login Form</h5>

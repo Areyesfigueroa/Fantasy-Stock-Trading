@@ -9,7 +9,7 @@ import Nav from 'react-bootstrap/Nav';
 
 //Forms
 import LoginForm from '../../Forms/LoginForm/LoginForm';
-import RegisterForm from '../../Forms/RegisterForm/RegisterForm';
+import RegisterFormContainer from '../../../containers/Forms/RegisterFormContainer';
 import useModal from '../../../hooks/useModal';
 
 //TODO: Create a separate container for this component.
@@ -42,7 +42,7 @@ const SplashPage = (props) => {
                         </Nav.Item>
                     </Nav>
                     { props.showLoginForm ? <LoginForm style={{padding: "16px"}}/> : null }
-                    { props.showRegisterForm ? <RegisterForm style={{padding: "16px"}}/> : null }
+                    { props.showRegisterForm ? <RegisterFormContainer style={{padding: "16px"}} btnText={"Register"}/> : null }
                 </Modal>
 
             </div>

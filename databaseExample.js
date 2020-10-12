@@ -9,11 +9,11 @@ const pool = new Pool({
     rejectUnauthorized: false
   }
 });
-pool.query('SELECT NOW()', (err, res) => {
-//   console.log(err, res);
-  console.log("Pool Query Working");
-  pool.end()
-});
+// pool.query('SELECT NOW()', (err, res) => {
+// //   console.log(err, res);
+//   console.log("Pool Query Working");
+//   pool.end()
+// });
 
 const client = new Client({
   connectionString: connectionString,
@@ -22,13 +22,13 @@ const client = new Client({
   }
 });
 
-client.connect();
+// client.connect();
 
-client.query('SELECT table_schema,table_name FROM information_schema.tables;', (err, res) => {
-  if (err) throw err;
-  console.log("Client Query Working");
+// client.query('SELECT * FROM users', (err, res) => {
+//   if (err) throw err;
+//   console.log("Client Query Working");
 //   for (let row of res.rows) {
 //     console.log(JSON.stringify(row));
 //   }
-  client.end();
-});
+//   client.end();
+// });

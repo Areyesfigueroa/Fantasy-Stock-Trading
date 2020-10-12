@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
 
-const exampleController = require("../controllers/exampleController");
+const authController = require("../controllers/authController");
 
-router.get('/users', exampleController.getUsers);
+router.get('/register/:email/:firstName/:lastName/:password/:termsCheck', authController.register);
 // router.get('/content/tweets/:query/:type/:count', contentSearchRoutes.searchByContent);
 // router.get('/content/nextTweets/:nextResultsURL', contentSearchRoutes.searchByContentNextResults);
 

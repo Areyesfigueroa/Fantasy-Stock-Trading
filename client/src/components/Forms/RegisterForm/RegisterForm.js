@@ -13,7 +13,7 @@ const RegisterForm = (props) => {
     if(props.disableFormText) formEmailText = null;
 
     return (
-        <Form style={props.style}>
+        <Form style={props.style} onSubmit={props.submit}>
             <Form.Group controlId="formEmail">
                 {props.disableLabels ? null: <Form.Label>Email address</Form.Label>}
                 <Form.Control type="email" placeholder="Enter email" />
@@ -40,7 +40,7 @@ const RegisterForm = (props) => {
                 <Form.Control type="password" placeholder="Retype Password" />
             </Form.Group>
 
-            <Form.Group controlId="registerCheck">
+            <Form.Group controlId="formRegisterCheck">
                 <Form.Check type="checkbox" label="By checking you agree to our terms and policies" />
             </Form.Group>
 
