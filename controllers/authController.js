@@ -2,41 +2,28 @@ const db = require('../db');
 const bcrypt = require('bcrypt');
 
 exports.register = async (request, response) => {
-    console.log(request.params);
-    const data = request.params;
+    const body = request.body;
 
     try {
         const saltRounds = 10;
-        const hashPassword = await bcrypt.hash(data.password, saltRounds);
+        const hashPassword = await bcrypt.hash(body.password, saltRounds);
         
         const query = "INSERT INTO users(email, first_name, last_name, password, terms_and_policies_agreement) VALUES($1, $2, $3, $4, $5)";
-        const values = [data.email, data.fName, data.lName, hashPassword, data.terms_and_policies];
-
-        db.query(query, values, (err, res) => {
-            let dbData = [];
+        const values = [body.email, body.firstName, body.lastName, hashPassword, body.termsCheck];
+        
+        await db.query(query, values, (err) => {
             if(err) {
-                console.log(err); 
-                return;
+                console.log(err);
+                response.status(500).send({success: false, errMsg: 'Error occured, could not register in database.'});
             }
 
-            for(let row of res.rows) {
-                dbData.push(row);    
-            }
-            
-            response.send(dbData);
+            response.send({success: true});
         });
 
-        // db.query('SELECT * FROM users', null, (err, res) => {
-        //     let dbData = [];
-        //     if(err) return next(err);
-    
-        //     for (let row of res.rows) {
-        //         dbData.push(row);
-        //     }
-        //     response.send(dbData);
-        // });
-    } catch {
-
+    } catch(err) {
+        //500 internal server error.
+        console.log(err);
+        response.status(500).send('Error occured could not register. Server error.');
     }
 
 };

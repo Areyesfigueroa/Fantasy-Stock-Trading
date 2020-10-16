@@ -57,7 +57,7 @@ const fetchFakeData2 = async () => {
 const registerUser = (email, fName, lName, password, termsCheck) => {
     return fetch(`/api/auth/register/${email}/${fName}/${lName}/${password}/${termsCheck}`)
     .then(res => res.json(res))
-    .catch(error => console.log("API Error"));
+    .catch(error => console.log("HTTP Error"));
 }
 
 export { fetchFakeData, fetchFakeData2, registerUser }
