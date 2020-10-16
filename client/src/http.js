@@ -60,4 +60,10 @@ const registerUser = (email, fName, lName, password, termsCheck) => {
     .catch(error => console.log("HTTP Error"));
 }
 
-export { fetchFakeData, fetchFakeData2, registerUser }
+const loginUser = (email, password) => {
+    return fetch(`/api/auth/login/${email}/${password}`)
+    .then(res => res.json(res))
+    .catch(error => console.log("HTTP Error"));
+}
+
+export { fetchFakeData, fetchFakeData2, registerUser, loginUser }
