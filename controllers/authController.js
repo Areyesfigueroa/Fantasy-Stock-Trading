@@ -58,6 +58,8 @@ exports.login = async(request, response) => {
             response.send({success: false, errMsg: 'Passwords do not match'});
         }
     } catch(err) {
-
+        //500 internal server error.
+        console.log(err);
+        response.status(500).send('Error occured could not register. Server error.');
     }
 }
