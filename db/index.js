@@ -25,6 +25,18 @@ const doPasswordsMatch = async (email, password) => {
 };
 
 module.exports = {
+  addUser: async (email, firstName, lastName, password, termsCheck) => {
+      const saltRounds = 10;
+      const salt = await bcrypt.genSalt(saltRounds);
+      const hashPassword = await bcrypt.hash(password, salt);
+      
+      const queryString = "INSERT INTO users(email, first_name, last_name, password, terms_and_policies_agreement) VALUES($1, $2, $3, $4, $5)";
+      const values = [email, firstName, lastName, hashPassword, termsCheck];
+      
+      await query(queryString, values);
+
+      return new Promise((resolve, reject) => resolve({success: true}));
+  },
   getUser: async (email, password) => {
     let response = null;
 
@@ -36,7 +48,7 @@ module.exports = {
           const { rows } = await query("SELECT * FROM users WHERE email = $1", [email]);
           resolve(rows[0]);
         } else {
-          reject({success: false, errMsg: 'Passwords do not match'})
+          reject({success: false, message: 'Passwords do not match'})
         }
     });
   }
