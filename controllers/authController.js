@@ -1,5 +1,6 @@
 const db = require('../db');
 const bcrypt = require('bcrypt');
+const utils = require('../utils');
 
 exports.register = async (request, response) => {
     const body = request.body;
@@ -32,34 +33,15 @@ exports.register = async (request, response) => {
 exports.login = async(request, response) => {
     const data = request.params;
     try {
-
-        let hashPassword = '';
-
-        const query = "SELECT password FROM users WHERE email = $1";
-        const values = [data.email];
-
-        //Find user and get password.
-        await db.query(query, values, (err, res) => {
-            if(err) {
-                console.log(err);
-                response.status(500).send({success: false, errMsg: 'Error occured, could not login user from Database'});
-            }
-
-            hashPassword = res.rows[0].password;
-            console.log(hashPassword);
+        db.getUser(data.email, data.password)
+        .then(user => {
+            response.send(user);
+        })
+        .catch(err => {
+            response.send(err)
         });
 
-        //Compare password
-        const isMatch = await bcrypt.compare(data.password, hashPassword, (err) => console.log(err));
-
-        if(isMatch) {
-            response.send("Passwords Match");
-        } else {
-            response.send({success: false, errMsg: 'Passwords do not match'});
-        }
     } catch(err) {
-        //500 internal server error.
-        console.log(err);
         response.status(500).send('Error occured could not register. Server error.');
     }
 }
