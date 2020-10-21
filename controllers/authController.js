@@ -4,10 +4,11 @@ const utils = require('../utils');
 exports.register = async (request, response) => {
     const body = request.body;
     try {
-        const result = await db.addUser(body.email, body.firstName, body.lastName, body.password, body.termsCheck);
-        response.send(result);
+        await db.addUser(body.email, body.firstName, body.lastName, body.password, body.termsCheck);
+        response.status(200).send("User registered successfully");
     } catch(err) {
-        response.status(500).send(`Error occured could not register: ${err.message}`);
+        response.status(500).send(`Server Error, could not register: ${err.message}`);
+        response.send(`Server Error: ${err.message}`);
     }
 
 };
@@ -26,6 +27,6 @@ exports.login = async(request, response) => {
         });
     } catch(err) {
         console.log(err.message);
-        response.status(500).send(`Error occured could not login: ${err.message}`);
+        response.status(500).send(`Server error occured, could not login: ${err.message}`);
     }
 }

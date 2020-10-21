@@ -54,16 +54,33 @@ const fetchFakeData2 = async () => {
 }
 
 //Fetching from Express Internal API.
-const registerUser = (email, fName, lName, password, termsCheck) => {
-    return fetch(`/api/auth/register/${email}/${fName}/${lName}/${password}/${termsCheck}`)
-    .then(res => res.json(res))
-    .catch(error => console.log("HTTP Error"));
+const postData = async (url='', data={}) => {
+    const response = await fetch(url, {
+        method: 'POST',
+        mode: 'cors',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        redirect: 'follow',
+        referrerPolicy: 'no-referrer',
+        body: JSON.stringify(data)
+    });
+    return response.json();
+}
+
+const registerUser = (email, firstName, lastName, password, termsCheck) => {
+    return postData('/api/auth/register/', {email, firstName, lastName, password, termsCheck})
+    .then(data => {
+        console.log(data);
+        return data;
+    })
+    .catch(error => console.log(error.message)); //use toast to showcase error. 
 }
 
 const loginUser = (email, password) => {
     return fetch(`/api/auth/login/${email}/${password}`)
     .then(res => res.json(res))
-    .catch(error => console.log("HTTP Error"));
+    .catch(error => console.log("HTTP Error: Login Failed"));
 }
 
 export { fetchFakeData, fetchFakeData2, registerUser, loginUser }

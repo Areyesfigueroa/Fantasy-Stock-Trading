@@ -1,21 +1,36 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import RegisterForm from '../../components/Forms/RegisterForm/RegisterForm';
 
 import { getFormElConfig, checkValidity } from '../../formValidation';
 import { registerUser } from '../../http';
+import { useHistory } from 'react-router-dom';
 
 const RegisterFormContainer = (props) => {
 
     const [registerForm, setRegisterForm] = useState(
         {
-            email: getFormElConfig('email', '', 'email'),
-            fName: getFormElConfig('firstName', '', 'text'),
-            lName: getFormElConfig('lastName', '', 'text'),
-            password: getFormElConfig('password', '', 'password'),
-            retypePassword: getFormElConfig('retypePassword', '', 'password'),
-            registerCheck: getFormElConfig('registerCheck', false, 'checkbox')
+            email: getFormElConfig('email', 'aliel2@gmail.com', 'email'),
+            fName: getFormElConfig('firstName', 'Aliel', 'text'),
+            lName: getFormElConfig('lastName', 'Reyes', 'text'),
+            password: getFormElConfig('password', '@R3y3s7457!', 'password'),
+            retypePassword: getFormElConfig('retypePassword', '@R3y3s7457!', 'password'),
+            registerCheck: getFormElConfig('registerCheck', true, 'checkbox')
         }
     );
+
+    const [isFormValid, setIsFormValid] = useState(false);
+
+    useEffect(() => {
+        if(!isFormValid) return;
+        registerUser(registerForm.email.value, registerForm.fName.value, registerForm.lName.value, registerForm.password.value, registerForm.registerCheck.value)
+        .then(res => {
+            console.log(res);
+        })
+        .catch(error => {
+            console.log(error);
+        })
+
+    }, [registerForm])
 
     const handleChange = (event) => {
         let form = { ...registerForm }
@@ -49,27 +64,20 @@ const RegisterFormContainer = (props) => {
     const handleSubmit = (event) => {
         event.preventDefault();
         let form = { ...registerForm };
-        let isFormValid = true;
+        let isSubmittionValid = true;
 
         for(let key in registerForm) {
             let {valid, error} = checkValidity(registerForm[key].value, registerForm[key].validation);
             form[key].valid = valid;
             form[key].error = error;
 
-            isFormValid = valid && isFormValid;
+            isSubmittionValid = valid && isSubmittionValid;
         }
-
+        
+        if(!isSubmittionValid) return;
+        
         setRegisterForm(form);
-
-        if(!isFormValid) return;
-
-        registerUser(form.email.value, form.fName.value, form.lName.value, form.password.value, form.registerCheck.value)
-        .then(res => {
-            console.log(res);
-        })
-        .catch(error => {
-            console.log(error);
-        })
+        setIsFormValid(isSubmittionValid);
     }
 
     return (

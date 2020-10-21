@@ -34,8 +34,6 @@ module.exports = {
       const values = [email, firstName, lastName, hashPassword, termsCheck];
       
       await query(queryString, values);
-
-      return new Promise((resolve, reject) => resolve({success: true}));
   },
   getUser: async (email, password) => {
     let response = null;
@@ -48,7 +46,7 @@ module.exports = {
           const { rows } = await query("SELECT * FROM users WHERE email = $1", [email]);
           resolve(rows[0]);
         } else {
-          reject({success: false, message: 'Passwords do not match'})
+          reject('Passwords do not match')
         }
     });
   }, 
@@ -60,7 +58,6 @@ module.exports = {
     const values = [user.id, tomorrow];
 
     const { rows } = await query(insertSessionQuery, values);
-    console.log(rows[0].id);
     const userSessionId = rows[0].id;
 
     return userSessionId;
