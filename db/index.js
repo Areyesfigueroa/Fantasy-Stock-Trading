@@ -51,5 +51,18 @@ module.exports = {
           reject({success: false, message: 'Passwords do not match'})
         }
     });
+  }, 
+  createUserSession: async (user) => {
+    const insertSessionQuery = "INSERT INTO user_sessions(user_id, expires_at) VALUES ($1, $2) RETURNING id";
+    const today = new Date();
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    const values = [user.id, tomorrow];
+
+    const { rows } = await query(insertSessionQuery, values);
+    console.log(rows[0].id);
+    const userSessionId = rows[0].id;
+
+    return userSessionId;
   }
 };

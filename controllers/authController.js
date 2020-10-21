@@ -13,10 +13,17 @@ exports.register = async (request, response) => {
 };
 
 exports.login = async(request, response) => {
-    const data = request.params;
+    const body = request.body;
     try {
-        const user = await db.getUser(data.email, data.password);
-        response.send(user);
+        const user = await db.getUser(body.email, body.password);
+        const sessionId = await db.createUserSession(user);
+        response.send({
+            user: {
+                id: user.id,
+                email: user.email
+            },
+            sessionId
+        });
     } catch(err) {
         console.log(err.message);
         response.status(500).send(`Error occured could not login: ${err.message}`);
