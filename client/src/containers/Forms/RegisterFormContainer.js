@@ -24,13 +24,15 @@ const RegisterFormContainer = (props) => {
         if(!isFormValid) return;
         registerUser(registerForm.email.value, registerForm.fName.value, registerForm.lName.value, registerForm.password.value, registerForm.registerCheck.value)
         .then(res => {
+            debugger;
             console.log(res);
         })
         .catch(error => {
+            debugger;
             console.log(error);
         })
 
-    }, [registerForm])
+    }, [isFormValid])
 
     const handleChange = (event) => {
         let form = { ...registerForm }
