@@ -24,12 +24,12 @@ const RegisterFormContainer = (props) => {
         if(!isFormValid) return;
         registerUser(registerForm.email.value, registerForm.fName.value, registerForm.lName.value, registerForm.password.value, registerForm.registerCheck.value)
         .then(res => {
-            debugger;
             console.log(res);
-            //Log the user in. Do I do this here or on the server. 
+            //Get the user session in the response.
+            //Update the header tab somehow.
+            //Redirect user to home page.
         })
         .catch(error => {
-            debugger;
             console.log(error.message);
         })
 

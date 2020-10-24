@@ -71,26 +71,21 @@ const registerUser = async (email, firstName, lastName, password, termsCheck) =>
     const response = await postData('/api/auth/register/', {email, firstName, lastName, password, termsCheck})
 
     if(!response.ok) {
-        throw new Error(await response.json());
+        const data = await response.json();
+        throw new Error(data.errorMessage);
     }
 
-    return response
-    .then(res => {
-        return res.json(res);
-    })
-    .catch(error => console.log("API Error, Register: " + error.message)); //use toast to showcase error. 
+    return response.then(res => res.json(res));
 };
 
 const loginUser = async (email, password) => {
     const response = await postData(`/api/auth/login/`, { email, password });
 
     if(!response.ok) {
-        throw new Error(response);
+        throw new Error(await response.json());
     }
 
-    return response
-    .then(res => res.json(res))
-    .catch(error => console.log("API Error, Login"));
+    return response.then(res => res.json(res));
 }
 
 export { fetchFakeData, fetchFakeData2, registerUser, loginUser }
