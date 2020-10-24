@@ -70,6 +70,7 @@ const postData = async (url='', data={}) => {
 
 const registerUser = async (email, firstName, lastName, password, termsCheck) => {
     const response = await postData('/api/auth/register/', {email, firstName, lastName, password, termsCheck})
+    debugger;
     if(!response.status.ok) {
         throw new Error(await response.json());
     }
@@ -85,7 +86,7 @@ const loginUser = async (email, password) => {
     const response = await postData(`/api/auth/login/`, { email, password });
 
     if(!response.ok) {
-        throw new Error(await response.json());
+        throw new Error(response);
     }
 
     return response

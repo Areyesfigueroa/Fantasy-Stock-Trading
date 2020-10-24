@@ -5,9 +5,9 @@ exports.register = async (request, response) => {
     const body = request.body;
     try {
         await db.addUser(body.email, body.firstName, body.lastName, body.password, body.termsCheck);
-        response.send("User registered successfully");
+        response.status(200).send({successMessage: "User registered successfully"});
     } catch(err) {
-        response.status(500).send(`Server Error, could not register: ${err.message}`);
+        response.status(500).send({error: err, errorMessage: `Server Error, could not register: ${err.message}`});
     }
 
 };
