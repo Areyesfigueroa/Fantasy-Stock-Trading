@@ -24,10 +24,13 @@ const RegisterFormContainer = (props) => {
         if(!isFormValid) return;
         registerUser(registerForm.email.value, registerForm.fName.value, registerForm.lName.value, registerForm.password.value, registerForm.registerCheck.value)
         .then(res => {
+            debugger;
             console.log(res);
+            //Log the user in. Do I do this here or on the server. 
         })
         .catch(error => {
-            console.log(error);
+            debugger;
+            console.log(error.message);
         })
 
     }, [isFormValid])

@@ -54,8 +54,8 @@ const fetchFakeData2 = async () => {
 }
 
 //Fetching from Express Internal API.
-const postData = async (url='', data={}) => {
-    const response = await fetch(url, {
+const postData = (url='', data={}) => {
+    return fetch(url, {
         method: 'POST',
         mode: 'cors',
         headers: {
@@ -65,13 +65,12 @@ const postData = async (url='', data={}) => {
         referrerPolicy: 'no-referrer',
         body: JSON.stringify(data)
     });
-    return response.json();
 }
 
 const registerUser = async (email, firstName, lastName, password, termsCheck) => {
     const response = await postData('/api/auth/register/', {email, firstName, lastName, password, termsCheck})
-    debugger;
-    if(!response.status.ok) {
+
+    if(!response.ok) {
         throw new Error(await response.json());
     }
 

@@ -1,13 +1,19 @@
 const db = require('../db');
 const utils = require('../utils');
 
+class StockErrorHandler {
+    constructor(message) {
+        this.errorMessage = message;
+    };
+}
+
 exports.register = async (request, response) => {
     const body = request.body;
     try {
         await db.addUser(body.email, body.firstName, body.lastName, body.password, body.termsCheck);
         response.status(200).send({successMessage: "User registered successfully"});
     } catch(err) {
-        response.status(500).send({error: err, errorMessage: `Server Error, could not register: ${err.message}`});
+        response.status(500).send(new StockErrorHandler(`Server Error, could not register: ${err.message}`));
     }
 
 };
@@ -25,6 +31,6 @@ exports.login = async(request, response) => {
             sessionId
         });
     } catch(err) {
-        response.status(500).send(`Server error occured, could not login: ${err.message}`);
+        response.status(500).send(new StockErrorHandler(`Server error occured, could not login: ${err.message}`));
     }
 }
