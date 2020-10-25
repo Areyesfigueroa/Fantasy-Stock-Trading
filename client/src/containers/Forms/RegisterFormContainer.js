@@ -4,6 +4,7 @@ import RegisterForm from '../../components/Forms/RegisterForm/RegisterForm';
 import { getFormElConfig, checkValidity } from '../../formValidation';
 import { registerUser } from '../../http';
 import { useHistory } from 'react-router-dom';
+import useLocalStorage from '../../hooks/useLocalStorage';
 
 const RegisterFormContainer = (props) => {
 
@@ -19,14 +20,19 @@ const RegisterFormContainer = (props) => {
     );
 
     const [isFormValid, setIsFormValid] = useState(false);
+    const [userSession, setUserSession] = useLocalStorage('userSession', null);
 
     useEffect(() => {
         if(!isFormValid) return;
         registerUser(registerForm.email.value, registerForm.fName.value, registerForm.lName.value, registerForm.password.value, registerForm.registerCheck.value)
         .then(res => {
             console.log(res);
-            //Get the user session in the response.
+            
+            //Get the user session in the response. save to local storage.
+            setUserSession(res);
+
             //Update the header tab somehow.
+
             //Redirect user to home page.
         })
         .catch(error => {

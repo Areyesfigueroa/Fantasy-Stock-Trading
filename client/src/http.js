@@ -68,14 +68,14 @@ const postData = (url='', data={}) => {
 }
 
 const registerUser = async (email, firstName, lastName, password, termsCheck) => {
-    const response = await postData('/api/auth/register/', {email, firstName, lastName, password, termsCheck})
+    const response = await postData('/api/auth/register/', {email, firstName, lastName, password, termsCheck});
 
     if(!response.ok) {
         const data = await response.json();
         throw new Error(data.errorMessage);
     }
 
-    return response.then(res => res.json(res));
+    return await response.json();
 };
 
 const loginUser = async (email, password) => {
@@ -85,7 +85,7 @@ const loginUser = async (email, password) => {
         throw new Error(await response.json());
     }
 
-    return response.then(res => res.json(res));
+    return await response.json();
 }
 
 export { fetchFakeData, fetchFakeData2, registerUser, loginUser }
