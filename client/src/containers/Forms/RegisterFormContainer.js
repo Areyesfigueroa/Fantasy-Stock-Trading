@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import RegisterForm from '../../components/Forms/RegisterForm/RegisterForm';
-
+import ErrorMessage from '../../components/Forms/ErrorMessage/ErrorMessage';
 import { getFormElConfig, checkValidity } from '../../formValidation';
 import { registerUser } from '../../http';
 import { useHistory } from 'react-router-dom';
@@ -20,22 +20,23 @@ const RegisterFormContainer = (props) => {
     );
 
     const [isFormValid, setIsFormValid] = useState(false);
+    const [submitErrorMessage, setSubmitErrorMessage] = useState('');
     const [userSession, setUserSession] = useLocalStorage('userSession', null);
+
+    let history = useHistory();
 
     useEffect(() => {
         if(!isFormValid) return;
         registerUser(registerForm.email.value, registerForm.fName.value, registerForm.lName.value, registerForm.password.value, registerForm.registerCheck.value)
-        .then(res => {
-            console.log(res);
-            
+        .then(res => {            
             //Get the user session in the response. save to local storage.
             setUserSession(res);
 
-            //Update the header tab somehow.
-
             //Redirect user to home page.
+            // history.push('/home');
         })
         .catch(error => {
+            setSubmitErrorMessage(error.message);
             console.log(error.message);
         })
 
@@ -96,8 +97,9 @@ const RegisterFormContainer = (props) => {
             disableFormText={props.disableFormText}
             btnText={props.btnText}
             formConfig={registerForm}
+            submitErrorMessage={submitErrorMessage}
             submit={handleSubmit}
-            change={handleChange} 
+            change={handleChange}
             />
     );
 };

@@ -14,6 +14,8 @@ const RegisterForm = (props) => {
 
     return (
         <Form style={props.style} onSubmit={props.submit}>
+            {props.submitErrorMessage ? <ErrorMessage>{props.submitErrorMessage}</ErrorMessage>: null}
+            
             <Form.Group controlId={props.formConfig.email.id}>
                 {props.disableLabels ? null: <Form.Label>Email address</Form.Label>}
                 <Form.Control type="email" className={props.formConfig.email.error ? "is-invalid":""} placeholder="Enter email" value={props.formConfig.email.value} onChange={(event) => props.change(event)} />

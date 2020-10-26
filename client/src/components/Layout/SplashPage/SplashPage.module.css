@@ -6,6 +6,7 @@
     width: 100%;
     height: calc(100vh - 56px); /* Subtract Header */
     box-sizing: border-box;
+    overflow: hidden;
 }
 
 .SplashPage img {
