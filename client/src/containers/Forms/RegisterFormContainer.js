@@ -6,15 +6,49 @@ import { useHistory } from 'react-router-dom';
 import useLocalStorage from '../../hooks/useLocalStorage';
 
 const RegisterFormContainer = (props) => {
+    const history = useHistory();
 
     const [registerForm, setRegisterForm] = useState(
         {
-            email: getFormElConfig('email', '', 'email'),
-            fName: getFormElConfig('firstName', '', 'text'),
-            lName: getFormElConfig('lastName', '', 'text'),
-            password: getFormElConfig('password', '', 'password'),
-            retypePassword: getFormElConfig('retypePassword', '', 'password'),
-            registerCheck: getFormElConfig('registerCheck', false, 'checkbox')
+            email: getFormElConfig(
+                'email',
+                'register-email',
+                'email',
+                props.disableLabels ? '':'Email Address',
+                'Enter Email',
+                props.disableHelperText ? '':"We'll never share your email with anyone else."),
+            fName: getFormElConfig(
+                'text',
+                'first-name',
+                'fName',
+                props.disableLabels ? '':'First Name', 
+                'Enter First Name'), 
+            lName: getFormElConfig(
+                'text', 
+                'last-name', 
+                'lName',
+                props.disableLabels ? '':'Last Name',
+                'Enter Last Name'),
+            password: getFormElConfig(
+                'password', 
+                'register-password', 
+                'password',
+                props.disableLabels ? '':'Password',
+                'Enter Password'),
+            retypePassword: getFormElConfig(
+                'password', 
+                'retype-password',
+                'retypePassword', 
+                props.disableLabels ? '':'Retype Password',
+                'Retype Password'),
+            registerCheck: getFormElConfig(
+                'checkbox', 
+                'register-check', 
+                'registerCheck',
+                'By checking you agree to our terms and policies',
+                '',
+                '',
+                false)
         }
     );
 
@@ -22,10 +56,9 @@ const RegisterFormContainer = (props) => {
     const [submitErrorMessage, setSubmitErrorMessage] = useState('');
     const [userSession, setUserSession] = useLocalStorage('userSession', null);
 
-    let history = useHistory();
-
     useEffect(() => {
         if(!isFormValid) return;
+        
         registerUser(registerForm.email.value, registerForm.fName.value, registerForm.lName.value, registerForm.password.value, registerForm.registerCheck.value)
         .then(res => {            
             //Get the user session in the response. save to local storage.
@@ -90,7 +123,7 @@ const RegisterFormContainer = (props) => {
     return (
         <RegisterForm 
             style={props.style}
-            disableLabels={props.disableLabels }
+            disableLabels={props.disableLabels}
             disableFormText={props.disableFormText}
             btnText={props.btnText}
             formConfig={registerForm}

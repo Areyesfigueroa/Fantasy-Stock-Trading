@@ -1,6 +1,7 @@
 import React from 'react';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
+import Input from '../Input/Input';
 
 const LoginForm = (props) => {
     let formEmailText = (
@@ -13,16 +14,8 @@ const LoginForm = (props) => {
 
     return (
         <Form style={props.style}>
-            <Form.Group controlId="loginEmail">
-                {props.disableLabels ? null : <Form.Label>Email address</Form.Label>}
-                <Form.Control type="email" placeholder="Enter email" />
-                {formEmailText}
-            </Form.Group>
-
-            <Form.Group controlId="loginPassword">
-                {props.disableLabels ? null : <Form.Label>Password</Form.Label>}
-                <Form.Control type="password" placeholder="Enter Password" />
-            </Form.Group>
+            <Input inputConfig={props.formConfig.email} change={props.change} />
+            <Input inputConfig={props.formConfig.password} change={props.change} />
 
             <Button variant="primary" type="submit">
                 {props.btnText ? props.btnText : "Submit"}

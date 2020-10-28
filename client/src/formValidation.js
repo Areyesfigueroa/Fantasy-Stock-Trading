@@ -12,11 +12,16 @@ const hasNumber = (stringValue) => {
     return /\d/.test(stringValue);
 }
 
-const getFormElConfig = (id, value="", validationType='') => {
+const getFormElConfig = (type, id, name, label="", placeholder="", helperText="", value="") => {
     return {
+        type: type,
         id: id,
+        name: name,
+        label: label,
+        placeholder: placeholder,
+        helperText: helperText,
         value: value,
-        validation: validationType ? validationRules[validationType]:{},
+        validation: type ? validationRules[type]:{},
         valid: false,
         error: ''
     }
