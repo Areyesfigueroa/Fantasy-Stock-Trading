@@ -42,7 +42,7 @@ const SplashPage = (props) => {
                         </Nav.Item>
                     </Nav>
                     { props.showLoginForm ? <LoginForm style={{padding: "16px"}}/> : null }
-                    { props.showRegisterForm ? <RegisterFormContainer style={{padding: "16px"}} btnText={"Register"}/> : null }
+                    { props.showRegisterForm ? <RegisterFormContainer style={{padding: "16px"}} btnText={"Register"} /> : null }
                 </Modal>
 
             </div>

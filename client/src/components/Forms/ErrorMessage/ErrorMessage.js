@@ -1,8 +1,8 @@
 import React from 'react';
 
-const ErrorMessage = (message) => {
+const ErrorMessage = (props) => {
     return (
-        <small className="text-danger">{props.message}</small>
+        <small className="text-danger">{props.children}</small>
     );
 };
 

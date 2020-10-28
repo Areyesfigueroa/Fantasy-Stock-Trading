@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import RegisterForm from '../../components/Forms/RegisterForm/RegisterForm';
-import ErrorMessage from '../../components/Forms/ErrorMessage/ErrorMessage';
 import { getFormElConfig, checkValidity } from '../../formValidation';
 import { registerUser } from '../../http';
 import { useHistory } from 'react-router-dom';
@@ -10,12 +9,12 @@ const RegisterFormContainer = (props) => {
 
     const [registerForm, setRegisterForm] = useState(
         {
-            email: getFormElConfig('email', 'aliel2@gmail.com', 'email'),
-            fName: getFormElConfig('firstName', 'Aliel', 'text'),
-            lName: getFormElConfig('lastName', 'Reyes', 'text'),
-            password: getFormElConfig('password', '@R3y3s7457!', 'password'),
-            retypePassword: getFormElConfig('retypePassword', '@R3y3s7457!', 'password'),
-            registerCheck: getFormElConfig('registerCheck', true, 'checkbox')
+            email: getFormElConfig('email', '', 'email'),
+            fName: getFormElConfig('firstName', '', 'text'),
+            lName: getFormElConfig('lastName', '', 'text'),
+            password: getFormElConfig('password', '', 'password'),
+            retypePassword: getFormElConfig('retypePassword', '', 'password'),
+            registerCheck: getFormElConfig('registerCheck', false, 'checkbox')
         }
     );
 
@@ -32,15 +31,16 @@ const RegisterFormContainer = (props) => {
             //Get the user session in the response. save to local storage.
             setUserSession(res);
 
-            //Redirect user to home page.
-            // history.push('/home');
+            //Reroute page.
+            history.push("/trade");
         })
         .catch(error => {
             setSubmitErrorMessage(error.message);
+            setIsFormValid(false);
             console.log(error.message);
         })
 
-    }, [isFormValid])
+    }, [isFormValid]);
 
     const handleChange = (event) => {
         let form = { ...registerForm }
@@ -83,9 +83,6 @@ const RegisterFormContainer = (props) => {
 
             isSubmittionValid = valid && isSubmittionValid;
         }
-        
-        if(!isSubmittionValid) return;
-        
         setRegisterForm(form);
         setIsFormValid(isSubmittionValid);
     }
