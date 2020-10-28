@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 import { useHistory } from 'react-router';
-import { getFormElConfig } from '../../formValidation';
+import { getFormElConfig, checkValidity } from '../../formValidation';
 import useLocalStorage from '../../hooks/useLocalStorage';
 import LoginForm from '../../components/Forms/LoginForm/LoginForm';
 import { loginUser } from '../../http';
@@ -16,14 +16,17 @@ const LoginFormContainer = (props) => {
             'email',
             props.disableLabels ? '':'Email Address', 
             'Enter Email', 
-            props.disableHelperText ? '':"We'll never share your email with anyone else."),
+            props.disableHelperText ? '':"We'll never share your email with anyone else.",
+            "aliel2@gmail.com"),
         
         password: getFormElConfig(
             'password',
             'login-password', 
             'password',
             props.disableLabels ? '':'Password', 
-            'Enter Password')
+            'Enter Password',
+            "",
+            "@R3y3s7457!")
     });
 
     const [isFormValid, setIsFormValid] = useState(false);
@@ -33,9 +36,10 @@ const LoginFormContainer = (props) => {
 
     useEffect(() => {
         if(!isFormValid) return;
-
-        loginUser
+        console.log("Login");
+        loginUser(loginForm.email.value, loginForm.password.value)
         .then(res => {
+            console.log("success");
             setUserSession(res);
             history.push("/trade");
         })

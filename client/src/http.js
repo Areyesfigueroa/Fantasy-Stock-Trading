@@ -80,9 +80,10 @@ const registerUser = async (email, firstName, lastName, password, termsCheck) =>
 
 const loginUser = async (email, password) => {
     const response = await postData(`/api/auth/login/`, { email, password });
-
+    
     if(!response.ok) {
-        throw new Error(await response.json());
+        const data = await response.json();
+        throw new Error(data.errorMessage);
     }
 
     return await response.json();

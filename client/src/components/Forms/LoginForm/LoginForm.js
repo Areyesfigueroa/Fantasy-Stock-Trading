@@ -2,6 +2,7 @@ import React from 'react';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Input from '../Input/Input';
+import ErrorMessage from '../ErrorMessage/ErrorMessage';
 
 const LoginForm = (props) => {
     return (

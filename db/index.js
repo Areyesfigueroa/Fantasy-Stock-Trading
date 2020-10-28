@@ -18,9 +18,10 @@ const query = (text, params, callback) => {
 const doPasswordsMatch = async (email, password) => {
   //Find user and get password.
   const { rows } = await query("SELECT password FROM users WHERE email = $1", [email]);
-  const hashPassword = rows[0].password;
+  
+  if(!rows[0]) throw new Error("Email not found");
 
-  //Compare password
+  const hashPassword = rows[0].password;
   return bcrypt.compare(password, hashPassword);
 };
 
@@ -36,8 +37,6 @@ module.exports = {
       await query(queryString, values);
   },
   getUser: async (email, password) => {
-    let response = null;
-
     const isMatch = await doPasswordsMatch(email, password);
 
     return new Promise(async (resolve, reject) => {
@@ -46,7 +45,7 @@ module.exports = {
           const { rows } = await query("SELECT * FROM users WHERE email = $1", [email]);
           resolve(rows[0]);
         } else {
-          reject('Passwords do not match')
+          reject({message:'Passwords do not match'});
         }
     });
   }, 
