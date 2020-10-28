@@ -61,11 +61,8 @@ const RegisterFormContainer = (props) => {
         
         registerUser(registerForm.email.value, registerForm.fName.value, registerForm.lName.value, registerForm.password.value, registerForm.registerCheck.value)
         .then(res => {            
-            //Get the user session in the response. save to local storage.
-            setUserSession(res);
-
-            //Reroute page.
-            history.push("/trade");
+            setUserSession(res); //Get the user session in the response. save to local storage.
+            history.push("/trade"); //Reroute page.
         })
         .catch(error => {
             setSubmitErrorMessage(error.message);

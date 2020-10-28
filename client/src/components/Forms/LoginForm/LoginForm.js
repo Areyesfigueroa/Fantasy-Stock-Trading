@@ -4,16 +4,10 @@ import Button from 'react-bootstrap/Button';
 import Input from '../Input/Input';
 
 const LoginForm = (props) => {
-    let formEmailText = (
-        <Form.Text className="text-muted">
-            We'll never share your email with anyone else.
-        </Form.Text>
-    );
-
-    if(props.disableFormText) formEmailText = null;
-
     return (
-        <Form style={props.style}>
+        <Form style={props.style} onSubmit={props.submit}>
+            {props.submitErrorMessage ? <ErrorMessage>{props.submitErrorMessage}</ErrorMessage>: null}
+
             <Input inputConfig={props.formConfig.email} change={props.change} />
             <Input inputConfig={props.formConfig.password} change={props.change} />
 
