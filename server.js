@@ -9,7 +9,7 @@ app.use(cors());
 app.use(bodyParser.json());
 
 //Serving React Build via Express.js
-app.use('/', express.static(path.join(__dirname + "/client/build")));
+app.use('/', express.static(path.join(__dirname, "client", "build")));
 
 //Route Examples.
 // const contentSearchRoute = require('./routes/contentSearchRoutes');
@@ -36,6 +36,11 @@ app.post("/api/transaction/buy", (req, res) => {
 
 const authRoute = require('./routes/authRoutes');
 app.use("/api/auth/", authRoute);
+
+//Catch All
+app.get('/*', (req, res) => {
+    res.sendFile(path.join(__dirname, "client", "build", "index.html"));
+});
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`Server started on port ${port}`));

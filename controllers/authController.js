@@ -1,5 +1,4 @@
 const db = require('../db');
-const utils = require('../utils');
 
 class StockErrorHandler {
     constructor(message) {
