@@ -15,8 +15,7 @@ const LoginFormContainer = (props) => {
             'email',
             props.disableLabels ? '':'Email Address', 
             'Enter Email', 
-            props.disableHelperText ? '':"We'll never share your email with anyone else.",
-            "aliel2@gmail.com"),
+            props.disableHelperText ? '':"We'll never share your email with anyone else."),
         
         password: getFormElConfig(
             'password',
@@ -24,8 +23,7 @@ const LoginFormContainer = (props) => {
             'password',
             props.disableLabels ? '':'Password', 
             'Enter Password',
-            "",
-            "@R3y3s7457!")
+            "")
     });
 
     const [isFormValid, setIsFormValid] = useState(false);

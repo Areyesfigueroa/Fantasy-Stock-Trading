@@ -14,15 +14,8 @@ import useLocalStorage from './hooks/useLocalStorage';
 
 // TESTING
 function App() {
-/**
- * If I have a user session: allow trade, portfolio, charts
- * If I don't have a user session: redirect user to login page unless they are on the home page.
- */
-  const [userSession, setUserSession] = useLocalStorage('userSession', null);
 
-  useEffect(() => {
-    console.log(userSession);
-  });
+  const [userSession, setUserSession] = useLocalStorage('userSession', null);
 
   return (
     <div className="App">
@@ -40,7 +33,7 @@ function App() {
 
         {/* TESTING */}
         <Route path='/charts' >
-          {userSession ? <Charts />: <Redirect to='/login' />}
+          {userSession ? <Charts />:<Redirect to='/login' />}
         </Route> 
         <Route path='/' >
           <SplashPageContainer setUserSession={setUserSession} />
