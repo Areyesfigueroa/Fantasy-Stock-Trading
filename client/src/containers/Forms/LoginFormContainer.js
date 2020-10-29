@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 
 import { useHistory } from 'react-router';
 import { getFormElConfig, checkValidity } from '../../formValidation';
-import useLocalStorage from '../../hooks/useLocalStorage';
 import LoginForm from '../../components/Forms/LoginForm/LoginForm';
 import { loginUser } from '../../http';
 
@@ -31,8 +30,6 @@ const LoginFormContainer = (props) => {
 
     const [isFormValid, setIsFormValid] = useState(false);
     const [submitErrorMessage, setSubmitErrorMessage] = useState('');
-    const [userSession, setUserSession] = useLocalStorage('userSession', null);
-
 
     useEffect(() => {
         if(!isFormValid) return;
@@ -40,7 +37,7 @@ const LoginFormContainer = (props) => {
         loginUser(loginForm.email.value, loginForm.password.value)
         .then(res => {
             console.log("success");
-            setUserSession(res);
+            props.setUserSession(res);
             history.push("/trade");
         })
         .catch(error => {

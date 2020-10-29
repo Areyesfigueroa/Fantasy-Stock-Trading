@@ -11,13 +11,6 @@ app.use(bodyParser.json());
 //Serving React Build via Express.js
 app.use('/', express.static(path.join(__dirname, "client", "build")));
 
-//Route Examples.
-// const contentSearchRoute = require('./routes/contentSearchRoutes');
-// app.use("/api/search", contentSearchRoute);
-
-// const userSearchRoute = require('./routes/userSearchRoutes');
-// app.use("/api/search", userSearchRoute);
-
 const exampleSearchRoute = require('./routes/exampleRoutes');
 app.use("/example", exampleSearchRoute);
 

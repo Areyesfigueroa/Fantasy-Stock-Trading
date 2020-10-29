@@ -41,8 +41,8 @@ const SplashPage = (props) => {
                             <Nav.Link eventKey="register-form">Register</Nav.Link>
                         </Nav.Item>
                     </Nav>
-                    { props.showLoginForm ? <LoginFormContainer style={{padding: "16px"}} btnText={"Login"}/> : null }
-                    { props.showRegisterForm ? <RegisterFormContainer style={{padding: "16px"}} btnText={"Register"} /> : null }
+                    { props.showLoginForm ? <LoginFormContainer style={{padding: "16px"}} btnText={"Login"} setUserSession={props.setUserSession} /> : null }
+                    { props.showRegisterForm ? <RegisterFormContainer style={{padding: "16px"}} btnText={"Register"} setUserSession={props.setUserSession} /> : null }
                 </Modal>
 
             </div>

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import SplashPage from '../../components/Layout/SplashPage/SplashPage';
 
-const SplashPageContainer = () => {
+const SplashPageContainer = (props) => {
     
     const [showLoginForm, setLoginForm] = useState(true);
     const [showRegisterForm, setRegisterForm] = useState(false);
@@ -37,7 +37,8 @@ const SplashPageContainer = () => {
         showLoginForm={showLoginForm}
         showRegisterForm={showRegisterForm}
         handleForm={handleForm}
-        modalFooter={appendModalFooter} />
+        modalFooter={appendModalFooter} 
+        setUserSession={props.setUserSession}/>
     );
 };
 

@@ -4,7 +4,7 @@ import RegisterFormContainer from '../../../containers/Forms/RegisterFormContain
 import LoginFormContainer from '../../../containers/Forms/LoginFormContainer';
 import Title from '../../Title/Title';
 
-const LoginPage = () => {
+const LoginPage = (props) => {
     return (
         <div className={classes.LoginPage}>
             <Title>Login or Register</Title>
@@ -12,11 +12,11 @@ const LoginPage = () => {
             <div className={classes.container}>
                 <div className={classes.form}>
                     <h5>Register Form</h5>
-                    <RegisterFormContainer disableLabels disableFormText btnText="Register"/>   
+                    <RegisterFormContainer disableLabels disableFormText btnText="Register" setUserSession={props.setUserSession}/>   
                 </div>
                 <div className={classes.form}>
                     <h5>Login Form</h5>
-                    <LoginFormContainer disableLabels disableHelperText btnText="Login" />  
+                    <LoginFormContainer disableLabels disableHelperText btnText="Login" setUserSession={props.setUserSession}/>  
                 </div>
             </div>
         </div>
