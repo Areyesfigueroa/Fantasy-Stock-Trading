@@ -1,25 +1,21 @@
-import React, {useEffect} from 'react';
+import React, {useContext} from 'react';
+
+import UserSessionContext from '../../context/UserSessionContext';
 import Nav from 'react-bootstrap/Nav';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import NavigationItem from './NavigationItem/NavigationItem';
 
-import useLocalStorage from '../../hooks/useLocalStorage';
-
 const NavigationItems = () => {
 
-    const [userSession, setUserSession] = useLocalStorage('userSession', null);
-
-    useEffect(() => {
-        console.log(userSession);
-    });
+    const userSession = useContext(UserSessionContext());
 
     return (
         <Nav className="mr-sm-2">
             <NavigationItem link="/home">Home</NavigationItem>
             <NavigationItem link="/trade">Trade</NavigationItem>
             <NavigationItem link="/portfolio">Portfolio</NavigationItem>
-            <NavDropdown title={userSession ? `Hi ${userSession.user.firstName}`: `My Account`} id="collasible-nav-dropdown">
-                <NavigationItem link="/login" dropdownItem>{userSession ? "Log out": "Log in"}</NavigationItem>
+            <NavDropdown title={userSession.session ? `Hi ${userSession.session.user.firstName}`: `My Account`} id="collasible-nav-dropdown">
+                <NavigationItem link="/login" dropdownItem>{userSession.session ? "Log out": "Log in"}</NavigationItem>
             </NavDropdown>
         </Nav>
     );

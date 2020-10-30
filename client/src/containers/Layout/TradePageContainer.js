@@ -1,15 +1,24 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+import { useHistory } from 'react-router';
+
+import UserSessionContext from '../../context/UserSessionContext';
 import TradePage from '../../components/Layout/TradePage/TradePage';
 
 import { fetchFakeData, fetchFakeData2 } from '../../http';
 
 const TradePageContainer = () => {
+
+    const userSession = useContext(UserSessionContext());
+    const history = useHistory();
+
     const [data, setData]=useState(null);
     const [loading, setLoading]=useState(true);
     const [showBuyModal, setShowBuyModal]=useState(false);
     const [showSellModal, setShowSellModal]=useState(false);
     
     useEffect(() => {
+        if(!userSession.session) history.push('/login');
+
         fetchFakeData2()
         .then((res) => {
             setData(res);

@@ -3,7 +3,7 @@ import Title from '../../Title/Title';
 import Container from 'react-bootstrap/Container';
 import PortfolioCard from '../../PortfolioCard/PortfolioCard';
 
-const PorfolioPage = () => {
+const PorfolioPage = (props) => {
     const subtitle="Each account starts with $100,000 fake dollars, see how much money you can earn by trading stocks";
     return (
         <div>

@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+import UserSessionContext from '../../context/UserSessionContext';
 import RegisterForm from '../../components/Forms/RegisterForm/RegisterForm';
 import { getFormElConfig, checkValidity } from '../../formValidation';
 import { registerUser } from '../../http';
@@ -6,7 +7,7 @@ import { useHistory } from 'react-router-dom';
 
 const RegisterFormContainer = (props) => {
     const history = useHistory();
-
+    const userSession = useContext(UserSessionContext());
     const [registerForm, setRegisterForm] = useState(
         {
             email: getFormElConfig(
@@ -59,8 +60,8 @@ const RegisterFormContainer = (props) => {
         
         registerUser(registerForm.email.value, registerForm.fName.value, registerForm.lName.value, registerForm.password.value, registerForm.registerCheck.value)
         .then(res => {            
-            props.setUserSession(res); //Get the user session in the response. save to local storage.
-            history.push("/trade"); //Reroute page.
+            userSession.setSession(res); //Get the user session in the response. save to local storage.
+            history.go(); //Reroute page.
         })
         .catch(error => {
             setSubmitErrorMessage(error.message);

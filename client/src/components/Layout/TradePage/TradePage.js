@@ -9,7 +9,7 @@ import LoadingSpinner from '../../LoadingSpinner/LoadingSpinner';
 
 const TradePage = (props) => {
     const subtitleText = 'Search stock symbols and use fake money to trade on the live market and test your skills';
-    
+
     return (
         <div className={classes.TradePage}>
             <Title subtitle={subtitleText}>Trade</Title>

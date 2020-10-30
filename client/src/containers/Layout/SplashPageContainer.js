@@ -37,8 +37,7 @@ const SplashPageContainer = (props) => {
         showLoginForm={showLoginForm}
         showRegisterForm={showRegisterForm}
         handleForm={handleForm}
-        modalFooter={appendModalFooter} 
-        setUserSession={props.setUserSession}/>
+        modalFooter={appendModalFooter} />
     );
 };
 

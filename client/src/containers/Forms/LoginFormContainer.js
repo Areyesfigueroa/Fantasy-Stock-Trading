@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 
+import UserSessionContext from '../../context/UserSessionContext';
 import { useHistory } from 'react-router';
 import { getFormElConfig, checkValidity } from '../../formValidation';
 import LoginForm from '../../components/Forms/LoginForm/LoginForm';
@@ -7,6 +8,10 @@ import { loginUser } from '../../http';
 
 const LoginFormContainer = (props) => {
     const history = useHistory();
+    const userSession = useContext(UserSessionContext());
+
+    const [isFormValid, setIsFormValid] = useState(false);
+    const [submitErrorMessage, setSubmitErrorMessage] = useState('');
 
     const [loginForm, setLoginForm] = useState({
         email: getFormElConfig(
@@ -28,17 +33,14 @@ const LoginFormContainer = (props) => {
             "@R3y3s7457!")
     });
 
-    const [isFormValid, setIsFormValid] = useState(false);
-    const [submitErrorMessage, setSubmitErrorMessage] = useState('');
 
     useEffect(() => {
         if(!isFormValid) return;
-        console.log("Login");
         loginUser(loginForm.email.value, loginForm.password.value)
         .then(res => {
-            console.log("success");
-            props.setUserSession(res);
-            history.push("/trade");
+            console.log("Login");
+            userSession.setSession(res);
+            history.push('/trade');
         })
         .catch(error => {
             setSubmitErrorMessage(error.message);
