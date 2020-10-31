@@ -2,6 +2,7 @@ import React from 'react';
 import Title from '../../Title/Title';
 import Container from 'react-bootstrap/Container';
 import PortfolioCard from '../../PortfolioCard/PortfolioCard';
+//import CustomChart from '../../CustomChart/CustomChart';
 
 const PorfolioPage = (props) => {
     const subtitle="Each account starts with $100,000 fake dollars, see how much money you can earn by trading stocks";
@@ -11,9 +12,11 @@ const PorfolioPage = (props) => {
             <Container>
                <PortfolioCard 
                title="Account Information"
-               balance={`$63,347.91`}
-               holdingValue={`$37,630.16`}
-               assetValue={`$100,978.07`} />
+               balance={props.accountBalance}
+               holdingValue={props.totalHoldingValue}
+               assetValue={props.totalAssetValue} />
+               
+
             </Container>
         </div>
     );

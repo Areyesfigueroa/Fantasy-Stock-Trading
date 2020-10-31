@@ -12,7 +12,11 @@ const PortfolioPageContainer = () => {
         if(!userSession.session) history.push('/login');
     });
     return (
-        <PortfolioPage />
+        <PortfolioPage 
+            accountBalance={100000}
+            totalHoldingValue={0}
+            totalAssetValue={0}
+        />
     );
 };
 
