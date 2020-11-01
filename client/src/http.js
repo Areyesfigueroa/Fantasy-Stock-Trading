@@ -89,4 +89,10 @@ const loginUser = async (email, password) => {
     return await response.json();
 }
 
-export { fetchFakeData, fetchFakeData2, registerUser, loginUser }
+const searchBySymbol = (symbol) => {
+    return fetch(`/api/stocks/search/${symbol}`)
+    .then((res) => res.json(res))
+    .catch(err => new Error(err.message))
+}
+
+export { fetchFakeData, fetchFakeData2, registerUser, loginUser, searchBySymbol }

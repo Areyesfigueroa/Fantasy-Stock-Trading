@@ -1,10 +1,5 @@
 const db = require('../db');
-
-class StockErrorHandler {
-    constructor(message) {
-        this.errorMessage = message;
-    };
-}
+const StockErrorHandler = require('../error/StockErrorHandler');
 
 class UserSession {
     constructor(userId, userEmail, userFirstName, userLastName, sessionId) {
