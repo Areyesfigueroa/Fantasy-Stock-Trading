@@ -27,10 +27,18 @@ const TradePage = (props) => {
                     price={props.searchResult.currentPrice}
                     percentage={props.searchResult.percentChange}
                     daily={props.searchResult.dailyGainLoss}
-                />: null}
+                /> : null}
 
                 {/* Chart */}
-
+                {props.stockHistoryChart && props.searchResult ? 
+                <CustomChart 
+                    type="AreaChart"
+                    title={`Daily Prices For ${props.searchResult.symbol} on ${props.stockHistoryChart.date}`}
+                    data={props.stockHistoryChart.chartData}
+                    chartAreaWidth={"70%"}
+                    hAxisTitle={"Time"}
+                    vAxisTitle={"Price"}
+                /> : null}
                 {props.loadingStocks ? <LoadingSpinner />:<TradingCards data={props.stocks} />}
             </Container>
         </div>

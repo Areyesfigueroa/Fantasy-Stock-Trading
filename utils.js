@@ -7,3 +7,19 @@ exports.makeid = (length) => {
    }
    return result;
 }
+
+
+const formatDigits = (num) => {
+   if(num.toString().length >= 2) return num;
+   return ("0" + num).slice(-2);
+}
+
+exports.getLatestWeekday = () => {
+   const today = new Date();
+   while(today.getDay() === 0 || today.getDay() === 6) {
+     today.setDate(today.getDate() - 1);
+   }
+   
+   return `${today.getFullYear()}${formatDigits(today.getMonth() + 1)}${formatDigits(today.getDate())}`;
+ }
+ 

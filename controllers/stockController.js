@@ -1,5 +1,6 @@
 const axios = require('../axios').instance;
 const StockErrorHandler = require('../error/StockErrorHandler');
+const utils = require('../utils');
 require('dotenv').config();
 
 exports.searchBySymbol = (request, response) => {
@@ -24,4 +25,28 @@ exports.searchBySymbol = (request, response) => {
 
         response.status(500).send(new StockErrorHandler(errorMessage));
     });
+}
+
+exports.getStockHistory = (request, response) => {
+    const params = request.params;
+    const interval = 60; //minutes
+
+    const date = utils.getLatestWeekday(); //YYYYMMDD
+
+    axios.get(`stock/${params.symbol}/chart/dynamic/${date}?token=${process.env.API_SECRET_TOKEN}&chartInterval=${interval}`)
+    .then(res => {
+        
+        const data = res.data.map((el) => {
+            return {
+                date: el.date,
+                time: el.label,
+                price: el.average
+            }
+        });
+
+        response.send(data);
+    })
+    .catch(err => {
+        response.status(500).send(new StockErrorHandler(err.message));
+    })
 }

@@ -95,4 +95,10 @@ const searchBySymbol = (symbol) => {
     .catch(err => new Error(err.message))
 }
 
-export { fetchFakeData, fetchFakeData2, registerUser, loginUser, searchBySymbol }
+const getStockHistory = (symbol) => {
+    return fetch(`/api/stocks/search/${symbol}/history`)
+    .then(res => res.json(res))
+    .catch(err => new Error(err.message));
+}
+
+export { fetchFakeData, fetchFakeData2, registerUser, loginUser, searchBySymbol, getStockHistory }

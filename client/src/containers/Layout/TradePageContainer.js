@@ -4,7 +4,7 @@ import { useHistory } from 'react-router';
 import UserSessionContext from '../../context/UserSessionContext';
 import TradePage from '../../components/Layout/TradePage/TradePage';
 
-import { fetchFakeData2, searchBySymbol } from '../../http';
+import { fetchFakeData2, searchBySymbol, getStockHistory } from '../../http';
 
 const TradePageContainer = () => {
 
@@ -13,6 +13,7 @@ const TradePageContainer = () => {
 
     const [savedStocks, setSavedStocks]=useState(null); //load stocks from database. 
     const [searchResult, setSearchResult]=useState(null); 
+    const [stockHistory, setStockHistory]=useState(null);
     const [loadingStocks, setLoadingStocks]=useState(true);
     const [loadingSearchRes, setLoadingSearchRes]=useState(false);
     
@@ -28,11 +29,26 @@ const TradePageContainer = () => {
     }, []);
 
 
-    const handleSearch = (search) => {
-        searchBySymbol(search)
+    const handleSearch = (searchTerm) => {
+        if(!searchTerm) {
+            setSearchResult(null);
+            setStockHistory(null);
+            return;
+        }
+
+        searchBySymbol(searchTerm)
         .then((res) => {
             console.log(res);
             setSearchResult(res);
+        })
+        .catch(err => console.log(err.errorMessage));
+
+        getStockHistory(searchTerm)
+        .then(res => {
+            let chartData = res.map(el => [el.time, el.price]);
+            chartData.unshift(['Time', searchTerm.toUpperCase()]);
+
+            setStockHistory({ date: res[0].date, chartData });
         })
         .catch(err => console.log(err.errorMessage));
     }
@@ -42,6 +58,7 @@ const TradePageContainer = () => {
             search={handleSearch}
             searchResult={searchResult}
             stocks={savedStocks}
+            stockHistoryChart={stockHistory}
             loadingStocks={loadingStocks}
             loadingSearchRes={loadingSearchRes}
         />
