@@ -30,9 +30,11 @@ const TradePageContainer = () => {
 
 
     const handleSearch = (searchTerm) => {
+        setLoadingSearchRes(true);
         searchBySymbol(searchTerm)
         .then((res) => {
             console.log(res);
+            setLoadingSearchRes(false);
             setSearchResult(res);
         })
         .catch(err => {

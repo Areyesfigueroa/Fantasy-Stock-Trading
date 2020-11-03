@@ -55,3 +55,12 @@ exports.getStockHistory = (request, response) => {
         response.status(500).send(new StockErrorHandler(errorMessage));
     })
 }
+
+exports.loadSavedStocks = () => {
+    
+}
+
+exports.buyShares = (request, response) => {
+    const body = request.params;
+    console.log(body);
+}
