@@ -89,16 +89,26 @@ const loginUser = async (email, password) => {
     return await response.json();
 }
 
-const searchBySymbol = (symbol) => {
-    return fetch(`/api/stocks/search/${symbol}`)
-    .then((res) => res.json(res))
-    .catch(err => new Error(err.message))
+const searchBySymbol = async (symbol) => {
+    const response = await fetch(`/api/stocks/search/${symbol}`);
+
+    if(!response.ok) {
+        const data = await response.json();
+        throw new Error(data.errorMessage);
+    }
+
+    return await response.json();
 }
 
-const getStockHistory = (symbol) => {
-    return fetch(`/api/stocks/search/${symbol}/history`)
-    .then(res => res.json(res))
-    .catch(err => new Error(err.message));
+const getStockHistory = async (symbol) => {
+    const response = await fetch(`/api/stocks/search/${symbol}/history`);
+
+    if(!response.ok) {
+        const data = await response.json();
+        throw new Error(data.errorMessage);
+    }
+
+    return await response.json();
 }
 
 export { fetchFakeData, fetchFakeData2, registerUser, loginUser, searchBySymbol, getStockHistory }

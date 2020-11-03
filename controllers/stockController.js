@@ -17,7 +17,7 @@ exports.searchBySymbol = (request, response) => {
         };
         response.send(data);
     })
-    .catch((error) => {
+    .catch(error => {
         let errorMessage = error.message;
         if(error.response.status === 404) {
             errorMessage = "Company Symbol not found.";
@@ -35,7 +35,7 @@ exports.getStockHistory = (request, response) => {
 
     axios.get(`stock/${params.symbol}/chart/dynamic/${date}?token=${process.env.API_SECRET_TOKEN}&chartInterval=${interval}`)
     .then(res => {
-        
+
         const data = res.data.map((el) => {
             return {
                 date: el.date,
@@ -46,7 +46,12 @@ exports.getStockHistory = (request, response) => {
 
         response.send(data);
     })
-    .catch(err => {
-        response.status(500).send(new StockErrorHandler(err.message));
+    .catch(error => {
+        let errorMessage = error.message;
+        if(error.response.status === 404) {
+            errorMessage = "Company Symbol not found.";
+        }
+
+        response.status(500).send(new StockErrorHandler(errorMessage));
     })
 }

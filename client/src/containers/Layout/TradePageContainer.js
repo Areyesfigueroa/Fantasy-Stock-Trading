@@ -30,18 +30,15 @@ const TradePageContainer = () => {
 
 
     const handleSearch = (searchTerm) => {
-        if(!searchTerm) {
-            setSearchResult(null);
-            setStockHistory(null);
-            return;
-        }
-
         searchBySymbol(searchTerm)
         .then((res) => {
             console.log(res);
             setSearchResult(res);
         })
-        .catch(err => console.log(err.errorMessage));
+        .catch(err => {
+            console.log(err);
+            setSearchResult(null);
+        });
 
         getStockHistory(searchTerm)
         .then(res => {
@@ -50,7 +47,10 @@ const TradePageContainer = () => {
 
             setStockHistory({ date: res[0].date, chartData });
         })
-        .catch(err => console.log(err.errorMessage));
+        .catch(err => {
+            console.log(err);
+            setStockHistory(null);
+        });
     }
 
     return (
