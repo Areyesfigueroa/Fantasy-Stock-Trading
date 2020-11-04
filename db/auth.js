@@ -46,5 +46,20 @@ module.exports = {
         const userSessionId = rows[0].id;
 
         return userSessionId;
+    },
+
+    hasUserSessionExpired: async (sessionID) => {
+        const { rows } = await db.query("SELECT expires_at FROM user_sessions WHERE id=$1", [sessionID]);
+        if(!rows[0]) throw new Error("Session not found");
+
+        const expirationDate = new Date(rows[0].expires_at);
+        const today = new Date();
+
+        return (expirationDate.getTime() < today.getTime());
+    },
+
+    destroyUserSession: async(sessionID) => {
+        const { rows } = await db.query("DELETE FROM user_sessions WHERE id!=$1", [sessionID]);
+        if(!rows[0]) throw new Error("Session not found");
     }
 };

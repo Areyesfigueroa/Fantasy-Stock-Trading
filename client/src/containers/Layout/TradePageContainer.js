@@ -4,7 +4,7 @@ import { useHistory } from 'react-router';
 import UserSessionContext from '../../context/UserSessionContext';
 import TradePage from '../../components/Layout/TradePage/TradePage';
 
-import { searchBySymbol, getStockHistory } from '../../http';
+import { searchBySymbol, getStockHistory, buyCompanyShares } from '../../http';
 
 const TradePageContainer = () => {
 
@@ -60,6 +60,16 @@ const TradePageContainer = () => {
         });
     }
 
+    const buyShares = (symbol, shareUnits) => {
+        buyCompanyShares(symbol, shareUnits)
+        .then(res => {
+            console.log(res);
+        })
+        .catch(err => {
+            console.log(err);
+        });
+    }
+
     return (
         <TradePage
             search={handleSearch}
@@ -68,6 +78,7 @@ const TradePageContainer = () => {
             stockHistoryChart={stockHistory}
             loadingStocks={loadingStocks}
             loadingSearchRes={loadingSearchRes}
+            buy={buyShares}
         />
     );
 };

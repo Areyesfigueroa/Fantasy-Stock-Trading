@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import classes from './TradingCard.module.css';
 import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
@@ -13,6 +13,8 @@ const TradingCard = (props) => {
     
     const buyModal = useModal();
     const sellModal = useModal();
+
+    const buyInputRef = useRef(null);
 
     return (
         <div className={classes.TradingCard}>
@@ -32,8 +34,8 @@ const TradingCard = (props) => {
                 show={buyModal.show} 
                 close={buyModal.handleCloseModal} 
                 title={title}
-                footer={<Button>Buy</Button>}>
-                    <SharesForm price={props.price}/>
+                footer={<Button onClick={() => props.buy(props.subtitle, buyInputRef.current.value)}>Buy</Button>}>
+                    <SharesForm price={props.price} inputRef={buyInputRef} />
             </Modal>
             <Modal 
                 show={sellModal.show} 

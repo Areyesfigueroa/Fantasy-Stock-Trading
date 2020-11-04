@@ -1,5 +1,6 @@
 const axios = require('../axios').instance;
-const db = require('../db/stocks');
+const stocksDB = require('../db/stocks');
+const authDB = require('../db/auth');
 const utils = require('../utils');
 const StockErrorHandler = require('../error/StockErrorHandler');
 require('dotenv').config();
@@ -58,7 +59,23 @@ exports.getStockHistory = (request, response) => {
     })
 }
 
-exports.buyShares = (request, response) => {
-    const body = request.params;
-    console.log(body);
+exports.buyShares = async (request, response) => {
+    try{
+        const body = request.body;
+
+        // check for basic auth header
+        if (!request.headers.authorization) throw new Error('Missing Authorization Header');
+
+        const sessionId = request.headers.authorization.split(' ')[1];
+        const hasExpired = await authDB.hasUserSessionExpired(sessionId);
+
+        // if(hasExpired) //Log out user
+
+        //upsert to database.
+        //await db.upsertStocks(body.userID, body.symbol, body.shareUnits);
+        response.send({ success: true, body, hasExpired});
+    } catch(error) {
+        console.log(error.message);
+        response.status(500).send(new StockErrorHandler(error.message));
+    }
 }

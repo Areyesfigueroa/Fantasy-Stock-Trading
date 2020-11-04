@@ -4,7 +4,7 @@ const StockErrorHandler = require('../error/StockErrorHandler');
 class UserSession {
     constructor(userId, userEmail, userFirstName, userLastName, sessionId) {
         this.user = { id: userId, email: userEmail, firstName: userFirstName, lastName: userLastName }
-        this.sessionId = { sessionId }
+        this.sessionId = sessionId;
     }
 }
 
@@ -33,4 +33,19 @@ exports.login = async(request, response) => {
     } catch(err) {
         response.status(500).send(new StockErrorHandler(`Server error occured, could not login: ${err.message}`));
     }
+}
+
+exports.logout = async(request, response) => {
+    try {        
+        //check for basic auth header
+        if (!request.headers.authorization) throw new Error('Missing Authorization Header');
+    
+        const sessionId = request.headers.authorization.split(' ')[1];
+        await db.destroyUserSession(sessionId);
+    
+        response.status(200).send({success: true});
+    } catch (error) {
+        response.status(500).send(new StockErrorHandler(`Server error occured, could not logout: ${err.message}`));
+    }
+
 }

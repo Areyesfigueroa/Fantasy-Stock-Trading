@@ -54,16 +54,30 @@ const fetchFakeData2 = async () => {
 }
 
 //Fetching from Express Internal API.
-const postData = (url='', data={}) => {
+const postData = (url='', data={}, bearerToken='') => {
     return fetch(url, {
         method: 'POST',
         mode: 'cors',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authorization': bearerToken ? `Bearer ${bearerToken}`:''
         },
         redirect: 'follow',
         referrerPolicy: 'no-referrer',
         body: JSON.stringify(data)
+    });
+}
+
+const fetchData = (url='', bearerToken='') => {
+    return fetch(url, {
+        method: 'GET',
+        mode: 'cors',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': bearerToken ? `Bearer ${bearerToken}`:''
+        },
+        redirect: 'follow',
+        referrerPolicy: 'no-referrer',
     });
 }
 
@@ -81,6 +95,17 @@ const registerUser = async (email, firstName, lastName, password, termsCheck) =>
 const loginUser = async (email, password) => {
     const response = await postData(`/api/auth/login/`, { email, password });
     
+    if(!response.ok) {
+        const data = await response.json();
+        throw new Error(data.errorMessage);
+    }
+
+    return await response.json();
+}
+
+const logoutUser = async(sessionId) => {
+    const response = await fetchData(`api/auth/logout/`, sessionId);
+
     if(!response.ok) {
         const data = await response.json();
         throw new Error(data.errorMessage);
@@ -111,4 +136,26 @@ const getStockHistory = async (symbol) => {
     return await response.json();
 }
 
-export { fetchFakeData, fetchFakeData2, registerUser, loginUser, searchBySymbol, getStockHistory }
+const buyCompanyShares = async (sessionId, symbol, shareUnits) => {
+    const response = await postData(`/api/stocks/transaction/buy`, {symbol, shareUnits}, sessionId);
+
+    if(!response.ok) {
+        const data = await response.json();
+        throw new Error(data.errorMessage);
+    }
+
+    return await response.json();
+}
+
+
+
+export { 
+    fetchFakeData, 
+    fetchFakeData2, 
+    registerUser, 
+    loginUser, 
+    logoutUser,
+    searchBySymbol, 
+    getStockHistory,
+    buyCompanyShares
+ }

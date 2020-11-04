@@ -6,7 +6,7 @@ const SharesForm = (props) => {
         <Form style={props.style}>
             <Form.Group controlId="sharesForm">
                 <Form.Label>{`Number of shares at: $${props.price}`}</Form.Label>
-                <Form.Control type="number" placeholder="0"/>
+                <Form.Control type="number" defaultValue={0} ref={props.inputRef}/>
             </Form.Group>
         </Form>
     );
