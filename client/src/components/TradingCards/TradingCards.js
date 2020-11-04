@@ -8,7 +8,7 @@ const TradingCards = (props) => {
                 <TradingCard 
                     key={el.id}
                     title={el.companyName}
-                    subtitle={el.companySubtitle}
+                    subtitle={el.symbol}
                     price={el.currentPrice}
                     percentage={el.percentChange}
                     daily={el.dailyGainLoss}

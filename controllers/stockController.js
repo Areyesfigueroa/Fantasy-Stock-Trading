@@ -1,6 +1,7 @@
 const axios = require('../axios').instance;
-const StockErrorHandler = require('../error/StockErrorHandler');
+const db = require('../db/stocks');
 const utils = require('../utils');
+const StockErrorHandler = require('../error/StockErrorHandler');
 require('dotenv').config();
 
 exports.searchBySymbol = (request, response) => {
@@ -9,6 +10,7 @@ exports.searchBySymbol = (request, response) => {
     axios.get(`stock/${data.symbol}/quote?token=${process.env.API_SECRET_TOKEN}`)
     .then((res) => {
         const data = {
+            id: res.data.symbol,
             companyName: res.data.companyName,
             symbol: res.data.symbol,
             currentPrice: res.data.latestPrice,
@@ -54,10 +56,6 @@ exports.getStockHistory = (request, response) => {
 
         response.status(500).send(new StockErrorHandler(errorMessage));
     })
-}
-
-exports.loadSavedStocks = () => {
-    
 }
 
 exports.buyShares = (request, response) => {

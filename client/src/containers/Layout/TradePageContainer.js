@@ -4,14 +4,14 @@ import { useHistory } from 'react-router';
 import UserSessionContext from '../../context/UserSessionContext';
 import TradePage from '../../components/Layout/TradePage/TradePage';
 
-import { fetchFakeData2, searchBySymbol, getStockHistory } from '../../http';
+import { searchBySymbol, getStockHistory } from '../../http';
 
 const TradePageContainer = () => {
 
     const userSession = useContext(UserSessionContext());
     const history = useHistory();
 
-    const [savedStocks, setSavedStocks]=useState(null); //load stocks from database. 
+    const [savedStocks, setSavedStocks]=useState([]); //load stocks from database. 
     const [searchResult, setSearchResult]=useState(null); 
     const [stockHistory, setStockHistory]=useState(null);
     const [loadingStocks, setLoadingStocks]=useState(true);
@@ -19,15 +19,20 @@ const TradePageContainer = () => {
     
     useEffect(() => {
         if(!userSession.session) history.push('/login');
-
-        fetchFakeData2()
-        .then((res) => {
-            setSavedStocks(res);
-            setLoadingStocks(false);
-        })
-        .catch((err) => console.log(err.message));
+        setInitialStocks();
     }, []);
 
+    const setInitialStocks = async () => {
+        const initialStocks = ['SPY', 'DIA', 'IWM'];
+        let stocks = [];
+        for(let i = 0; i < initialStocks.length; i++) {
+            stocks = savedStocks;
+            stocks.push(await searchBySymbol(initialStocks[i]));
+            setSavedStocks(stocks);
+        }
+
+        setLoadingStocks(false);
+    }
 
     const handleSearch = (searchTerm) => {
         setLoadingSearchRes(true);
