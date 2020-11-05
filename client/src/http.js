@@ -147,8 +147,6 @@ const buyCompanyShares = async (sessionId, symbol, shareUnits) => {
     return await response.json();
 }
 
-
-
 export { 
     fetchFakeData, 
     fetchFakeData2, 

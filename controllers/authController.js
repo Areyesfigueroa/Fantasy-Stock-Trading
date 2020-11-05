@@ -45,7 +45,7 @@ exports.logout = async(request, response) => {
     
         response.status(200).send({success: true});
     } catch (error) {
-        response.status(500).send(new StockErrorHandler(`Server error occured, could not logout: ${err.message}`));
+        response.status(500).send(new StockErrorHandler(`Server error occured, could not logout: ${error.message}`));
     }
 
 }

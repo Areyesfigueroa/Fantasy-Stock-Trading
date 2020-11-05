@@ -16,9 +16,10 @@ const NavigationItems = () => {
     const logout = () => {
         logoutUser(userSession.session.sessionId)
         .then(res => {
-            console.log(res);
-            //Delete localStorage value
-            //history.go(0);
+            if(!res.success) throw new Error("Logout Failed");
+            
+            localStorage.removeItem("userSession");
+            history.go(0);
         })
         .catch(err => console.log(err.message));
     }

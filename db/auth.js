@@ -59,7 +59,6 @@ module.exports = {
     },
 
     destroyUserSession: async(sessionID) => {
-        const { rows } = await db.query("DELETE FROM user_sessions WHERE id!=$1", [sessionID]);
-        if(!rows[0]) throw new Error("Session not found");
+        await db.query("DELETE FROM user_sessions WHERE id=$1", [sessionID]);
     }
 };
