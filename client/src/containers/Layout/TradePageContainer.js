@@ -4,7 +4,7 @@ import { useHistory } from 'react-router';
 import UserSessionContext from '../../context/UserSessionContext';
 import TradePage from '../../components/Layout/TradePage/TradePage';
 
-import { searchBySymbol, getStockHistory, buyCompanyShares } from '../../http';
+import { searchBySymbol, getStockHistory, buyCompanyShares, logoutUser } from '../../http';
 
 const TradePageContainer = () => {
 
@@ -23,15 +23,19 @@ const TradePageContainer = () => {
     }, []);
 
     const setInitialStocks = async () => {
-        const initialStocks = ['SPY', 'DIA', 'IWM'];
-        let stocks = [];
-        for(let i = 0; i < initialStocks.length; i++) {
-            stocks = savedStocks;
-            stocks.push(await searchBySymbol(initialStocks[i]));
-            setSavedStocks(stocks);
+        try {            
+            const initialStocks = ['SPY', 'DIA', 'IWM'];
+            let stocks = [];
+            for(let i = 0; i < initialStocks.length; i++) {
+                stocks = savedStocks;
+                stocks.push(await searchBySymbol(initialStocks[i]));
+                setSavedStocks(stocks);
+            }
+    
+            setLoadingStocks(false);
+        } catch (error) {
+            console.log(error.message);
         }
-
-        setLoadingStocks(false);
     }
 
     const handleSearch = (searchTerm) => {
@@ -60,14 +64,16 @@ const TradePageContainer = () => {
         });
     }
 
-    const buyShares = (symbol, shareUnits) => {
-        buyCompanyShares(symbol, shareUnits)
-        .then(res => {
-            console.log(res);
-        })
-        .catch(err => {
-            console.log(err);
-        });
+    const buyShares = async (symbol, shareUnits) => {
+        try {
+            const response = await buyCompanyShares(symbol, shareUnits);
+            if(response.hasExpired) await logoutUser();
+
+            console.log(response) //use toast
+            
+        } catch (error) {
+            console.log(error.message);
+        }
     }
 
     return (

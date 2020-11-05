@@ -1,5 +1,3 @@
-import { useHistory } from 'react-router';
-
 const dummyData = {
     companyName: "SPDR S&P 500 ETF Trust",
     companySubtitle: "SPY",
@@ -107,16 +105,16 @@ const loginUser = async (email, password) => {
 
 const logoutUser = async() => {
     const userSession = JSON.parse(localStorage.getItem('userSession'));
+
     const response = await fetchData(`api/auth/logout/`, userSession.sessionId);
 
     if(!response.ok) {
         const data = await response.json();
         throw new Error(data.errorMessage);
     }
-    const history = useHistory();
-    // localStorage.removeItem("userSession");
-    
-    return await response.json();
+
+    localStorage.removeItem("userSession");
+    window.location.reload();
 }
 
 const searchBySymbol = async (symbol) => {
@@ -149,8 +147,6 @@ const buyCompanyShares = async (symbol, shareUnits) => {
         const data = await response.json();
         throw new Error(data.errorMessage);
     }
-
-    if(response.hasExpired) console.log("Logout user");
 
     return await response.json();
 }
