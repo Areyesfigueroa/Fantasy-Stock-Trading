@@ -41,6 +41,7 @@ const LoginFormContainer = (props) => {
             console.log("Login");
             userSession.setSession(res);
             history.push('/trade');
+            history.go(0);
         })
         .catch(error => {
             setSubmitErrorMessage(error.message);

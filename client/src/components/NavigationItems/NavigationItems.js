@@ -18,7 +18,10 @@ const NavigationItems = () => {
         .then(res => {
             if(!res.success) throw new Error("Logout Failed");
             
+            userSession.setSession(null);
             localStorage.removeItem("userSession");
+            
+            history.push('/trade');
             history.go(0);
         })
         .catch(err => console.log(err.message));
