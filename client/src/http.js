@@ -103,8 +103,9 @@ const loginUser = async (email, password) => {
     return await response.json();
 }
 
-const logoutUser = async(sessionId) => {
-    const response = await fetchData(`api/auth/logout/`, sessionId);
+const logoutUser = async() => {
+    const userSession = JSON.parse(localStorage.getItem('userSession'));
+    const response = await fetchData(`api/auth/logout/`, userSession.sessionId);
 
     if(!response.ok) {
         const data = await response.json();
@@ -136,13 +137,16 @@ const getStockHistory = async (symbol) => {
     return await response.json();
 }
 
-const buyCompanyShares = async (sessionId, symbol, shareUnits) => {
-    const response = await postData(`/api/stocks/transaction/buy`, {symbol, shareUnits}, sessionId);
+const buyCompanyShares = async (symbol, shareUnits) => {
+    const userSession = JSON.parse(localStorage.getItem('userSession'));
+    const response = await postData(`/api/stocks/transaction/buy`, {symbol, shareUnits}, userSession.sessionId);
 
     if(!response.ok) {
         const data = await response.json();
         throw new Error(data.errorMessage);
     }
+
+    if(response.hasExpired) console.log("Logout user");
 
     return await response.json();
 }

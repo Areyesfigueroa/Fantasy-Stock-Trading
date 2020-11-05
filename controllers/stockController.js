@@ -68,14 +68,14 @@ exports.buyShares = async (request, response) => {
 
         const sessionId = request.headers.authorization.split(' ')[1];
         const hasExpired = await authDB.hasUserSessionExpired(sessionId);
+        const user = await authDB.getUserBySessionID(sessionId);
 
-        // if(hasExpired) //Log out user
-
+        if(hasExpired) response.send({ hasExpired });
+        
         //upsert to database.
-        //await db.upsertStocks(body.userID, body.symbol, body.shareUnits);
-        response.send({ success: true, body, hasExpired});
+        await stocksDB.upsertStocks(user.user_id, body.symbol, body.shareUnits);
+        response.send({ success: true, hasExpired});
     } catch(error) {
-        console.log(error.message);
-        response.status(500).send(new StockErrorHandler(error.message));
+        response.status(500).send(new StockErrorHandler(`Could not update/insert the stocks table: ${error.message}`));
     }
 }

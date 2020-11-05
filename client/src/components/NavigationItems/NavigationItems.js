@@ -14,7 +14,7 @@ const NavigationItems = () => {
     const history = useHistory();
 
     const logout = () => {
-        logoutUser(userSession.session.sessionId)
+        logoutUser()
         .then(res => {
             if(!res.success) throw new Error("Logout Failed");
             
