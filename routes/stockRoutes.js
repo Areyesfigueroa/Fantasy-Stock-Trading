@@ -7,8 +7,7 @@ router.get('/search/:symbol', stockController.searchBySymbol);
 router.get('/search/:symbol/history', stockController.getStockHistory);
 
 router.post('/transaction/buy', stockController.buyShares);
-// router.get('/content/tweets/:query/:type/:count', contentSearchRoutes.searchByContent);
-// router.get('/content/nextTweets/:nextResultsURL', contentSearchRoutes.searchByContentNextResults);
+router.post('/transaction/sell', stockController.sellShares);
 
 module.exports = router;
 

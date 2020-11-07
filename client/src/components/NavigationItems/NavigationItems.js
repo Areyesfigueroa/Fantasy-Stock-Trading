@@ -11,7 +11,6 @@ import { logoutUser } from '../../http';
 const NavigationItems = () => {
 
     const userSession = useContext(UserSessionContext());
-    const history = useHistory();
 
     return (
         <Nav className="mr-sm-2">

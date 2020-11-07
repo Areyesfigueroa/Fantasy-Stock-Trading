@@ -79,3 +79,25 @@ exports.buyShares = async (request, response) => {
         response.status(500).send(new StockErrorHandler(`Could not update/insert the stocks table: ${error.message}`));
     }
 }
+
+exports.sellShares = async (request, response) => {
+    try {
+        const body = request.body;
+
+        // check for basic auth header
+        if (!request.headers.authorization) throw new Error('Missing Authorization Header');
+
+        const sessionId = request.headers.authorization.split(' ')[1];
+        const hasExpired = await authDB.hasUserSessionExpired(sessionId);
+        const user = await authDB.getUserBySessionID(sessionId);
+
+        if(hasExpired) response.send({ hasExpired });
+
+        //reduce shares db logic
+        await stocksDB.reduceShareUnits(user.user_id, body.symbol, body.shareUnits);
+        response.send({ success: true, hasExpired });
+
+    } catch (error) {
+        response.status(500).send(new StockErrorHandler(`Could not reduce the shares on the stocks table: ${error.message}`));
+    }
+}

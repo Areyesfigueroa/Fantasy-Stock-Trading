@@ -28,6 +28,7 @@ const TradePage = (props) => {
                     percentage={props.searchResult.percentChange}
                     daily={props.searchResult.dailyGainLoss}
                     buy={props.buy}
+                    sell={props.sell}
                 /> : null}
 
                 {/* Chart */}
@@ -40,7 +41,7 @@ const TradePage = (props) => {
                     hAxisTitle={"Time"}
                     vAxisTitle={"Price"}
                 /> : null}
-                {props.loadingStocks ? <LoadingSpinner />:<TradingCards data={props.stocks} buy={props.buy}/>}
+                {props.loadingStocks ? <LoadingSpinner />:<TradingCards data={props.stocks} buy={props.buy} sell={props.sell}/>}
             </Container>
         </div>
     );

@@ -4,7 +4,7 @@ import { useHistory } from 'react-router';
 import UserSessionContext from '../../context/UserSessionContext';
 import TradePage from '../../components/Layout/TradePage/TradePage';
 
-import { searchBySymbol, getStockHistory, buyCompanyShares, logoutUser } from '../../http';
+import { searchBySymbol, getStockHistory, buyCompanyShares, sellCompanyShares, logoutUser } from '../../http';
 
 const TradePageContainer = () => {
 
@@ -76,6 +76,17 @@ const TradePageContainer = () => {
         }
     }
 
+    const sellShares = async (symbol, shareUnits) => {
+        try {
+            const response = await sellCompanyShares(symbol, shareUnits)
+            if(response.hasExpired) await logoutUser();
+
+            console.log(response);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     return (
         <TradePage
             search={handleSearch}
@@ -85,6 +96,7 @@ const TradePageContainer = () => {
             loadingStocks={loadingStocks}
             loadingSearchRes={loadingSearchRes}
             buy={buyShares}
+            sell={sellShares}
         />
     );
 };

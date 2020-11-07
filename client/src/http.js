@@ -151,6 +151,18 @@ const buyCompanyShares = async (symbol, shareUnits) => {
     return await response.json();
 }
 
+const sellCompanyShares = async(symbol, shareUnits) => {
+    const userSession = JSON.parse(localStorage.getItem('userSession'));
+    const response = await postData(`/api/stocks/transaction/sell`, {symbol, shareUnits}, userSession.sessionId);
+
+    if(!response.ok) {
+        const data = await response.json();
+        throw new Error(data.errorMessage);
+    }
+
+    return await response.json();
+}
+
 export { 
     fetchFakeData, 
     fetchFakeData2, 
@@ -159,5 +171,6 @@ export {
     logoutUser,
     searchBySymbol, 
     getStockHistory,
-    buyCompanyShares
+    buyCompanyShares,
+    sellCompanyShares
  }
