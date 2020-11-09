@@ -3,16 +3,18 @@ import InputGroup from 'react-bootstrap/InputGroup';
 import Button from 'react-bootstrap/Button';
 import classes from './CardHeader.module.css';
 
-const CardHeader = (props) => {
+const TradingCardHeader = (props) => {
     return (
         <div className={classes.CardHeader}>
             <strong>{props.title}</strong>
+
             <InputGroup className="justify-content-end">
-                <Button variant="outline-primary" onClick={props.handleShowBuyModal}>Buy</Button>
-                <Button variant="outline-primary" onClick={props.handleShowSellModal}>Sell</Button>
+                {props.buttonList.map((btn, i) => (
+                    <Button key={`${i}-${btn.text}`} variant="outline-primary" onClick={btn.click}>{btn.text}</Button>
+                ))}
             </InputGroup>
         </div>
     );
 };
 
-export default CardHeader;
+export default TradingCardHeader;

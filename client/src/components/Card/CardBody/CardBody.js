@@ -9,9 +9,13 @@ const CardBody = (props) => {
     };
     return (
         <div className={classes.CardBody}>
-            <CardItem style={cardStyle} title={"Current Price:"} subtitle={`$${props.price}`}/>
-            <CardItem style={cardStyle} title={"Percent Change:"} subtitle={`${props.percentage}%`}/>
-            <CardItem style={{ height: "90px" }} title={"Daily Gain/Loss:"} subtitle={`$${props.daily}`}/>
+            {props.items.map((item, i) => (
+                <CardItem 
+                style={i+1 !== props.items.length ? cardStyle: { height: "90px" }} //last one is different 
+                key={`${i}-${item.subtitle}`}
+                title={item.title} 
+                subtitle={item.subtitle} />
+            ))}
         </div>
     );
 };

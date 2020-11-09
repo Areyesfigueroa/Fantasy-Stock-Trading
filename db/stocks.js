@@ -15,5 +15,12 @@ module.exports = {
         RETURNING share_units`;
 
         await db.query(query, [shareUnits, userID, symbol]);
+    },
+
+    getAllStocks: async(userID) => {
+        const query = `SELECT company_symbol, share_units FROM stocks WHERE user_id=$1`;
+
+        const { rows } =  await db.query(query, [userID]);
+        return rows;
     }
 };

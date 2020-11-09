@@ -89,15 +89,33 @@ exports.sellShares = async (request, response) => {
 
         const sessionId = request.headers.authorization.split(' ')[1];
         const hasExpired = await authDB.hasUserSessionExpired(sessionId);
-        const user = await authDB.getUserBySessionID(sessionId);
-
+        
         if(hasExpired) response.send({ hasExpired });
-
-        //reduce shares db logic
+        
+        const user = await authDB.getUserBySessionID(sessionId);
         await stocksDB.reduceShareUnits(user.user_id, body.symbol, body.shareUnits);
         response.send({ success: true, hasExpired });
 
     } catch (error) {
         response.status(500).send(new StockErrorHandler(`Could not reduce the shares on the stocks table: ${error.message}`));
+    }
+}
+
+exports.getStocks = async (request, response) => {
+    try {
+        // check for basic auth header
+        if (!request.headers.authorization) throw new Error('Missing Authorization Header');
+
+        const sessionId = request.headers.authorization.split(' ')[1];
+        const hasExpired = await authDB.hasUserSessionExpired(sessionId);
+        
+        if(hasExpired) response.send({ hasExpired });
+        
+        const user = await authDB.getUserBySessionID(sessionId);
+        const res = await stocksDB.getAllStocks(user.user_id);
+
+        response.send(res);
+    } catch (error) {
+        response.status(500).send(new StockErrorHandler(`Could not retrive saved stocks: ${error.message}`));
     }
 }

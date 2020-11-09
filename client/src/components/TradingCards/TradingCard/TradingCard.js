@@ -1,21 +1,33 @@
 import React, { useRef } from 'react';
 import classes from './TradingCard.module.css';
-import Card from 'react-bootstrap/Card';
+// import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
 import Modal from '../../Modal/Modal';
 import useModal from '../../../hooks/useModal';
-import CardHeader from './CardHeader/CardHeader';
-import CardBody from './CardBody/CardBody';
+// import CardHeader from '../../Card/CardHeader/CardHeader';
+// import CardBody from '../../Card/CardBody/CardBody';
 import SharesForm from '../../Forms/SharesForm/SharesForm';
+import Card from '../../Card/Card';
 
 const TradingCard = (props) => {
     const title = `${props.title}: ${props.subtitle}`;
-    
+
     const buyModal = useModal();
     const sellModal = useModal();
 
     const buyInputRef = useRef(null);
     const sellInputRef = useRef(null);
+
+    const cardButtonList = [
+        { text: "Buy", click: buyModal.handleShowModal },
+        { text: "Sell", click: sellModal.handleShowModal }
+    ];
+
+    const cardItems = [
+        { title: "Current Price", subtitle: `$${props.price}` },
+        { title: "Percent Change", subtitle: `${props.percentage}%` },
+        { title: "Daily Gain/Loss", subtitle:  `$${props.daily}` }
+    ];
 
     const buy = () => {
         props.buy(props.subtitle, buyInputRef.current.value);
@@ -29,17 +41,7 @@ const TradingCard = (props) => {
 
     return (
         <div className={classes.TradingCard}>
-            <Card style={{ width: "100%" }}>
-                <Card.Title>
-                    <CardHeader 
-                        title={title} 
-                        handleShowBuyModal={buyModal.handleShowModal} 
-                        handleShowSellModal={sellModal.handleShowModal}/>
-                </Card.Title>
-                <Card.Body>
-                    <CardBody price={props.price} percentage={props.percentage} daily={props.daily}/>
-                </Card.Body>
-            </Card>
+            <Card title={title} buttonList={cardButtonList} itemList={cardItems} />
 
             <Modal 
                 show={buyModal.show} 
