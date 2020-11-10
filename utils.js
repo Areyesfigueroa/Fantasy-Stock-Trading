@@ -8,7 +8,6 @@ exports.makeid = (length) => {
    return result;
 }
 
-
 const formatDigits = (num) => {
    if(num.toString().length >= 2) return num;
    return ("0" + num).slice(-2);

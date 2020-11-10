@@ -5,20 +5,23 @@ const utils = require('../utils');
 const StockErrorHandler = require('../error/StockErrorHandler');
 require('dotenv').config();
 
-exports.searchBySymbol = (request, response) => {
-    const data = request.params;
+const formatStockData = (res) => {
+    const data = {
+        id: res.data.symbol,
+        companyName: res.data.companyName,
+        symbol: res.data.symbol,
+        currentPrice: res.data.latestPrice,
+        percentChange: (res.data.changePercent * 100).toFixed(3),
+        dailyGainLoss: res.data.change
+    };
+    return data;
+}
+
+exports.searchBySymbol = async (request, response) => {
 
     axios.get(`stock/${data.symbol}/quote?token=${process.env.API_SECRET_TOKEN}`)
     .then((res) => {
-        const data = {
-            id: res.data.symbol,
-            companyName: res.data.companyName,
-            symbol: res.data.symbol,
-            currentPrice: res.data.latestPrice,
-            percentChange: (res.data.changePercent * 100).toFixed(3),
-            dailyGainLoss: res.data.change
-        };
-        response.send(data);
+        response.send(formatStockData(res));
     })
     .catch(error => {
         let errorMessage = error.message;
@@ -112,9 +115,23 @@ exports.getStocks = async (request, response) => {
         if(hasExpired) response.send({ hasExpired });
         
         const user = await authDB.getUserBySessionID(sessionId);
-        const res = await stocksDB.getAllStocks(user.user_id);
+        const stocksRes = await stocksDB.getAllStocks(user.user_id);
+        
+        //Format data.
+        let data = [];
+        for (let i = 0; i < stocksRes.length; i++) {
+            const searchRes = formatStockData(await axios.get(`stock/${stocksRes[i].company_symbol}/quote?token=${process.env.API_SECRET_TOKEN}`));
+            data.push({
+                companyName: searchRes.companyName,
+                companySymbol: stocksRes[i].company_symbol,
+                holdingValue: stocksRes[i].share_units * searchRes.currentPrice,
+                shares: stocksRes[i].share_units,
+                lastPrice: searchRes.currentPrice,
+                percentChange: searchRes.percentChange
+            });
+        }
 
-        response.send(res);
+        response.send(data);
     } catch (error) {
         response.status(500).send(new StockErrorHandler(`Could not retrive saved stocks: ${error.message}`));
     }
