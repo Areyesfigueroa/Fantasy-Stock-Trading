@@ -1,4 +1,6 @@
-import React, { useRef } from 'react';
+import React, { useRef, useEffect } from 'react';
+import { useHistory } from 'react-router';
+
 import InputGroup from 'react-bootstrap/InputGroup';
 import Button from 'react-bootstrap/Button';
 import FormControl from 'react-bootstrap/FormControl';
@@ -6,6 +8,15 @@ import classes from './Searchbar.module.css';
 
 const Searchbar = (props) => {
     const searchValueRef = useRef(null);
+    const history = useHistory();
+
+    useEffect(() => {
+        if(!history.location.search) return;
+
+        const params = new URLSearchParams(history.location.search);
+        searchValueRef.current.defaultValue = params.get('q');
+    }, []);
+
     return (
         <div className={classes.Searchbar}>
             <InputGroup className="mb-3">

@@ -1,11 +1,8 @@
 import React, { useRef } from 'react';
 import classes from './TradingCard.module.css';
-// import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
 import Modal from '../../Modal/Modal';
 import useModal from '../../../hooks/useModal';
-// import CardHeader from '../../Card/CardHeader/CardHeader';
-// import CardBody from '../../Card/CardBody/CardBody';
 import SharesForm from '../../Forms/SharesForm/SharesForm';
 import Card from '../../Card/Card';
 

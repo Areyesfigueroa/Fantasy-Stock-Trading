@@ -20,6 +20,11 @@ const TradePageContainer = () => {
     useEffect(() => {
         if(!userSession.session) history.push('/login');
         setInitialStocks();
+
+        if(!history.location.search) return;
+
+        const params = new URLSearchParams(history.location.search);
+        handleSearch(params.get('q'));
     }, []);
 
     const setInitialStocks = async () => {
@@ -42,7 +47,6 @@ const TradePageContainer = () => {
         setLoadingSearchRes(true);
         searchBySymbol(searchTerm)
         .then((res) => {
-            console.log(res);
             setLoadingSearchRes(false);
             setSearchResult(res);
         })
@@ -68,9 +72,6 @@ const TradePageContainer = () => {
         try {
             const response = await buyCompanyShares(symbol, shareUnits);
             if(response.hasExpired) await logoutUser();
-
-            console.log(response) //use toast
-            
         } catch (error) {
             console.log(error.message);
         }
@@ -80,8 +81,6 @@ const TradePageContainer = () => {
         try {
             const response = await sellCompanyShares(symbol, shareUnits)
             if(response.hasExpired) await logoutUser();
-
-            console.log(response);
         } catch (error) {
             console.log(error);
         }

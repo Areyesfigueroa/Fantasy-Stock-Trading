@@ -2,7 +2,7 @@ import React from 'react';
 import Card from 'react-bootstrap/Card';
 import ListGroup from 'react-bootstrap/ListGroup';
 
-const PortfolioCard = (props) => {
+const AccountData = (props) => {
     return (
         <Card style={{ width: '100%' }}>
             <Card.Header>
@@ -19,4 +19,4 @@ const PortfolioCard = (props) => {
     );
 };
 
-export default PortfolioCard;
+export default AccountData;

@@ -11,7 +11,7 @@ const PortfolioPageContainer = () => {
 
     const [portfolioHoldings, setPortfolioHoldings] = useState(null);
     const [portfolioHoldingsChart, setPorfolioHoldingsChart] = useState(null);
-    const [loadingChart, setLoadingChart] = useState(true);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         if (!userSession.session) history.push('/login');
@@ -42,11 +42,18 @@ const PortfolioPageContainer = () => {
 
             setPortfolioHoldings(portfolioHoldingsTemp);
             setPorfolioHoldingsChart(portfolioChart);
-            setLoadingChart(false);
+            setLoading(false);
 
         } catch (error) {
             console.log(error.message);
         }
+    }
+
+    const trade = (companySymbol) => {
+        history.push({
+            pathname: '/trade',
+            search: `?q=${companySymbol}`
+        });
     }
 
     return (
@@ -56,7 +63,8 @@ const PortfolioPageContainer = () => {
             totalAssetValue={0}
             holdings={portfolioHoldings}
             holdingsChart={portfolioHoldingsChart}
-            loadingChart={loadingChart}
+            loading={loading}
+            trade={trade}
         />
     );
 };
