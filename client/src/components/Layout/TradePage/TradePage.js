@@ -25,6 +25,7 @@ const TradePage = (props) => {
                     title={props.searchResult.companyName}
                     subtitle={props.searchResult.symbol}
                     price={props.searchResult.currentPrice}
+                    prevPrice={props.searchResult.prevClosedPrice}
                     percentage={props.searchResult.percentChange}
                     daily={props.searchResult.dailyGainLoss}
                     buy={props.buy}

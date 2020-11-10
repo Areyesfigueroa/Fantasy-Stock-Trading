@@ -5,6 +5,8 @@ import Modal from '../../Modal/Modal';
 import useModal from '../../../hooks/useModal';
 import SharesForm from '../../Forms/SharesForm/SharesForm';
 import Card from '../../Card/Card';
+import { getCardItemVariant, formatNumToCurrency } from '../../../utils';
+
 
 const TradingCard = (props) => {
     const title = `${props.title}: ${props.subtitle}`;
@@ -21,9 +23,23 @@ const TradingCard = (props) => {
     ];
 
     const cardItems = [
-        { title: "Current Price", subtitle: `$${props.price}` },
-        { title: "Percent Change", subtitle: `${props.percentage}%` },
-        { title: "Daily Gain/Loss", subtitle:  `$${props.daily}` }
+        { 
+            title: "Current Price", 
+            subtitle: formatNumToCurrency(props.price), 
+            variant: getCardItemVariant(props.price, props.prevPrice), 
+            compareTitle: "Previous Closed", 
+            compareValue: props.prevPrice 
+        },
+        { 
+            title: "Percent Change", 
+            subtitle: `${props.percentage}%`, 
+            variant: getCardItemVariant(props.percentage, 0)
+        },
+        { 
+            title: "Daily Gain/Loss", 
+            subtitle: formatNumToCurrency(props.daily),
+            variant: getCardItemVariant(props.daily, 0) 
+        },
     ];
 
     const buy = () => {

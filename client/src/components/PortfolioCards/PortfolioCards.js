@@ -10,8 +10,10 @@ const PortfolioCards = (props) => {
                 title={el.companyName}
                 subtitle={el.companySymbol}
                 holdingValue={el.holdingValue}
+                prevHoldingValue={el.prevHoldingValue}
                 shares={el.shares}
                 lastPrice={el.lastPrice}
+                prevPrice={el.prevClosedPrice}
                 percentChange={el.percentChange}
                 trade={props.trade} />
             ))}

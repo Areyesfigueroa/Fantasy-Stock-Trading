@@ -9,3 +9,15 @@
     margin: 0;
     padding: 0;
 }
+
+.success {
+    color: #03a82a;
+}
+
+.danger {
+    color: #da071c;
+}
+
+.small {
+    font-size: small;
+}

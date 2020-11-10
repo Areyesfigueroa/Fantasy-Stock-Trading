@@ -11,6 +11,7 @@ const formatStockData = (res) => {
         companyName: res.data.companyName,
         symbol: res.data.symbol,
         currentPrice: res.data.latestPrice,
+        prevClosedPrice: res.data.previousClose,
         percentChange: (res.data.changePercent * 100).toFixed(3),
         dailyGainLoss: res.data.change
     };
@@ -18,8 +19,8 @@ const formatStockData = (res) => {
 }
 
 exports.searchBySymbol = async (request, response) => {
-
-    axios.get(`stock/${data.symbol}/quote?token=${process.env.API_SECRET_TOKEN}`)
+    const params = request.params;
+    axios.get(`stock/${params.symbol}/quote?token=${process.env.API_SECRET_TOKEN}`)
     .then((res) => {
         response.send(formatStockData(res));
     })
@@ -125,8 +126,10 @@ exports.getStocks = async (request, response) => {
                 companyName: searchRes.companyName,
                 companySymbol: stocksRes[i].company_symbol,
                 holdingValue: stocksRes[i].share_units * searchRes.currentPrice,
+                prevHoldingValue: stocksRes[i].share_units * searchRes.prevClosedPrice,
                 shares: stocksRes[i].share_units,
                 lastPrice: searchRes.currentPrice,
+                prevClosedPrice: searchRes.prevClosedPrice,
                 percentChange: searchRes.percentChange
             });
         }

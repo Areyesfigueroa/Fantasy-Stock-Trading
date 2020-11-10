@@ -7,5 +7,11 @@ const formatNumToCurrency = (num) => {
  
      return formatter.format(num);
  }
+ 
+const getCardItemVariant = (currentValue, prevValue) => {
+  if(currentValue > prevValue) return "success";
+  if(currentValue < prevValue) return "danger";
+  return "";
+}
 
- export { formatNumToCurrency }
+ export { formatNumToCurrency, getCardItemVariant }

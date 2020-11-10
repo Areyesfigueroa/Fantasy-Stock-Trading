@@ -14,7 +14,10 @@ const CardBody = (props) => {
                 style={i+1 !== props.items.length ? cardStyle: { height: "90px" }} //last one is different 
                 key={`${i}-${item.subtitle}`}
                 title={item.title} 
-                subtitle={item.subtitle} />
+                subtitle={item.subtitle}
+                variant={item.variant}
+                compareTitle={item.compareTitle}
+                compareValue={item.compareValue} />
             ))}
         </div>
     );
