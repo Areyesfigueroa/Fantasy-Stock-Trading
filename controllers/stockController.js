@@ -1,6 +1,7 @@
 const axios = require('../axios').instance;
 const stocksDB = require('../db/stocks');
 const authDB = require('../db/auth');
+const portfolioDB = require('../db/porftolio');
 const utils = require('../utils');
 const StockErrorHandler = require('../error/StockErrorHandler');
 require('dotenv').config();
@@ -38,7 +39,10 @@ exports.getStockHistory = (request, response) => {
     const params = request.params;
     const interval = 60; //minutes
 
-    const date = utils.getLatestWeekday(); //YYYYMMDD
+    const today = new Date();
+    const yesterday = new Date();
+    yesterday.setDate(today.getDate() - 1);
+    const date = utils.getLatestWeekday(yesterday);
 
     axios.get(`stock/${params.symbol}/chart/dynamic/${date}?token=${process.env.API_SECRET_TOKEN}&chartInterval=${interval}`)
     .then(res => {
@@ -75,9 +79,13 @@ exports.buyShares = async (request, response) => {
         const user = await authDB.getUserBySessionID(sessionId);
 
         if(hasExpired) response.send({ hasExpired });
+
+        const { account_balance } = await portfolioDB.getAccountBalance(user.user_id);
+        const newBalance = parseFloat(account_balance - (body.unitPrice * body.shareUnits)).toFixed(2);
         
-        //upsert to database.
         await stocksDB.upsertStocks(user.user_id, body.symbol, body.shareUnits);
+        await portfolioDB.upsertPortfolio(user.user_id, newBalance);
+
         response.send({ success: true, hasExpired});
     } catch(error) {
         response.status(500).send(new StockErrorHandler(`Could not update/insert the stocks table: ${error.message}`));
@@ -93,11 +101,21 @@ exports.sellShares = async (request, response) => {
 
         const sessionId = request.headers.authorization.split(' ')[1];
         const hasExpired = await authDB.hasUserSessionExpired(sessionId);
-        
         if(hasExpired) response.send({ hasExpired });
-        
         const user = await authDB.getUserBySessionID(sessionId);
-        await stocksDB.reduceShareUnits(user.user_id, body.symbol, body.shareUnits);
+
+        //Update share units.
+        const newShareUnits = await stocksDB.reduceShareUnits(user.user_id, body.symbol, body.shareUnits);
+        if(newShareUnits === 0) {
+            await stocksDB.deleteStock(user.user_id, body.symbol);
+            throw new Error("Insufficient Shares");
+        }
+
+        //Update account balance.
+        const { account_balance } = await portfolioDB.getAccountBalance(user.user_id);
+        const newBalance = parseFloat(account_balance + (body.unitPrice * body.shareUnits)).toFixed(2);
+        await portfolioDB.upsertPortfolio(user.user_id, newBalance);
+
         response.send({ success: true, hasExpired });
 
     } catch (error) {

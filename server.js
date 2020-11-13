@@ -17,6 +17,9 @@ app.use("/api/auth/", authRoute);
 const stockRoute = require('./routes/stockRoutes');
 app.use("/api/stocks/", stockRoute);
 
+const portfolioRoute = require('./routes/portfolioRoutes');
+app.use("/api/portfolio/", portfolioRoute);
+
 //Catch All
 app.get('/*', (req, res) => {
     res.sendFile(path.join(__dirname, "client", "build", "index.html"));

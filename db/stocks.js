@@ -14,7 +14,14 @@ module.exports = {
         WHERE user_id=$2 AND company_symbol=$3 
         RETURNING share_units`;
 
-        await db.query(query, [shareUnits, userID, symbol]);
+        const { rows } = await db.query(query, [shareUnits, userID, symbol]);
+        return rows.length > 0 ? rows[0].shareUnits:0;
+    },
+
+    deleteStock: async(userID, symbol) => {
+        const query = `DELETE FROM stocks WHERE user_id=$1 AND company_symbol=$2`;
+
+        await db.query(query, [userID, symbol]);
     },
 
     getAllStocks: async(userID) => {

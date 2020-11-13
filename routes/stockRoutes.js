@@ -11,9 +11,4 @@ router.get('/all', stockController.getStocks);
 router.post('/transaction/buy', stockController.buyShares);
 router.post('/transaction/sell', stockController.sellShares);
 
-
 module.exports = router;
-
-
-
-

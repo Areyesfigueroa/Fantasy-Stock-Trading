@@ -3,7 +3,7 @@ import { useHistory } from 'react-router';
 
 import UserSessionContext from '../../context/UserSessionContext';
 import PortfolioPage from '../../components/Layout/PortfolioPage/PorfolioPage';
-import { getSavedStocks, logoutUser } from '../../http';
+import { getSavedStocks, logoutUser, getAccountBalance } from '../../http';
 import { formatNumToCurrency } from '../../utils';
 
 const PortfolioPageContainer = () => {
@@ -14,7 +14,7 @@ const PortfolioPageContainer = () => {
     const [portfolioHoldingsChart, setPorfolioHoldingsChart] = useState(null);
     const [loading, setLoading] = useState(true);
 
-    const [accountBalance, setAccountBalance] = useState(100000);
+    const [accountBalance, setAccountBalance] = useState(0);
     const [totalHoldingValue, setTotalHoldingValue] = useState(0);
     const [totalAssetValue, setTotalAssetValue] = useState(0);
 
@@ -33,7 +33,7 @@ const PortfolioPageContainer = () => {
 
             setPortfolioHoldings(savedStocks);
             setPorfolioHoldingsChart(portfolioChart);
-            setAccountInfo(savedStocks);
+            await setAccountInfo(savedStocks);
             setLoading(false);
 
         } catch (error) {
@@ -41,18 +41,26 @@ const PortfolioPageContainer = () => {
         }
     }
 
-    const setAccountInfo = (stocks) => {
-        let totalHoldings = 0;
-        stocks.forEach(stock => {
-            totalHoldings += stock.holdingValue;
-        });
+    const setAccountInfo = async (stocks) => {
+        try {
 
-        let totalBalance = accountBalance - totalHoldings;
-        let totalAssets = totalBalance + totalHoldings;
+            const response = await getAccountBalance();
+            if(isNaN(response.account_balance)) throw new Error("Total Balance not found");
 
-        setTotalHoldingValue(formatNumToCurrency(totalHoldings));
-        setAccountBalance(formatNumToCurrency(totalBalance));
-        setTotalAssetValue(formatNumToCurrency(totalAssets));
+            let totalHoldings = 0;
+            stocks.forEach(stock => {
+                totalHoldings += stock.holdingValue;
+            });
+
+            let totalAssets = +response.account_balance + totalHoldings;
+            
+            setTotalHoldingValue(formatNumToCurrency(totalHoldings));
+            setAccountBalance(formatNumToCurrency(response.account_balance));
+            setTotalAssetValue(formatNumToCurrency(totalAssets));
+        } catch (error) {
+            console.log(error.message);
+        }
+
     }
 
     const trade = (companySymbol) => {

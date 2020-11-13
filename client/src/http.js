@@ -84,9 +84,9 @@ const getStockHistory = async (symbol) => {
     return await response.json();
 }
 
-const buyCompanyShares = async (symbol, shareUnits) => {
+const buyCompanyShares = async (symbol, shareUnits, unitPrice) => {
     const userSession = JSON.parse(localStorage.getItem('userSession'));
-    const response = await postData(`/api/stocks/transaction/buy`, {symbol, shareUnits}, userSession.sessionId);
+    const response = await postData(`/api/stocks/transaction/buy`, {symbol, shareUnits, unitPrice}, userSession.sessionId);
 
     if(!response.ok) {
         const data = await response.json();
@@ -96,9 +96,9 @@ const buyCompanyShares = async (symbol, shareUnits) => {
     return await response.json();
 }
 
-const sellCompanyShares = async(symbol, shareUnits) => {
+const sellCompanyShares = async(symbol, shareUnits, unitPrice) => {
     const userSession = JSON.parse(localStorage.getItem('userSession'));
-    const response = await postData(`/api/stocks/transaction/sell`, {symbol, shareUnits}, userSession.sessionId);
+    const response = await postData(`/api/stocks/transaction/sell`, {symbol, shareUnits, unitPrice}, userSession.sessionId);
 
     if(!response.ok) {
         const data = await response.json();
@@ -120,6 +120,18 @@ const getSavedStocks = async() => {
     return await response.json();
 }
 
+const getAccountBalance = async() => {
+    const userSession = JSON.parse(localStorage.getItem('userSession'));
+    const response = await fetchData(`/api/portfolio/balance`, userSession.sessionId);
+
+    if(!response.ok) {
+        const data = await response.json();
+        throw new Error(data.errorMessage);
+    }
+
+    return await response.json();
+}
+
 export { 
     registerUser, 
     loginUser, 
@@ -128,5 +140,6 @@ export {
     getStockHistory,
     buyCompanyShares,
     sellCompanyShares,
-    getSavedStocks
+    getSavedStocks,
+    getAccountBalance
  }

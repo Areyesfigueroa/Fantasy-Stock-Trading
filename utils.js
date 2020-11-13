@@ -13,12 +13,11 @@ const formatDigits = (num) => {
    return ("0" + num).slice(-2);
 }
 
-exports.getLatestWeekday = () => {
-   const today = new Date();
-   while(today.getDay() === 0 || today.getDay() === 6) {
-     today.setDate(today.getDate() - 1);
+exports.getLatestWeekday = (fromDate) => {
+   while(fromDate.getDay() === 0 || fromDate.getDay() === 6) {
+      fromDate.setDate(fromDate.getDate() - 1);
    }
    
-   return `${today.getFullYear()}${formatDigits(today.getMonth() + 1)}${formatDigits(today.getDate())}`;
+   return `${fromDate.getFullYear()}${formatDigits(fromDate.getMonth() + 1)}${formatDigits(fromDate.getDate())}`;
  }
  

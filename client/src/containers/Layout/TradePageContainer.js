@@ -68,18 +68,18 @@ const TradePageContainer = () => {
         });
     }
 
-    const buyShares = async (symbol, shareUnits) => {
+    const buyShares = async (symbol, shareUnits, unitPrice) => {
         try {
-            const response = await buyCompanyShares(symbol, shareUnits);
+            const response = await buyCompanyShares(symbol, shareUnits, unitPrice);
             if(response.hasExpired) await logoutUser();
         } catch (error) {
             console.log(error.message);
         }
     }
 
-    const sellShares = async (symbol, shareUnits) => {
+    const sellShares = async (symbol, shareUnits, unitPrice) => {
         try {
-            const response = await sellCompanyShares(symbol, shareUnits)
+            const response = await sellCompanyShares(symbol, shareUnits, unitPrice)
             if(response.hasExpired) await logoutUser();
         } catch (error) {
             console.log(error);

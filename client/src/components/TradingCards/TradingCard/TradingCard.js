@@ -43,12 +43,12 @@ const TradingCard = (props) => {
     ];
 
     const buy = () => {
-        props.buy(props.subtitle, buyInputRef.current.value);
+        props.buy(props.subtitle, buyInputRef.current.value, isNaN(props.price) ? +props.price:props.price);
         buyModal.handleCloseModal();
     }
     
     const sell = () => {
-        props.sell(props.subtitle, sellInputRef.current.value);
+        props.sell(props.subtitle, sellInputRef.current.value, isNaN(props.price) ? +props.price:props.price);
         sellModal.handleCloseModal();
     }
 
