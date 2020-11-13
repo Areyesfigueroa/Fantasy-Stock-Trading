@@ -99,17 +99,19 @@ exports.sellShares = async (request, response) => {
         // check for basic auth header
         if (!request.headers.authorization) throw new Error('Missing Authorization Header');
 
+        //Auth Request
         const sessionId = request.headers.authorization.split(' ')[1];
         const hasExpired = await authDB.hasUserSessionExpired(sessionId);
         if(hasExpired) response.send({ hasExpired });
         const user = await authDB.getUserBySessionID(sessionId);
 
+        //Check how many shares we have left
+        const savedShareUnits = await stocksDB.getShareUnits(user.user_id, body.symbol);
+        if((savedShareUnits - body.shareUnits) < 0) throw new Error("Insufficient Share Units");
+
         //Update share units.
         const newShareUnits = await stocksDB.reduceShareUnits(user.user_id, body.symbol, body.shareUnits);
-        if(newShareUnits === 0) {
-            await stocksDB.deleteStock(user.user_id, body.symbol);
-            throw new Error("Insufficient Shares");
-        }
+        if(newShareUnits === 0) await stocksDB.deleteStock(user.user_id, body.symbol);
 
         //Update account balance.
         const { account_balance } = await portfolioDB.getAccountBalance(user.user_id);
@@ -119,7 +121,8 @@ exports.sellShares = async (request, response) => {
         response.send({ success: true, hasExpired });
 
     } catch (error) {
-        response.status(500).send(new StockErrorHandler(`Could not reduce the shares on the stocks table: ${error.message}`));
+        console.log(error);
+        response.status(500).send(new StockErrorHandler(`Could not reduce the shares: ${error.message}`));
     }
 }
 
