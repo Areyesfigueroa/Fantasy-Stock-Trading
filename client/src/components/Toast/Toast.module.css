@@ -1,0 +1,11 @@
+.Toast {
+    position: fixed;
+    min-height: 100px;
+    top: 20px;
+    left: calc(50% - (350px/2));
+    z-index: 999;
+}
+
+.fullWidth {
+    width: 350px;
+}

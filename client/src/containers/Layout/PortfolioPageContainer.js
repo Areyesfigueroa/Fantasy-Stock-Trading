@@ -3,12 +3,15 @@ import { useHistory } from 'react-router';
 
 import UserSessionContext from '../../context/UserSessionContext';
 import PortfolioPage from '../../components/Layout/PortfolioPage/PorfolioPage';
+import Toast from '../../components/Toast/Toast';
+import useToast from '../../hooks/useToast';
 import { getSavedStocks, logoutUser, getAccountBalance } from '../../http';
 import { formatNumToCurrency } from '../../utils';
 
 const PortfolioPageContainer = () => {
     const userSession = useContext(UserSessionContext());
     const history = useHistory();
+    const toast = useToast();
 
     const [portfolioHoldings, setPortfolioHoldings] = useState(null);
     const [portfolioHoldingsChart, setPorfolioHoldingsChart] = useState(null);
@@ -37,7 +40,7 @@ const PortfolioPageContainer = () => {
             setLoading(false);
 
         } catch (error) {
-            console.log(error.message);
+            toast.handleShow(error.message);
         }
     }
 
@@ -58,7 +61,7 @@ const PortfolioPageContainer = () => {
             setAccountBalance(formatNumToCurrency(response.account_balance));
             setTotalAssetValue(formatNumToCurrency(totalAssets));
         } catch (error) {
-            console.log(error.message);
+            toast.handleShow(error.message);
         }
 
     }
@@ -71,15 +74,18 @@ const PortfolioPageContainer = () => {
     }
 
     return (
-        <PortfolioPage
-            accountBalance={accountBalance}
-            totalHoldingValue={totalHoldingValue}
-            totalAssetValue={totalAssetValue}
-            holdings={portfolioHoldings}
-            holdingsChart={portfolioHoldingsChart}
-            loading={loading}
-            trade={trade}
-        />
+        <div>
+            <Toast title={'Oops! We ran into an issue'} show={toast.show} close={toast.handleClose}>{toast.message}</Toast>
+            <PortfolioPage
+                accountBalance={accountBalance}
+                totalHoldingValue={totalHoldingValue}
+                totalAssetValue={totalAssetValue}
+                holdings={portfolioHoldings}
+                holdingsChart={portfolioHoldingsChart}
+                loading={loading}
+                trade={trade}
+            />
+        </div>
     );
 };
 

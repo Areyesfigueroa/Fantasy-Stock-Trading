@@ -3,6 +3,8 @@ import { useHistory } from 'react-router';
 
 import UserSessionContext from '../../context/UserSessionContext';
 import TradePage from '../../components/Layout/TradePage/TradePage';
+import Toast from '../../components/Toast/Toast';
+import useToast from '../../hooks/useToast';
 
 import { searchBySymbol, getStockHistory, buyCompanyShares, sellCompanyShares, logoutUser } from '../../http';
 
@@ -10,6 +12,7 @@ const TradePageContainer = () => {
 
     const userSession = useContext(UserSessionContext());
     const history = useHistory();
+    const toast = useToast();
 
     const [savedStocks, setSavedStocks]=useState([]); //load stocks from database. 
     const [searchResult, setSearchResult]=useState(null); 
@@ -36,10 +39,9 @@ const TradePageContainer = () => {
                 stocks.push(await searchBySymbol(initialStocks[i]));
                 setSavedStocks(stocks);
             }
-    
             setLoadingStocks(false);
         } catch (error) {
-            console.log(error.message);
+            toast.handleShow(error.message);
         }
     }
 
@@ -51,8 +53,8 @@ const TradePageContainer = () => {
             setSearchResult(res);
         })
         .catch(err => {
-            console.log(err);
             setSearchResult(null);
+            toast.handleShow(err);
         });
 
         getStockHistory(searchTerm)
@@ -63,8 +65,8 @@ const TradePageContainer = () => {
             setStockHistory({ date: res[0].date, chartData });
         })
         .catch(err => {
-            console.log(err);
             setStockHistory(null);
+            toast.handleShow(err);
         });
     }
 
@@ -73,7 +75,7 @@ const TradePageContainer = () => {
             const response = await buyCompanyShares(symbol, shareUnits, unitPrice);
             if(response.hasExpired) await logoutUser();
         } catch (error) {
-            console.log(error.message);
+            toast.handleShow(error.message);
         }
     }
 
@@ -82,21 +84,24 @@ const TradePageContainer = () => {
             const response = await sellCompanyShares(symbol, shareUnits, unitPrice)
             if(response.hasExpired) await logoutUser();
         } catch (error) {
-            console.log(error);
+            toast.handleShow(error.message);
         }
     }
 
     return (
-        <TradePage
-            search={handleSearch}
-            searchResult={searchResult}
-            stocks={savedStocks}
-            stockHistoryChart={stockHistory}
-            loadingStocks={loadingStocks}
-            loadingSearchRes={loadingSearchRes}
-            buy={buyShares}
-            sell={sellShares}
-        />
+        <div>
+            <Toast show={toast.show} close={toast.handleClose}>{toast.message}</Toast>
+            <TradePage
+                search={handleSearch}
+                searchResult={searchResult}
+                stocks={savedStocks}
+                stockHistoryChart={stockHistory}
+                loadingStocks={loadingStocks}
+                loadingSearchRes={loadingSearchRes}
+                buy={buyShares}
+                sell={sellShares}
+            />
+        </div>
     );
 };
 
