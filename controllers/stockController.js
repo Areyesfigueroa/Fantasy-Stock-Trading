@@ -77,18 +77,20 @@ exports.buyShares = async (request, response) => {
         const sessionId = request.headers.authorization.split(' ')[1];
         const hasExpired = await authDB.hasUserSessionExpired(sessionId);
         const user = await authDB.getUserBySessionID(sessionId);
-
         if(hasExpired) response.send({ hasExpired });
+
+        if(body.shareUnits < 0) throw new Error('Negative values are not accepted');
 
         const { account_balance } = await portfolioDB.getAccountBalance(user.user_id);
         const newBalance = parseFloat(account_balance - (body.unitPrice * body.shareUnits)).toFixed(2);
-        
+        if(newBalance < 0) throw new Error(`Insufficient Funds, you are over by $${Math.abs(newBalance)}`);
+
         await stocksDB.upsertStocks(user.user_id, body.symbol, body.shareUnits);
         await portfolioDB.upsertPortfolio(user.user_id, newBalance);
 
         response.send({ success: true, hasExpired});
     } catch(error) {
-        response.status(500).send(new StockErrorHandler(`Could not update/insert the stocks table: ${error.message}`));
+        response.status(500).send(new StockErrorHandler(`Could not update your stocks: ${error.message}`));
     }
 }
 
@@ -105,6 +107,8 @@ exports.sellShares = async (request, response) => {
         if(hasExpired) response.send({ hasExpired });
         const user = await authDB.getUserBySessionID(sessionId);
 
+        if(body.shareUnits < 0) throw new Error('Negative values are not accepted');
+
         //Check how many shares we have left
         const savedShareUnits = await stocksDB.getShareUnits(user.user_id, body.symbol);
         if((savedShareUnits - body.shareUnits) < 0) throw new Error("Insufficient Share Units");
@@ -115,8 +119,8 @@ exports.sellShares = async (request, response) => {
 
         //Update account balance.
         const { account_balance } = await portfolioDB.getAccountBalance(user.user_id);
-        const newBalance = parseFloat(account_balance + (body.unitPrice * body.shareUnits)).toFixed(2);
-        await portfolioDB.upsertPortfolio(user.user_id, newBalance);
+        const newBalance = (parseFloat(account_balance) + (parseFloat(body.unitPrice) * parseInt(body.shareUnits))).toFixed(2);
+        await portfolioDB.upsertPortfolio(user.user_id, +newBalance);
 
         response.send({ success: true, hasExpired });
 

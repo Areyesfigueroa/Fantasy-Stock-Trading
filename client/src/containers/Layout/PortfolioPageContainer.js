@@ -75,7 +75,7 @@ const PortfolioPageContainer = () => {
 
     return (
         <div>
-            <Toast title={'Oops! We ran into an issue'} show={toast.show} close={toast.handleClose}>{toast.message}</Toast>
+            <Toast show={toast.show} close={toast.handleClose}>{toast.message}</Toast>
             <PortfolioPage
                 accountBalance={accountBalance}
                 totalHoldingValue={totalHoldingValue}

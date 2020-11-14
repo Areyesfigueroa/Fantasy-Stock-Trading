@@ -13,7 +13,7 @@ exports.getBalance = async (request, response) => {
         if(hasExpired) response.send({ hasExpired });
 
         let balance = await portfolioDB.getAccountBalance(user.user_id);
-        if(!balance) balance = await portfolioDB.upsertPortfolio(user.user_id, 100000);
+        if(!balance) balance = await portfolioDB.upsertPortfolio(user.user_id, 1);
 
         response.send(balance);
     } catch(err) {
