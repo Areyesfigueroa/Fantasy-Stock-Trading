@@ -54,7 +54,7 @@ const TradePageContainer = () => {
         })
         .catch(err => {
             setSearchResult(null);
-            toast.handleShow(err);
+            toast.handleShow(err.message);
         });
 
         getStockHistory(searchTerm)
@@ -66,7 +66,7 @@ const TradePageContainer = () => {
         })
         .catch(err => {
             setStockHistory(null);
-            toast.handleShow(err);
+            toast.handleShow(err.message);
         });
     }
 

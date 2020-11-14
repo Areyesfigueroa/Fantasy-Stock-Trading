@@ -12,7 +12,8 @@ exports.getBalance = async (request, response) => {
         const user = await authDB.getUserBySessionID(sessionId);
         if(hasExpired) response.send({ hasExpired });
 
-        const balance = await portfolioDB.getAccountBalance(user.user_id);
+        let balance = await portfolioDB.getAccountBalance(user.user_id);
+        if(!balance) balance = await portfolioDB.upsertPortfolio(user.user_id, 100000);
 
         response.send(balance);
     } catch(err) {
