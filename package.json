@@ -9,7 +9,8 @@
     "client": "npm run watch --prefix client",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
     "heroku-prebuild": "npm i --prefix client && npm run build --prefix client",
-    "heroku-postbuild": "echo This runs afterwards."
+    "heroku-postbuild": "echo This runs afterwards.",
+    "test": "jest"
   },
   "keywords": [
     "heroku"
@@ -29,6 +30,7 @@
     "qs": "^6.9.4"
   },
   "devDependencies": {
+    "jest": "^26.6.3",
     "nodemon": "^2.0.4"
   }
 }
