@@ -30,7 +30,7 @@ exports.login = async(request, response) => {
 
         response.status(200).send(userSession);
     } catch(err) {
-        response.status(500).send(new StockErrorHandler(`Server error occured, could not login: ${err.message}`));
+        response.status(500).send(new StockErrorHandler(`Server Error, could not login: ${err.message}`));
     }
 }
 
@@ -42,9 +42,9 @@ exports.logout = async(request, response) => {
         const sessionId = request.headers.authorization.split(' ')[1];
         await db.destroyUserSession(sessionId);
     
-        response.status(200).send({success: true});
+        response.send({success: true});
     } catch (error) {
-        response.status(500).send(new StockErrorHandler(`Server error occured, could not logout: ${error.message}`));
+        response.status(500).send(new StockErrorHandler(`Server error, could not logout: ${error.message}`));
     }
 
 }
