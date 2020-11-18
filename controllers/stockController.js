@@ -76,8 +76,9 @@ exports.buyShares = async (request, response) => {
 
         const sessionId = request.headers.authorization.split(' ')[1];
         const hasExpired = await authDB.hasUserSessionExpired(sessionId);
-        const user = await authDB.getUserBySessionID(sessionId);
         if(hasExpired) response.send({ hasExpired });
+        
+        const user = await authDB.getUserBySessionID(sessionId);
 
         if(body.shareUnits < 0) throw new Error('Negative values are not accepted');
 
@@ -105,6 +106,7 @@ exports.sellShares = async (request, response) => {
         const sessionId = request.headers.authorization.split(' ')[1];
         const hasExpired = await authDB.hasUserSessionExpired(sessionId);
         if(hasExpired) response.send({ hasExpired });
+        
         const user = await authDB.getUserBySessionID(sessionId);
 
         if(body.shareUnits < 0) throw new Error('Negative values are not accepted');

@@ -19,10 +19,12 @@ module.exports = {
         
         const queryString = "INSERT INTO users(email, first_name, last_name, password, terms_and_policies_agreement) VALUES($1, $2, $3, $4, $5)";
         const values = [email, firstName, lastName, hashPassword, termsCheck];
-        
+        console.log('WARNING: Adding user to DB');
         await db.query(queryString, values);
     },
     getUser: async (email, password) => {
+        console.log('WARNING: Getting User from DB');
+
         const isMatch = await doPasswordsMatch(email, password);
 
         return new Promise(async (resolve, reject) => {
@@ -36,6 +38,8 @@ module.exports = {
         });
     }, 
     createUserSession: async (user) => {
+        console.log('WARNING: Creating User Session DB');
+
         const insertSessionQuery = "INSERT INTO user_sessions(user_id, expires_at) VALUES ($1, $2) RETURNING id";
         const today = new Date();
         const tomorrow = new Date(today);

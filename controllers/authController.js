@@ -15,8 +15,7 @@ exports.register = async (request, response) => {
         const user = await db.getUser(body.email, body.password);
         const sessionId = await db.createUserSession(user);
         const userSession = new UserSession(user.id, user.email, user.first_name, user.last_name, sessionId);
-
-        response.status(200).send(userSession);
+        response.send(userSession);
     } catch(err) {
         response.status(500).send(new StockErrorHandler(`Server Error, could not register: ${err.message}`));
     }
