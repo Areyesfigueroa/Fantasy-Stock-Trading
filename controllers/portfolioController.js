@@ -1,4 +1,4 @@
-const portfolioDB = require('../db/porftolio');
+const portfolioDB = require('../db/portfolio');
 const authDB = require('../db/auth');
 const StockErrorHandler = require('../error/StockErrorHandler');
 
@@ -9,9 +9,9 @@ exports.getBalance = async (request, response) => {
 
         const sessionId = request.headers.authorization.split(' ')[1];
         const hasExpired = await authDB.hasUserSessionExpired(sessionId);
-        const user = await authDB.getUserBySessionID(sessionId);
         if(hasExpired) response.send({ hasExpired });
-
+        const user = await authDB.getUserBySessionID(sessionId);
+        
         let balance = await portfolioDB.getAccountBalance(user.user_id);
         if(!balance) balance = await portfolioDB.upsertPortfolio(user.user_id, 1);
 
