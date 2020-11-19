@@ -1,4 +1,5 @@
 const db = require('../db/auth');
+const authService = require('../services/auth');
 const StockErrorHandler = require('../error/StockErrorHandler');
 
 class UserSession {
@@ -11,10 +12,7 @@ class UserSession {
 exports.register = async (request, response) => {
     const body = request.body;
     try {
-        await db.addUser(body.email, body.firstName, body.lastName, body.password, body.termsCheck);
-        const user = await db.getUser(body.email, body.password);
-        const sessionId = await db.createUserSession(user);
-        const userSession = new UserSession(user.id, user.email, user.first_name, user.last_name, sessionId);
+        const userSession = authService.registerUser(body.email, body.firstName, body.lastName, body.password, body.termsCheck);
         response.send(userSession);
     } catch(err) {
         response.status(500).send(new StockErrorHandler(`Server Error, could not register: ${err.message}`));
