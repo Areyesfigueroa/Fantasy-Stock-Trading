@@ -1,12 +1,15 @@
 const db = require('../../db/auth');
-const authService = require('../../services/auth');
 const authCtrl = require('../../controllers/authController');
 const StockErrorHandler = require('../../error/StockErrorHandler');
 const UserSession = require('../../services/auth/UserSession');
-const registerUser = require('../../services/auth/registerUser');
+const registerUserService = require('../../services/auth/registerUserService');
+
+/**
+ * How do you import your services. One module at a time?
+ */
 
 jest.mock('../../db/auth');
-jest.mock('../../services/auth');
+jest.mock('../../services/auth/registerUserService');
 
 describe("Auth Controller Tests", () => {
     describe("Register User Tests", () => {
@@ -19,7 +22,7 @@ describe("Auth Controller Tests", () => {
             const userSession = new UserSession("UserID2", body.email, body.firstName, body.lastName, body.termsCheck);
     
             //Mocking DB Functions
-            authService.registerUser.mockReturnValue(userSession);
+            registerUserService.registerUser.mockReturnValue(userSession);
 
             //Main Function
             await authCtrl.register(request, response);

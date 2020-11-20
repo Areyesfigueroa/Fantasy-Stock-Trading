@@ -1,7 +1,7 @@
 const axios = require('../axios').instance;
 const stocksDB = require('../db/stocks');
 const authDB = require('../db/auth');
-const portfolioDB = require('../db/porftolio');
+const portfolioDB = require('../db/portfolio');
 const utils = require('../utils');
 const StockErrorHandler = require('../error/StockErrorHandler');
 require('dotenv').config();

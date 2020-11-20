@@ -13,13 +13,14 @@ const doPasswordsMatch = async (email, password) => {
 
 module.exports = {
     addUser: async (email, firstName, lastName, password, termsCheck) => {
+        console.log('WARNING: Adding user to DB');
+        
         const saltRounds = 10;
         const salt = await bcrypt.genSalt(saltRounds);
         const hashPassword = await bcrypt.hash(password, salt);
         
         const queryString = "INSERT INTO users(email, first_name, last_name, password, terms_and_policies_agreement) VALUES($1, $2, $3, $4, $5)";
         const values = [email, firstName, lastName, hashPassword, termsCheck];
-        console.log('WARNING: Adding user to DB');
         await db.query(queryString, values);
     },
     getUser: async (email, password) => {
