@@ -18,7 +18,7 @@ exports.login = async(request, response) => {
     const body = request.body;
     try {
         const userSession = await loginUserService.loginUser(body.email, body.password);
-        response.status(200).send(userSession);
+        response.send(userSession);
     } catch(err) {
         response.status(500).send(new StockErrorHandler(`Server Error, could not login: ${err.message}`));
     }

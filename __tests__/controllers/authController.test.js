@@ -3,23 +3,36 @@ const authCtrl = require('../../controllers/authController');
 const StockErrorHandler = require('../../error/StockErrorHandler');
 const UserSession = require('../../services/auth/UserSession');
 const registerUserService = require('../../services/auth/registerUserService');
-
-/**
- * How do you import your services. One module at a time?
- */
+const loginUserService = require('../../services/auth/loginUserService');
+const authUserSessionService = require('../../services/auth/authUserSessionService');
 
 jest.mock('../../db/auth');
 jest.mock('../../services/auth/registerUserService');
+jest.mock('../../services/auth/loginUserService');
+jest.mock('../../services/auth/authUserSessionService');
+
+const getMockedUserSession = () => {
+    return new UserSession("UserId", 'test@gmail.com', 'John', 'Doe', 'sessionId');
+}
+
+const getMockedResponse = () => {
+    const response = { 
+        statusCode: 200,
+        send: jest.fn(obj => obj),
+        status: jest.fn(code => {statusCode=code; return response})
+    };
+
+    return response;
+}
 
 describe("Auth Controller Tests", () => {
     describe("Register User Tests", () => {
-
-        test('Testing DB Queries Parameters', async () => {
+        test('Reponse should be called with UserSession obj', async () => {
             //Mock Values
-            const request = { body: { email: 'alielreyes@gmail.com', firstName: 'Aliel', lastName: 'Reyes', password: 'test123', termsCheck: true } };
+            const request = { body: { email: 'test@gmail.com', firstName: 'John', lastName: 'Doe', password: 'test123', termsCheck: true } };
             const body = request.body;
-            const response = { send: jest.fn(obj => obj) };
-            const userSession = new UserSession("UserID2", body.email, body.firstName, body.lastName, body.termsCheck);
+            const response = getMockedResponse();
+            const userSession = getMockedUserSession;
     
             //Mocking DB Functions
             registerUserService.registerUser.mockReturnValue(userSession);
@@ -29,43 +42,15 @@ describe("Auth Controller Tests", () => {
     
             //Assert Tests
             expect(response.send).toHaveBeenCalledWith(userSession);
-        });
-    
-        test('Response should send userSession object', async () => {
-            //Mock Values
-            const request = { body: { email: 'alielreyes@gmail.com', firstName: 'Aliel', lastName: 'Reyes', password: 'test123', termsCheck: true } };
-            const response = { 
-                statusCode: 200,
-                send: jest.fn(obj => obj),
-                status: jest.fn(code => {statusCode=code; return response})
-            };
-            const user = { id: "UserID1" , email: "alielreyes@gmail.com" , first_name: "Aliel" , last_name: "Reyes" };
-            const sessionId = "SessionID";
-            const userSession = new UserSession(user.id, user.email, user.first_name, user.last_name, sessionId);
-    
-            
-            //Mocking DB Functions
-            db.addUser.mockReturnValue();
-            db.getUser.mockReturnValue(user);
-            db.createUserSession.mockReturnValue(sessionId);
-        
-            //Main function
-            await authCtrl.register(request, response);
-            
-            //Assert
-            expect(response.send.mock.results[0].value).toEqual(userSession);
+            expect(registerUserService.registerUser).toHaveBeenCalledWith(body.email, body.firstName, body.lastName, body.password, body.termsCheck);
         });
     
         test('Response should send error object', async () => {
             const errorMsg = 'Mock Error Test';
-            const request = { body: { email: 'alielreyes@gmail.com', firstName: 'Aliel', lastName: 'Reyes', password: 'test123', termsCheck: true } };
-            const response = { 
-                statusCode: 200,
-                send: jest.fn(obj => obj),
-                status: jest.fn(code => {statusCode=code; return response})
-            };
-            //Mocking DB Functions
-            db.addUser.mockImplementation(() => {
+            const request = { body: { email: 'test@gmail.com', firstName: 'John', lastName: 'Doe', password: 'test123', termsCheck: true } };
+            const response = getMockedResponse();
+            //Mocking Functions
+            registerUserService.registerUser.mockImplementation(() => {
                 throw new Error(errorMsg);
             });
         
@@ -81,38 +66,26 @@ describe("Auth Controller Tests", () => {
     })
     
     describe("Login User Tests", () => {
-        //Test response
-        test('Response should be user session', async () => {
-            const request = { body: { email: 'alielreyes@gmail.com', password: 'test123'} };
-            const response = { 
-                statusCode: 200,
-                send: jest.fn(obj => obj),
-                status: jest.fn(code => {statusCode=code; return response})
-            };
-            const user = { id: "UserID1" , email: "alielreyes@gmail.com" , first_name: "Aliel" , last_name: "Reyes" };
-            const sessionId = "SessionID";
-            const userSession = new UserSession(user.id, user.email, user.first_name, user.last_name, sessionId);
-    
-            db.getUser.mockReturnValue(user);
-            db.createUserSession.mockReturnValue(sessionId);
+        test('Response should be called with user session', async () => {
+            const request = { body: { email: 'test@gmail.com', password: 'test123'} };
+            const response = getMockedResponse();
+            const userSession = getMockedUserSession();
+
+            loginUserService.loginUser.mockReturnValue(userSession);
     
             await authCtrl.login(request, response);
             
-            expect(response.send.mock.results[0].value).toEqual(userSession);
+            expect(response.send).toHaveBeenCalledWith(userSession);
+            expect(loginUserService.loginUser).toHaveBeenCalledWith(request.body.email, request.body.password);
         });
     
-        //Test errors
         test('Response should send error object', async () => {
             const errorMsg = 'Mock Error Test';
-            const request = { body: { email: 'alielreyes@gmail.com', firstName: 'Aliel', lastName: 'Reyes', password: 'test123', termsCheck: true } };
-            const response = { 
-                statusCode: 200,
-                send: jest.fn(obj => obj),
-                status: jest.fn(code => {statusCode=code; return response})
-            };
+            const request = { body: { email: 'test@gmail.com', firstName: 'John', lastName: 'Doe', password: 'test123', termsCheck: true } };
+            const response = getMockedResponse();
             
             //Mocking DB Functions
-            db.getUser.mockImplementation(() => {
+            loginUserService.loginUser.mockImplementation(() => {
                 throw new Error(errorMsg);
             });
         
@@ -125,58 +98,42 @@ describe("Auth Controller Tests", () => {
             
             expect(error).toEqual(errorHandler);
         });
-    
     });
     
     describe("Logout User Tests", () => {
-        test('Testing DB Query Parameters', async() => {
-            const request = { headers: { authorization: 'Bearer token' } };
+        test('Response should send success obj', async() => {
+            const request = {};
             const response = { send: jest.fn(obj => obj) };
             const sessionId = 'token';
     
-            db.destroyUserSession.mockReturnValue();
+            await authUserSessionService.authUserSession.mockReturnValue(sessionId);
+    
+            await authCtrl.logout(request, response);
+    
+            expect(response.send.mock.results[0].value).toEqual({ success: true });
+        });
+
+        test('Testing DB Query Params', async() => {
+            const request = {};
+            const response = { send: jest.fn(obj => obj) };
+            const sessionId = 'token';
+    
+            await authUserSessionService.authUserSession.mockReturnValue(sessionId);
     
             await authCtrl.logout(request, response);
     
             expect(db.destroyUserSession).toHaveBeenCalledWith(sessionId);
         });
     
-        test('Response should be success object', async () => {
-            const request = { headers: { authorization: 'Bearer token' } };
-            const response = { send: jest.fn(obj => obj) };
-    
-            db.destroyUserSession.mockReturnValue();
-    
-            await authCtrl.logout(request, response);
-    
-            expect(response.send.mock.results[0].value).toEqual({ success: true });
-        });
-    
-        test('Response should be missing auth header', async() => {
-            const request = { headers: { authorization: '' } };
-            const response = { 
-                statusCode: 200,
-                send: jest.fn(obj => obj),
-                status: jest.fn(code => {statusCode=code; return response})
-            };
-    
-            db.destroyUserSession.mockReturnValue();
-    
-            await authCtrl.logout(request, response);
-    
-            const errorHandler = new StockErrorHandler('Server error, could not logout: Missing Authorization Header');
-            expect(response.send.mock.results[0].value).toEqual(errorHandler);
-        });
-    
         test('Response should send error object', async() => {
-            const request = { headers: { authorization: 'Bearer token' } };
+            const request = {};
             const response = { 
                 statusCode: 200,
                 send: jest.fn(obj => obj),
                 status: jest.fn(code => {statusCode=code; return response})
             };
             const errorMsg = "Mock Error";
-            db.destroyUserSession.mockImplementation(() => {
+            await authUserSessionService.authUserSession.mockImplementation(() => {
                 throw new Error(errorMsg);
             });
     

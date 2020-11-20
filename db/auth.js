@@ -75,6 +75,7 @@ module.exports = {
     },
 
     destroyUserSession: async(sessionID) => {
+        console.log('WARNING: Deleting from DB');
         await db.query("DELETE FROM user_sessions WHERE id=$1", [sessionID]);
     }
 };
