@@ -15,7 +15,7 @@ exports.searchBySymbol = async (request, response) => {
         const params = request.params;
         const res = await axios.get(`stock/${params.symbol}/quote?token=${process.env.API_SECRET_TOKEN}`);
 
-        response.send(formatStockDataService.formatStockData(res));
+        response.send(formatStockDataService.formatSearchResults(res));
     } catch (error) {
         let errorMessage = error.message;
         if(error.response.status === 404) {
@@ -36,7 +36,7 @@ exports.getStockHistory = async (request, response) => {
         const date = utils.getLatestWeekday(yesterday); //save
 
         const res = await axios.get(`stock/${params.symbol}/chart/dynamic/${date}?token=${process.env.API_SECRET_TOKEN}&chartInterval=${interval}`)
-        const stockHistory = res.data.map(el => ({ date: el.date, time: el.label, price: el.average}));
+        const stockHistory = formatStockDataService.formatHistoryData(res);
 
         response.send(stockHistory);
     } catch (error) {

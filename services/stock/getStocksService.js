@@ -9,7 +9,7 @@ const getFormattedStocks = async (userId) => {
         //Format data.
         let data = [];
         for (let i = 0; i < stocksRes.length; i++) {
-            const searchRes = formatStockDataService.formatStockData(await axios.get(`stock/${stocksRes[i].company_symbol}/quote?token=${process.env.API_SECRET_TOKEN}`));
+            const searchRes = formatStockDataService.formatSearchResults(await axios.get(`stock/${stocksRes[i].company_symbol}/quote?token=${process.env.API_SECRET_TOKEN}`));
             data.push({
                 companyName: searchRes.companyName,
                 companySymbol: stocksRes[i].company_symbol,
