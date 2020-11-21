@@ -4,6 +4,7 @@ const mockResponse = require('../../services/test/mockResponse');
 const mockUserSession = require('../../services/test/mockUserSession');
 const stockCtrl = require('../../controllers/stockController');
 const formatStockDataService = require('../../services/stock/formatStockDataService');
+const StockErrorHandler = require('../../error/StockErrorHandler');
 
 jest.mock('../../db/auth');
 jest.mock('../../services/auth/registerUserService');
@@ -26,6 +27,21 @@ describe('Stock Controller Tests', () => {
             expect(response.send.mock.results[0].value).toEqual(formattedRes);
         });
 
+        test('Response should throw error', async () => {
+            const request = { params: { symbol: 'TSLA' } };
+            const response = mockResponse.getResponse();
+            const errorMsg = "mock error";
+
+            axios.get.mockImplementation(() => {
+                throw new Error(error);
+            });
+
+            await stockCtrl.searchBySymbol(request, response);
+
+            expect(response.send.mock.results[0].value).toEqual(new StockErrorHandler(errorMsg));
+        })
+
+        //TODO Ask question.
         test('Response should throw 404 error', async () => {
             const request = { params: { symbol: 'TSLA' } };
             const response = mockResponse.getResponse();
