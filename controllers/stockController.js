@@ -60,7 +60,7 @@ exports.buyShares = async (request, response) => {
         const newBalance = await buySharesService.calculateNewBalance(user.user_id, body.unitPrice, body.shareUnits);
         await buySharesService.updateHoldings(user.user_id, body.shareUnits, newBalance);
 
-        response.send({ success: true, hasExpired});
+        response.send({ success: true });
     } catch(error) {
         response.status(500).send(new StockErrorHandler(`Could not update your stocks: ${error.message}`));
     }
@@ -77,7 +77,7 @@ exports.sellShares = async (request, response) => {
         await sellSharesService.updateShareUnits(user.user_id, body.symbol, body.shareUnits);
         await sellSharesService.updateAccountBalance(user.user_id, body.unitPrice, body.shareUnits);
 
-        response.send({ success: true, hasExpired });
+        response.send({ success: true });
 
     } catch (error) {
         response.status(500).send(new StockErrorHandler(`Could not reduce the shares: ${error.message}`));
