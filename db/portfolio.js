@@ -18,6 +18,6 @@ module.exports = {
 
         const query = `SELECT account_balance FROM portfolio WHERE user_id=$1`;
         const { rows } = await db.query(query, [userID]);
-        return rows[0];
+        return rows[0].account_balance;
     }
 };
