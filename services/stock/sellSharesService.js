@@ -25,8 +25,8 @@ const updateShareUnits = async (userId, symbol, shareUnits) => {
 
 const updateAccountBalance = async (userId, unitPrice, shareUnits) => {
     try {
-        const { account_balance } = await portfolioDB.getAccountBalance(userId);
-        const newBalance = (parseFloat(account_balance) + (parseFloat(unitPrice) * parseInt(shareUnits))).toFixed(2);
+        const account_balance = await portfolioDB.getAccountBalance(userId);
+        const newBalance = +(account_balance + (unitPrice * shareUnits)).toFixed(2);
         await portfolioDB.upsertPortfolio(userId, +newBalance);
     } catch (error) {
         throw error;
