@@ -1,11 +1,11 @@
-const db = require('../../db/auth');
+const authDB = require('../../db/auth');
 
 const authUserSession = async(request, response) => {
     try {
         if (!request.headers.authorization) throw new Error('Missing Authorization Header');
 
         const sessionId = request.headers.authorization.split(' ')[1];
-        const hasExpired = await db.hasUserSessionExpired(sessionId);
+        const hasExpired = await authDB.hasUserSessionExpired(sessionId);
         if(hasExpired) response.send({ hasExpired });
 
         return sessionId;

@@ -31,6 +31,7 @@ const PortfolioPageContainer = () => {
             const savedStocks = await getSavedStocks();
             if(savedStocks.hasExpired) logoutUser();
 
+            //TODO: savedStocks could be empty. 
             const portfolioChart = savedStocks.map(stock => [stock.companyName, stock.holdingValue, stock.holdingValue]);
             portfolioChart.unshift(['Current Stock Value', 'Stock Value', { role: 'annotation' }]);
 

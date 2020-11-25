@@ -86,10 +86,8 @@ exports.sellShares = async (request, response) => {
 
 exports.getStocks = async (request, response) => {
     try {
-        
-        const sessionId = authUserSessionService.authUserSession(request, response);
+        const sessionId = await authUserSessionService.authUserSession(request, response);
         const user = await authDB.getUserBySessionID(sessionId);
-        
         const stocksData = getStocksService.getFormattedStocks(user.user_id);
 
         response.send(stocksData);

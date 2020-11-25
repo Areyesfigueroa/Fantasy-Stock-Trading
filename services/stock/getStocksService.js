@@ -1,11 +1,14 @@
 const db = require('../../db/stocks');
 const formatStockDataService = require('./formatStockDataService');
 const axios = require('../../axios').instance;
+require('dotenv').config();
 
 const getFormattedStocks = async (userId) => {
     try {
         const stocksRes = await db.getAllStocks(userId);
-            
+        
+        if(!stockRes) return [];
+
         //Format data.
         let data = [];
         for (let i = 0; i < stocksRes.length; i++) {

@@ -59,7 +59,8 @@ module.exports = {
 
         const expirationDate = new Date(rows[0].expires_at);
         const today = new Date();
-        // console.log(expirationDate, today);
+        
+
         return (expirationDate.getTime() < today.getTime());
     },
 
