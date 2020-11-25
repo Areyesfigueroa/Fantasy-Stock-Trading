@@ -13,7 +13,7 @@ const PortfolioCard = (props) => {
             title: "Holding Value:", 
             subtitle: formatNumToCurrency(props.holdingValue), 
             variant: getCardItemVariant(props.holdingValue, props.prevHoldingValue),
-            compareTitle: "Yesterday's Holding", 
+            compareTitle: "Previous Holding", 
             compareValue: formatNumToCurrency(props.prevHoldingValue)
         },
         { 
@@ -24,7 +24,7 @@ const PortfolioCard = (props) => {
             title: "Last Price:", 
             subtitle: formatNumToCurrency(props.lastPrice), 
             variant: getCardItemVariant(props.lastPrice, props.prevPrice), 
-            compareTitle: "Yesterday's Last Price", 
+            compareTitle: "Previous Last Price", 
             compareValue: formatNumToCurrency(props.prevPrice)
         },
         { 

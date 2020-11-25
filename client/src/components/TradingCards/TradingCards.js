@@ -13,6 +13,7 @@ const TradingCards = (props) => {
                     prevPrice={el.prevClosedPrice}
                     percentage={el.percentChange}
                     daily={el.dailyGainLoss}
+                    sharesHeld={el.sharesHeld}
                     buy={props.buy}
                     sell={props.sell}
                 />

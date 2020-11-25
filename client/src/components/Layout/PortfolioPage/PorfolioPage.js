@@ -12,7 +12,6 @@ const PorfolioPage = (props) => {
     const loadChart = () => {
 
         if(props.loading) return (<p>Loading Chart</p>);
-        console.log(props.holdingsChart);
 
         //First row is always the title
         if(props.holdingsChart.length > 1) {

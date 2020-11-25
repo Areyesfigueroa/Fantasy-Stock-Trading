@@ -6,7 +6,7 @@ import TradePage from '../../components/Layout/TradePage/TradePage';
 import Toast from '../../components/Toast/Toast';
 import useToast from '../../hooks/useToast';
 
-import { searchBySymbol, getStockHistory, buyCompanyShares, sellCompanyShares, logoutUser } from '../../http';
+import { searchBySymbol, getStockHistory, buyCompanyShares, sellCompanyShares, logoutUser, getSavedShareUnits } from '../../http';
 
 const TradePageContainer = () => {
 
@@ -37,6 +37,10 @@ const TradePageContainer = () => {
             for(let i = 0; i < initialStocks.length; i++) {
                 stocks = savedStocks;
                 stocks.push(await searchBySymbol(initialStocks[i]));
+                
+                const { sharesHeld } = await getSavedShareUnits(stocks.id);
+                stocks[i].sharesHeld = sharesHeld;
+
                 setSavedStocks(stocks);
             }
             setLoadingStocks(false);
@@ -45,35 +49,83 @@ const TradePageContainer = () => {
         }
     }
 
-    const handleSearch = (searchTerm) => {
-        setLoadingSearchRes(true);
-        searchBySymbol(searchTerm)
-        .then((res) => {
-            setLoadingSearchRes(false);
-            setSearchResult(res);
-        })
-        .catch(err => {
-            setSearchResult(null);
-            toast.handleShow(err.message);
-        });
+    const setSearchRes = async (searchTerm) => {
+        try {
+            const res = await searchBySymbol(searchTerm);
+            const { sharesHeld } = await getSavedShareUnits(searchTerm);
+            res.sharesHeld = sharesHeld;
 
-        getStockHistory(searchTerm)
-        .then(res => {
+            setSearchResult(res);
+        } catch (error) {
+            setSearchResult(null);
+            throw error;
+        }
+    }
+
+    const setStockHistoryRes = async(searchTerm) => {
+        try {
+            const res = await getStockHistory(searchTerm);
+
             let chartData = res.map(el => [el.time, el.price]);
             chartData.unshift(['Time', searchTerm.toUpperCase()]);
 
             setStockHistory({ date: res[0].date, chartData });
-        })
-        .catch(err => {
+        } catch (error) {
             setStockHistory(null);
-            toast.handleShow(err.message);
-        });
+            throw error;
+        }
     }
 
+    const handleSearch = async (searchTerm) => {
+        try {
+            setLoadingSearchRes(true);
+            await setSearchRes(searchTerm);
+            await setStockHistoryRes(searchTerm);
+            setLoadingSearchRes(false);
+        } catch (error) {
+            toast.handleShow(error.message);
+        }
+    }
+
+    const addShareUnits = (sharesHeld, shareUnits) => {
+        return sharesHeld + shareUnits;
+    }
+
+    const reduceShareUnits = (sharesHeld, shareUnits) => {
+        return sharesHeld - shareUnits;
+    }
+
+    const updateSharesHeld = (symbol, shareUnits, callback) => {
+        if(searchResult && searchResult.id === symbol){
+            const searchResultCopy = { ...searchResult };
+            searchResultCopy.sharesHeld = callback(parseInt(searchResultCopy.sharesHeld), parseInt(shareUnits));
+
+            setSearchResult(searchResultCopy);
+        } else {
+
+            const newSavedStocks = savedStocks.map(stock => {
+                if(stock.id === symbol){
+                    const stockCopy = { ...stock };
+                    stockCopy.sharesHeld = callback(parseInt(stockCopy.sharesHeld), parseInt(shareUnits));
+
+                    return stockCopy;
+                }
+
+                return stock;
+            });
+
+            setSavedStocks(newSavedStocks);
+        }
+
+    }
+
+    //TODO: Update new sharesHeld
     const buyShares = async (symbol, shareUnits, unitPrice) => {
         try {
             const response = await buyCompanyShares(symbol, shareUnits, unitPrice);
             if(response.hasExpired) await logoutUser();
+
+            updateSharesHeld(symbol, shareUnits, addShareUnits);
         } catch (error) {
             toast.handleShow(error.message);
         }
@@ -83,6 +135,8 @@ const TradePageContainer = () => {
         try {
             const response = await sellCompanyShares(symbol, shareUnits, unitPrice)
             if(response.hasExpired) await logoutUser();
+
+            updateSharesHeld(symbol, shareUnits, reduceShareUnits);
         } catch (error) {
             toast.handleShow(error.message);
         }

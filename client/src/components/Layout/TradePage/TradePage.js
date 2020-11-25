@@ -28,6 +28,7 @@ const TradePage = (props) => {
                     prevPrice={props.searchResult.prevClosedPrice}
                     percentage={props.searchResult.percentChange}
                     daily={props.searchResult.dailyGainLoss}
+                    sharesHeld={props.searchResult.sharesHeld}
                     buy={props.buy}
                     sell={props.sell}
                 /> : null}

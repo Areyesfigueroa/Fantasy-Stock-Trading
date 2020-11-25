@@ -1,5 +1,6 @@
 const axios = require('../axios').instance;
 const authDB = require('../db/auth');
+const stocksDB = require('../db/stocks');
 const utils = require('../utils');
 const formatStockDataService = require('../services/stock/formatStockDataService');
 const authUserSessionService = require('../services/auth/authUserSessionService');
@@ -13,8 +14,12 @@ require('dotenv').config();
 exports.searchBySymbol = async (request, response) => {
     try {
         const params = request.params;
-        const res = await axios.get(`stock/${params.symbol}/quote?token=${process.env.API_SECRET_TOKEN}`);
 
+
+
+        const res = await axios.get(`stock/${params.symbol}/quote?token=${process.env.API_SECRET_TOKEN}`);
+  
+        
         response.send(formatStockDataService.formatSearchResults(res));
     } catch (error) {
         let errorMessage = error.message;
@@ -24,6 +29,24 @@ exports.searchBySymbol = async (request, response) => {
 
         response.status(500).send(new StockErrorHandler(errorMessage));
     }
+}
+
+//TODO: Needs unit test
+exports.getShareUnits = async (request, response) => {
+    try {
+        const params = request.params;
+        
+        //Get user info
+        const sessionId = await authUserSessionService.authUserSession(request, response);
+        const user = await authDB.getUserBySessionID(sessionId);
+
+        const sharesHeld = await stocksDB.getShareUnits(user.user_id, params.symbol.toUpperCase());
+
+        response.send({ sharesHeld });
+    } catch (error) {
+        response.status(500).send(new StockErrorHandler(`Could not get share units: ${error.message}`));
+    }
+
 }
 
 exports.getStockHistory = async (request, response) => {
@@ -69,13 +92,14 @@ exports.buyShares = async (request, response) => {
 exports.sellShares = async (request, response) => {
     try {
         const body = request.body;
+        body.shareUnits = parseInt(body.shareUnits);
 
         const sessionId = await authUserSessionService.authUserSession(request, response);
         const user = await authDB.getUserBySessionID(sessionId);
 
-        await sellSharesService.calculateSavedShares(user.user_id, body.symbol, +body.shareUnits);
-        await sellSharesService.updateShareUnits(user.user_id, body.symbol, +body.shareUnits);
-        await sellSharesService.updateAccountBalance(user.user_id, body.unitPrice, +body.shareUnits);
+        await sellSharesService.calculateSavedShares(user.user_id, body.symbol, body.shareUnits);
+        await sellSharesService.updateShareUnits(user.user_id, body.symbol, body.shareUnits);
+        await sellSharesService.updateAccountBalance(user.user_id, body.unitPrice, body.shareUnits);
 
         response.send({ success: true });
 

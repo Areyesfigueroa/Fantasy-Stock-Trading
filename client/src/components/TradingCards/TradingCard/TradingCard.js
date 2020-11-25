@@ -10,7 +10,6 @@ import { getCardItemVariant, formatNumToCurrency } from '../../../utils';
 
 const TradingCard = (props) => {
     const title = `${props.title}: ${props.subtitle}`;
-
     const buyModal = useModal();
     const sellModal = useModal();
 
@@ -28,7 +27,7 @@ const TradingCard = (props) => {
             subtitle: formatNumToCurrency(props.price), 
             variant: getCardItemVariant(props.price, props.prevPrice), 
             compareTitle: "Previous Closed", 
-            compareValue: props.prevPrice 
+            compareValue: formatNumToCurrency(props.prevPrice)
         },
         { 
             title: "Percent Change", 
@@ -39,6 +38,10 @@ const TradingCard = (props) => {
             title: "Daily Gain/Loss", 
             subtitle: formatNumToCurrency(props.daily),
             variant: getCardItemVariant(props.daily, 0) 
+        },
+        { 
+            title: "Shares Held", 
+            subtitle: props.sharesHeld
         },
     ];
 
@@ -61,14 +64,14 @@ const TradingCard = (props) => {
                 close={buyModal.handleCloseModal} 
                 title={title}
                 footer={<Button onClick={buy}>Buy</Button>}>
-                    <SharesForm price={props.price} inputRef={buyInputRef} />
+                    <SharesForm price={props.price} shares={props.sharesHeld} inputRef={buyInputRef} />
             </Modal>
             <Modal 
                 show={sellModal.show} 
                 close={sellModal.handleCloseModal} 
                 title={title} 
                 footer={<Button onClick={sell}>Sell</Button>}>
-                    <SharesForm price={props.price} inputRef={sellInputRef}/>
+                    <SharesForm price={props.price} shares={props.sharesHeld} inputRef={sellInputRef}/>
             </Modal>
         </div>
     );

@@ -23,9 +23,9 @@ const SplashPage = (props) => {
 
             <div className={classes.content}>
                 <h1>Fantasy Stock Trading</h1>
-                <p>Sentence 1</p>
-                <p>Sentence 2</p>
-                <p>Sentence 3</p>
+                <p>This web app utilizes IEX Cloud API to fetch stock information</p>
+                <p>Search for stocks from any company and use fake money to buy or sell shares</p>
+                <p>View your share holdings and account balance through visual charts</p>
 
                 <Button onClick={formModal.handleShowModal}>Login/Register</Button>
                 <Modal 

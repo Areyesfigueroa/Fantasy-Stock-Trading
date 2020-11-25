@@ -120,6 +120,18 @@ const getSavedStocks = async() => {
     return await response.json();
 }
 
+const getSavedShareUnits = async(symbol) => {
+    const userSession = JSON.parse(localStorage.getItem('userSession'));
+    const response = await fetchData(`/api/stocks/${symbol}`, userSession.sessionId);
+
+    if(!response.ok) {
+        const data = await response.json();
+        throw new Error(data.errorMessage);
+    }
+
+    return await response.json();
+}
+
 const getAccountBalance = async() => {
     const userSession = JSON.parse(localStorage.getItem('userSession'));
     const response = await fetchData(`/api/portfolio/balance`, userSession.sessionId);
@@ -140,5 +152,6 @@ export {
     buyCompanyShares,
     sellCompanyShares,
     getSavedStocks,
+    getSavedShareUnits,
     getAccountBalance
  }
