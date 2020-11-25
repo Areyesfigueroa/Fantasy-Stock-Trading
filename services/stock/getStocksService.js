@@ -6,8 +6,7 @@ require('dotenv').config();
 const getFormattedStocks = async (userId) => {
     try {
         const stocksRes = await db.getAllStocks(userId);
-        
-        if(!stockRes) return [];
+        if(stocksRes.length === 0) return stocksRes;
 
         //Format data.
         let data = [];

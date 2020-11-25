@@ -128,7 +128,6 @@ const getAccountBalance = async() => {
         const data = await response.json();
         throw new Error(data.errorMessage);
     }
-
     return await response.json();
 }
 

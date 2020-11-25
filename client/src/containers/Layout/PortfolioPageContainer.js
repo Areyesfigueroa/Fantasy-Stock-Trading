@@ -31,7 +31,6 @@ const PortfolioPageContainer = () => {
             const savedStocks = await getSavedStocks();
             if(savedStocks.hasExpired) logoutUser();
 
-            //TODO: savedStocks could be empty. 
             const portfolioChart = savedStocks.map(stock => [stock.companyName, stock.holdingValue, stock.holdingValue]);
             portfolioChart.unshift(['Current Stock Value', 'Stock Value', { role: 'annotation' }]);
 
@@ -47,7 +46,6 @@ const PortfolioPageContainer = () => {
 
     const setAccountInfo = async (stocks) => {
         try {
-
             const response = await getAccountBalance();
             if(isNaN(response.account_balance)) throw new Error("Total Balance not found");
 

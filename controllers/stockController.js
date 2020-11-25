@@ -58,7 +58,7 @@ exports.buyShares = async (request, response) => {
         const user = await authDB.getUserBySessionID(sessionId);
 
         const newBalance = await buySharesService.calculateNewBalance(user.user_id, body.unitPrice, body.shareUnits);
-        await buySharesService.updateHoldings(user.user_id, body.shareUnits, newBalance);
+        await buySharesService.updateHoldings(user.user_id, body.symbol, body.shareUnits, newBalance);
 
         response.send({ success: true });
     } catch(error) {
@@ -73,9 +73,9 @@ exports.sellShares = async (request, response) => {
         const sessionId = await authUserSessionService.authUserSession(request, response);
         const user = await authDB.getUserBySessionID(sessionId);
 
-        await sellSharesService.calculateSavedShares(user.user_id, body.symbol, body.shareUnits);
-        await sellSharesService.updateShareUnits(user.user_id, body.symbol, body.shareUnits);
-        await sellSharesService.updateAccountBalance(user.user_id, body.unitPrice, body.shareUnits);
+        await sellSharesService.calculateSavedShares(user.user_id, body.symbol, +body.shareUnits);
+        await sellSharesService.updateShareUnits(user.user_id, body.symbol, +body.shareUnits);
+        await sellSharesService.updateAccountBalance(user.user_id, body.unitPrice, +body.shareUnits);
 
         response.send({ success: true });
 
@@ -88,7 +88,7 @@ exports.getStocks = async (request, response) => {
     try {
         const sessionId = await authUserSessionService.authUserSession(request, response);
         const user = await authDB.getUserBySessionID(sessionId);
-        const stocksData = getStocksService.getFormattedStocks(user.user_id);
+        const stocksData = await getStocksService.getFormattedStocks(user.user_id);
 
         response.send(stocksData);
     } catch (error) {

@@ -10,7 +10,9 @@ const PorfolioPage = (props) => {
     const subtitle="Each account starts with $100,000 fake dollars, see how much money you can earn by trading stocks";
     
     const loadChart = () => {
+
         if(props.loading) return (<p>Loading Chart</p>);
+        console.log(props.holdingsChart);
 
         //First row is always the title
         if(props.holdingsChart.length > 1) {

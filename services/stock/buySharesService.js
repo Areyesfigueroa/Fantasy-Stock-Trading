@@ -6,7 +6,7 @@ const calculateNewBalance = async (userId, unitPrice, shareUnits) => {
         if(shareUnits < 0) throw new Error('Negative values are not accepted');
 
         //Get new balance
-        const account_balance = await portfolioDB.getAccountBalance(userId);
+        const { account_balance } = await portfolioDB.getAccountBalance(userId);
         const newBalance = +parseFloat(account_balance - (unitPrice * shareUnits)).toFixed(2);
         if(newBalance < 0) throw new Error(`Insufficient Funds, you are over by $${Math.abs(newBalance)}`);
 
@@ -17,7 +17,7 @@ const calculateNewBalance = async (userId, unitPrice, shareUnits) => {
     }
 }
 
-const updateHoldings = async(userId, shareUnits, newBalance) => {
+const updateHoldings = async(userId, symbol, shareUnits, newBalance) => {
     try {
         await stocksDB.upsertStocks(userId, symbol, shareUnits);
         await portfolioDB.upsertPortfolio(userId, newBalance);
