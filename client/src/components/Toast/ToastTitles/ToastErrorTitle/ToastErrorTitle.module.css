@@ -1,0 +1,14 @@
+.ToastErrorTitle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.ToastErrorTitle ion-icon {
+    margin-left: 5px;
+    color: black;
+    background-color: #FFE700;
+    width: 25px;
+    height: 25px;
+    border-radius: 25px;
+}

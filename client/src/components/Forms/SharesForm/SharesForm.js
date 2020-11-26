@@ -11,7 +11,7 @@ const SharesForm = (props) => {
                         <div>{`Current Shares Held: ${props.shares}`}</div>
                     </div>
                 </Form.Label>
-                <Form.Control type="number" min={0} defaultValue={0} ref={props.inputRef}/>
+                <Form.Control type="number" min={1} defaultValue={1} ref={props.inputRef}/>
             </Form.Group>
         </Form>
     );

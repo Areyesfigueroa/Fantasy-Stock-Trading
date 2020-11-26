@@ -4,6 +4,7 @@ import { useHistory } from 'react-router';
 import UserSessionContext from '../../context/UserSessionContext';
 import PortfolioPage from '../../components/Layout/PortfolioPage/PorfolioPage';
 import Toast from '../../components/Toast/Toast';
+import ToastErrorTitle from '../../components/Toast/ToastTitles/ToastErrorTitle/ToastErrorTitle';
 import useToast from '../../hooks/useToast';
 import { getSavedStocks, logoutUser, getAccountBalance } from '../../http';
 import { formatNumToCurrency } from '../../utils';
@@ -40,7 +41,7 @@ const PortfolioPageContainer = () => {
             setLoading(false);
 
         } catch (error) {
-            toast.handleShow(error.message);
+            toast.handleShow(<ToastErrorTitle />, error.message);
         }
     }
 
@@ -60,7 +61,7 @@ const PortfolioPageContainer = () => {
             setAccountBalance(formatNumToCurrency(response.account_balance));
             setTotalAssetValue(formatNumToCurrency(totalAssets));
         } catch (error) {
-            toast.handleShow(error.message);
+            toast.handleShow(<ToastErrorTitle />, error.message);
         }
 
     }

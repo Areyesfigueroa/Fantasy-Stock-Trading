@@ -4,8 +4,11 @@ import { useHistory } from 'react-router';
 import UserSessionContext from '../../context/UserSessionContext';
 import TradePage from '../../components/Layout/TradePage/TradePage';
 import Toast from '../../components/Toast/Toast';
+import ToastErrorTitle from '../../components/Toast/ToastTitles/ToastErrorTitle/ToastErrorTitle';
+import ToastTransactionTitle from '../../components/Toast/ToastTitles/ToastTransactionTitle/ToastTransactionTitle';
 import useToast from '../../hooks/useToast';
 
+import { formatNumToCurrency } from '../../utils';
 import { searchBySymbol, getStockHistory, buyCompanyShares, sellCompanyShares, logoutUser, getSavedShareUnits } from '../../http';
 
 const TradePageContainer = () => {
@@ -19,7 +22,7 @@ const TradePageContainer = () => {
     const [stockHistory, setStockHistory]=useState(null);
     const [loadingStocks, setLoadingStocks]=useState(true);
     const [loadingSearchRes, setLoadingSearchRes]=useState(false);
-    
+
     useEffect(() => {
         if(!userSession.session) history.push('/login');
         setInitialStocks();
@@ -38,14 +41,14 @@ const TradePageContainer = () => {
                 stocks = savedStocks;
                 stocks.push(await searchBySymbol(initialStocks[i]));
                 
-                const { sharesHeld } = await getSavedShareUnits(stocks.id);
+                const { sharesHeld } = await getSavedShareUnits(stocks[i].id);
                 stocks[i].sharesHeld = sharesHeld;
 
                 setSavedStocks(stocks);
             }
             setLoadingStocks(false);
         } catch (error) {
-            toast.handleShow(error.message);
+            toast.handleShow(<ToastErrorTitle />, error.message);
         }
     }
 
@@ -84,7 +87,7 @@ const TradePageContainer = () => {
             await setStockHistoryRes(searchTerm);
             setLoadingSearchRes(false);
         } catch (error) {
-            toast.handleShow(error.message);
+            toast.handleShow(<ToastErrorTitle />, error.message);
         }
     }
 
@@ -126,8 +129,13 @@ const TradePageContainer = () => {
             if(response.hasExpired) await logoutUser();
 
             updateSharesHeld(symbol, shareUnits, addShareUnits);
+
+            const toastTotal = formatNumToCurrency(parseInt(shareUnits) * parseFloat(unitPrice));
+            const toastMsg = `Successfully purchased ${shareUnits} shares from ${symbol} for a total of ${toastTotal}`;
+            toast.handleShow(<ToastTransactionTitle />, toastMsg);
+
         } catch (error) {
-            toast.handleShow(error.message);
+            toast.handleShow(<ToastErrorTitle />, error.message);
         }
     }
 
@@ -137,14 +145,24 @@ const TradePageContainer = () => {
             if(response.hasExpired) await logoutUser();
 
             updateSharesHeld(symbol, shareUnits, reduceShareUnits);
+
+            const toastTotal = formatNumToCurrency(parseInt(shareUnits) * parseFloat(unitPrice));
+            const toastMsg = `Successfully sold ${shareUnits} shares from ${symbol} for a total of ${toastTotal}`;
+            toast.handleShow(<ToastTransactionTitle />, toastMsg);
         } catch (error) {
-            toast.handleShow(error.message);
+            toast.handleShow(<ToastErrorTitle />, error.message);
         }
     }
 
     return (
         <div>
-            <Toast show={toast.show} close={toast.handleClose}>{toast.message}</Toast>
+            <Toast 
+                show={toast.show} 
+                close={toast.handleClose}
+                title={toast.title}
+                >
+                    {toast.message}
+            </Toast>
             <TradePage
                 search={handleSearch}
                 searchResult={searchResult}

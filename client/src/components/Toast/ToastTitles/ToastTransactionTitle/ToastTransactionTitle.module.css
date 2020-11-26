@@ -1,0 +1,13 @@
+.ToastTransactionTitle {
+    display: flex;
+    align-items: center;
+}
+
+.ToastTransactionTitle ion-icon {
+    margin-left: 5px;
+    color: white;
+    background-color: green;
+    width: 25px;
+    height: 25px;
+    border-radius: 25px;
+}
