@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { NavLink } from 'react-router-dom';
 import SplashPage from '../../components/Layout/SplashPage/SplashPage';
 
 const SplashPageContainer = (props) => {
@@ -19,14 +20,14 @@ const SplashPageContainer = (props) => {
             setLoginForm(false);
             setRegisterForm(true);
         }
-    }
-
+    }            
+    
     const appendModalFooter = () => {
         const style = {marginRight: "auto"};
         if(showLoginForm) {
-            return (<p style={style}>Not a member? <a href="#LoginPage">Sign Up</a></p>);
+            return (<p style={style}>Not a member? <NavLink to={'/login'}>Sign Up</NavLink></p>);
         } else if(showRegisterForm) {
-            return (<p style={style}>Already have an account? <a href="#LoginPage">Log In</a></p>);
+            return (<p style={style}>Already have an account? <NavLink to={'/login'}>Log In</NavLink></p>);
         } else {
             return null;
         }

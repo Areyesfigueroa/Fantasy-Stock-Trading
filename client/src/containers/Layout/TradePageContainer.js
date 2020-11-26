@@ -78,6 +78,7 @@ const TradePageContainer = () => {
 
     const handleSearch = async (searchTerm) => {
         try {
+            if(searchTerm === '') throw new Error('Search failed: searchbar is empty')
             setLoadingSearchRes(true);
             await setSearchRes(searchTerm);
             await setStockHistoryRes(searchTerm);
@@ -119,7 +120,6 @@ const TradePageContainer = () => {
 
     }
 
-    //TODO: Update new sharesHeld
     const buyShares = async (symbol, shareUnits, unitPrice) => {
         try {
             const response = await buyCompanyShares(symbol, shareUnits, unitPrice);

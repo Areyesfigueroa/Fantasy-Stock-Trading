@@ -11,11 +11,23 @@ const Searchbar = (props) => {
     const history = useHistory();
 
     useEffect(() => {
-        if(!history.location.search) return;
+        if(history.location.search) { 
+            const params = new URLSearchParams(history.location.search);
+            searchValueRef.current.defaultValue = params.get('q');
+        }
 
-        const params = new URLSearchParams(history.location.search);
-        searchValueRef.current.defaultValue = params.get('q');
+        searchValueRef.current.addEventListener('keydown', searchOnEnter);
+
+        return function cleanUpListener() {
+            searchValueRef.current.removeEventListener('keydown', searchOnEnter);
+        }
     }, []);
+
+    const searchOnEnter = (event) => {
+        if(event.keyCode === 13) {
+            props.search(searchValueRef.current.value);
+        }
+    }
 
     return (
         <div className={classes.Searchbar}>

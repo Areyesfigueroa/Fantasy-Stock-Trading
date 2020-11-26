@@ -43,6 +43,8 @@ const TradePage = (props) => {
                     hAxisTitle={"Time"}
                     vAxisTitle={"Price"}
                 /> : null}
+
+                <p>Other Recommendations</p>
                 {props.loadingStocks ? <LoadingSpinner />:<TradingCards data={props.stocks} buy={props.buy} sell={props.sell}/>}
             </Container>
         </div>

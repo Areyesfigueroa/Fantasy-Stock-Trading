@@ -14,20 +14,20 @@ require('dotenv').config();
 exports.searchBySymbol = async (request, response) => {
     try {
         const params = request.params;
-
-
+        if(!params.symbol) throw new Error('Symbol cannot be empty');
 
         const res = await axios.get(`stock/${params.symbol}/quote?token=${process.env.API_SECRET_TOKEN}`);
   
-        
         response.send(formatStockDataService.formatSearchResults(res));
     } catch (error) {
         let errorMessage = error.message;
-        if(error.response.status === 404) {
-            errorMessage = "Company Symbol not found.";
+        if(error.response) {
+            if(error.response.status === 404) {
+                errorMessage = "Company Symbol not found.";
+            }
         }
 
-        response.status(500).send(new StockErrorHandler(errorMessage));
+        response.status(500).send(new StockErrorHandler(`Search Failed: ${errorMessage}`));
     }
 }
 
@@ -35,6 +35,7 @@ exports.searchBySymbol = async (request, response) => {
 exports.getShareUnits = async (request, response) => {
     try {
         const params = request.params;
+        if(!params.symbol) throw new error('Symbol cannot be empty');
         
         //Get user info
         const sessionId = await authUserSessionService.authUserSession(request, response);
@@ -64,8 +65,10 @@ exports.getStockHistory = async (request, response) => {
         response.send(stockHistory);
     } catch (error) {
         let errorMessage = error.message;
-        if(error.response.status === 404) {
-            errorMessage = "Company Symbol not found.";
+        if(error.response) {
+            if(error.response.status === 404) {
+                errorMessage = "Company Symbol not found.";
+            }
         }
 
         response.status(500).send(new StockErrorHandler(errorMessage));

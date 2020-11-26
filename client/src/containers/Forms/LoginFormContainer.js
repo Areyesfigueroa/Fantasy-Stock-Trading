@@ -40,7 +40,7 @@ const LoginFormContainer = (props) => {
         .then(res => {
             console.log("Login");
             userSession.setSession(res);
-            history.push('/trade');
+            history.push('/portfolio');
             history.go(0);
         })
         .catch(error => {
