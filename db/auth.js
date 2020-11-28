@@ -23,6 +23,10 @@ module.exports = {
         const values = [email, firstName, lastName, hashPassword, termsCheck];
         await db.query(queryString, values);
     },
+    doesUserExist: async (email) => {
+        const { rows } = await db.query("SELECT EXISTS(SELECT 1 FROM users WHERE email = $1)", [email]);
+        return rows[0].exists;
+    },
     getUser: async (email, password) => {
         console.log('WARNING: Getting User from DB');
 

@@ -13,3 +13,9 @@ exports.getLatestWeekday = (fromDate) => {
    return `${fromDate.getFullYear()}${utils.formatDateDigits(fromDate.getMonth() + 1)}${utils.formatDateDigits(fromDate.getDate())}`;
  }
  
+exports.hasSpecialCharacters = (stringValue) => {
+   return /[\s~`!@#$%\^&*+=\-\[\]\\';,/{}|\\":<>\?()\._]/g.test(stringValue);
+}
+exports.hasNumber = (stringValue) => {
+   return /\d/.test(stringValue);
+}

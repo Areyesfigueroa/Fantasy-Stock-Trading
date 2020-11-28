@@ -6,7 +6,7 @@ const loginValidation = () => [
 ];
 
 const registerValidation = () => [ 
-    email('Email'), 
+    email('Email', 'email', true), 
     text('First Name', 'firstName'), 
     text('Last Name', 'lastName'),
     password('Password'),
