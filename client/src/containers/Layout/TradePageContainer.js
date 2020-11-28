@@ -23,7 +23,10 @@ const TradePageContainer = () => {
     const [loadingStocks, setLoadingStocks]=useState(true);
     const [loadingSearchRes, setLoadingSearchRes]=useState(false);
 
+    let isStocksInitialized = true;
+
     useEffect(() => {
+
         if(!userSession.session) history.push('/login');
         setInitialStocks();
 
@@ -31,10 +34,15 @@ const TradePageContainer = () => {
 
         const params = new URLSearchParams(history.location.search);
         handleSearch(params.get('q'));
+
+        //cancel all subscriptions
+        return () => (isStocksInitialized = false)
     }, []);
 
     const setInitialStocks = async () => {
         try {            
+            if(!isStocksInitialized) return;
+
             const initialStocks = ['SPY', 'DIA', 'IWM'];
             let stocks = [];
             for(let i = 0; i < initialStocks.length; i++) {
@@ -48,6 +56,8 @@ const TradePageContainer = () => {
             }
             setLoadingStocks(false);
         } catch (error) {
+            if(!isStocksInitialized) return;
+            
             toast.handleShow(<ToastErrorTitle />, error.message);
         }
     }

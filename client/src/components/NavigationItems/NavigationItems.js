@@ -13,14 +13,14 @@ const NavigationItems = () => {
 
     return (
         <Nav className="mr-sm-2">
-            <NavigationItem link="/home">Home</NavigationItem>
-            <NavigationItem link="/trade">Trade</NavigationItem>
-            <NavigationItem link="/portfolio">Portfolio</NavigationItem>
             <NavDropdown title={userSession.session ? `Hi ${userSession.session.user.first_name}`: `My Account`} id="collasible-nav-dropdown">
                {userSession.session ? 
                <Button variant="light" style={{width: "100%"}} onClick={logoutUser}>LogOut</Button>:
                <NavigationItem link="/login" dropdownItem>{"Log in"}</NavigationItem>}
             </NavDropdown>
+            <NavigationItem link="/home">Home</NavigationItem>
+            <NavigationItem link="/trade">Trade</NavigationItem>
+            <NavigationItem link="/portfolio">Portfolio</NavigationItem>
         </Nav>
     );
 };
