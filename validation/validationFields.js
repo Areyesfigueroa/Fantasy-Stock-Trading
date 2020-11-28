@@ -48,9 +48,25 @@ const checkbox = (customName, fieldName='checkbox') => {
     )
 }
 
+const number = (customName, fieldName='number', positiveOnly=false) => {
+
+    const validationChainObj = (
+        check(fieldName)
+            .custom((value) => typeof value === 'number').withMessage(`${customName} must be a number`)
+        );
+
+    if(positiveOnly) {
+        validationChainObj.custom((value) => value > 0).withMessage(`${customName} must be a positive number`);
+    }
+
+    return validationChainObj;
+
+}
+
 module.exports = {
     email, 
     password,
     text,
-    checkbox
+    checkbox,
+    number
 }

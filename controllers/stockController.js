@@ -7,6 +7,7 @@ const authUserSessionService = require('../services/auth/authUserSessionService'
 const buySharesService = require('../services/stock/buySharesService');
 const sellSharesService = require('../services/stock/sellSharesService');
 const getStocksService = require('../services/stock/getStocksService');
+const validationService = require('../services/validation/validateService');
 
 const StockErrorHandler = require('../error/StockErrorHandler');
 require('dotenv').config();
@@ -79,6 +80,8 @@ exports.buyShares = async (request, response) => {
     try{
         const body = request.body;
 
+        validationService.validateRequest(request, response);
+
         //Get user info
         const sessionId = await authUserSessionService.authUserSession(request, response);
         const user = await authDB.getUserBySessionID(sessionId);
@@ -95,7 +98,8 @@ exports.buyShares = async (request, response) => {
 exports.sellShares = async (request, response) => {
     try {
         const body = request.body;
-        body.shareUnits = parseInt(body.shareUnits);
+
+        validationService.validateRequest(request, response);
 
         const sessionId = await authUserSessionService.authUserSession(request, response);
         const user = await authDB.getUserBySessionID(sessionId);
