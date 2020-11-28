@@ -3,10 +3,13 @@ const registerUserService = require('../services/auth/registerUserService');
 const loginUserService = require('../services/auth/loginUserService');
 const authUserSessionService = require('../services/auth/authUserSessionService');
 const StockErrorHandler = require('../error/StockErrorHandler');
+const validateService = require('../services/validation/validateService');
 
 exports.register = async (request, response) => {
     const body = request.body;
     try {
+        validateService.validateRequest(request, response);
+
         const userSession = await registerUserService.registerUser(body.email, body.firstName, body.lastName, body.password, body.termsCheck);
         response.send(userSession);
     } catch(err) {
@@ -17,6 +20,8 @@ exports.register = async (request, response) => {
 exports.login = async(request, response) => {
     const body = request.body;
     try {
+        validateService.validateRequest(request, response);
+
         const userSession = await loginUserService.loginUser(body.email, body.password);
         response.send(userSession);
     } catch(err) {

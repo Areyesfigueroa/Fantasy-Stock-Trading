@@ -16,31 +16,40 @@ const RegisterFormContainer = (props) => {
                 'email',
                 props.disableLabels ? '':'Email Address',
                 'Enter Email',
-                props.disableHelperText ? '':"We'll never share your email with anyone else."),
+                props.disableHelperText ? '':"We'll never share your email with anyone else.",
+                'alielreyes@gmail.com'),
             fName: getFormElConfig(
                 'text',
                 'first-name',
                 'fName',
                 props.disableLabels ? '':'First Name', 
-                'Enter First Name'), 
+                'Enter First Name',
+                '',
+                "Aliel"), 
             lName: getFormElConfig(
                 'text', 
                 'last-name', 
                 'lName',
                 props.disableLabels ? '':'Last Name',
-                'Enter Last Name'),
+                'Enter Last Name',
+                "",
+                "Reyes"),
             password: getFormElConfig(
                 'password', 
                 'register-password', 
                 'password',
                 props.disableLabels ? '':'Password',
-                'Enter Password'),
+                'Enter Password',
+                '',
+                '@R3y3s7457'),
             retypePassword: getFormElConfig(
                 'password', 
                 'retype-password',
                 'retypePassword', 
                 props.disableLabels ? '':'Retype Password',
-                'Retype Password'),
+                'Retype Password',
+                '',
+                '@R3y3s7457'),
             registerCheck: getFormElConfig(
                 'checkbox', 
                 'register-check', 
@@ -58,8 +67,8 @@ const RegisterFormContainer = (props) => {
     useEffect(() => {
         if(!isFormValid) return;
         
-        registerUser(registerForm.email.value, registerForm.fName.value, registerForm.lName.value, registerForm.password.value, registerForm.registerCheck.value)
-        .then(res => {            
+        registerUser(registerForm.email.value, registerForm.fName.value, registerForm.lName.value, registerForm.password.value, registerForm.retypePassword.value, registerForm.registerCheck.value)
+        .then(res => {     
             userSession.setSession(res); //Get the user session in the response. save to local storage.
             history.push('/portfolio'); //Reroute page.
             history.go(0);
@@ -67,7 +76,6 @@ const RegisterFormContainer = (props) => {
         .catch(error => {
             setSubmitErrorMessage(error.message);
             setIsFormValid(false);
-            console.log(error.message);
         })
 
     }, [isFormValid]);
@@ -92,7 +100,7 @@ const RegisterFormContainer = (props) => {
                 form.retypePassword.validation.matchInput = registerForm.password.value;
                 break;
             case (form.registerCheck.id): 
-                form.registerCheck.value = event.target.value;
+                form.registerCheck.value = event.target.checked;
                 break;
             default:
                 throw new Error("Form ID not found");

@@ -38,7 +38,6 @@ const LoginFormContainer = (props) => {
         if(!isFormValid) return;
         loginUser(loginForm.email.value, loginForm.password.value)
         .then(res => {
-            console.log("Login");
             userSession.setSession(res);
             history.push('/portfolio');
             history.go(0);

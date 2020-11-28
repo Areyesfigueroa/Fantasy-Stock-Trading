@@ -26,8 +26,8 @@ const fetchData = (url='', bearerToken='') => {
     });
 }
 
-const registerUser = async (email, firstName, lastName, password, termsCheck) => {
-    const response = await postData('/api/auth/register/', {email, firstName, lastName, password, termsCheck});
+const registerUser = async (email, firstName, lastName, password, retypePassword, termsCheck) => {
+    const response = await postData('/api/auth/register/', {email, firstName, lastName, password, retypePassword, termsCheck});
 
     if(!response.ok) {
         const data = await response.json();
