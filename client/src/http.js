@@ -62,6 +62,7 @@ const logoutUser = async() => {
     window.location.reload();
 }
 
+
 const searchBySymbol = async (symbol) => {
     const response = await fetch(`/api/stocks/search/${symbol}`);
 

@@ -11,6 +11,8 @@ import useToast from '../../hooks/useToast';
 import { formatNumToCurrency } from '../../utils';
 import { searchBySymbol, getStockHistory, buyCompanyShares, sellCompanyShares, logoutUser, getSavedShareUnits } from '../../http';
 
+let _isMounted = true;
+
 const TradePageContainer = () => {
 
     const userSession = useContext(UserSessionContext());
@@ -23,10 +25,8 @@ const TradePageContainer = () => {
     const [loadingStocks, setLoadingStocks]=useState(true);
     const [loadingSearchRes, setLoadingSearchRes]=useState(false);
 
-    let isStocksInitialized = true;
-
     useEffect(() => {
-
+        _isMounted = true;
         if(!userSession.session) history.push('/login');
         setInitialStocks();
 
@@ -34,31 +34,37 @@ const TradePageContainer = () => {
 
         const params = new URLSearchParams(history.location.search);
         handleSearch(params.get('q'));
-
-        //cancel all subscriptions
-        return () => (isStocksInitialized = false)
     }, []);
+
+    useEffect(() => {
+        return function cleanup() {
+            _isMounted = false;
+        };
+    })
 
     const setInitialStocks = async () => {
         try {            
-            if(!isStocksInitialized) return;
-
             const initialStocks = ['SPY', 'DIA', 'IWM'];
             let stocks = [];
             for(let i = 0; i < initialStocks.length; i++) {
                 stocks = savedStocks;
-                stocks.push(await searchBySymbol(initialStocks[i]));
                 
-                const { sharesHeld } = await getSavedShareUnits(stocks[i].id);
-                stocks[i].sharesHeld = sharesHeld;
+                    if(!_isMounted) return;
+                    stocks.push(await searchBySymbol(initialStocks[i]));
 
-                setSavedStocks(stocks);
+                    if(!_isMounted) return;
+                    const { sharesHeld } = await getSavedShareUnits(stocks[i].id);
+                    stocks[i].sharesHeld = sharesHeld;
+                
+                    if(!_isMounted) return;
+                    setSavedStocks(stocks);
             }
+            if(!_isMounted) return;
             setLoadingStocks(false);
         } catch (error) {
-            if(!isStocksInitialized) return;
-            
-            toast.handleShow(<ToastErrorTitle />, error.message);
+            if(_isMounted) {
+                toast.handleShow(<ToastErrorTitle />, error.message);
+            }
         }
     }
 

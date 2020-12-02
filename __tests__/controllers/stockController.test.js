@@ -53,7 +53,7 @@ describe('Stock Controller Tests', () => {
 
             await stockCtrl.searchBySymbol(request, response);
 
-            expect(response.send.mock.results[0].value).toEqual(new StockErrorHandler(error.message));
+            expect(response.send.mock.results[0].value).toEqual(new StockErrorHandler(`Search Failed: ${error.message}`));
         })
 
         test('Response should throw 404 error', async () => {
@@ -72,7 +72,7 @@ describe('Stock Controller Tests', () => {
 
             await stockCtrl.searchBySymbol(request, response);
 
-            expect(response.send.mock.results[0].value).toEqual(new StockErrorHandler("Company Symbol not found."));
+            expect(response.send.mock.results[0].value).toEqual(new StockErrorHandler("Search Failed: Company Symbol not found."));
         });
     });
 

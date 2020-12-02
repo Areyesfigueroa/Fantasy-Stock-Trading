@@ -52,14 +52,14 @@ describe('Sell Share Services Tests', () => {
             const unitPrice = 300;
             const shareUnits = 3;
             const account_balance = 100000;
-            const newBalanceMock = +(account_balance + (unitPrice * shareUnits)).toFixed(2);
+            const newBalanceMock = +(parseFloat(account_balance) + (unitPrice * shareUnits)).toFixed(2);
 
-            portfolioDB.getAccountBalance.mockReturnValue(account_balance);
+            portfolioDB.getAccountBalance.mockReturnValue({ account_balance });
             portfolioDB.upsertPortfolio.mockImplementation((uId, newBalance) => {
                 expect(uId).toEqual(userId);
                 expect(newBalance).toEqual(newBalanceMock);
             });
-
+            
             await sellSharesService.updateAccountBalance(userId, unitPrice, shareUnits);
             
         })

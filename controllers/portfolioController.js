@@ -9,7 +9,6 @@ exports.getBalance = async (request, response) => {
         const user = await authDB.getUserBySessionID(sessionId);
         
         const balance = await getBalanceService.getAccountBalance(user.user_id);
-
         response.send(balance);
     } catch(err) {
         response.status(500).send(new StockErrorHandler(`Server Error, could not get account balance: ${err.message}`));

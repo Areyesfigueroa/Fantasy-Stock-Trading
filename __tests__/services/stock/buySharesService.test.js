@@ -1,8 +1,10 @@
 const portfolioDB = require('../../../db/portfolio');
+const getBalanceService = require('../../../services/portfolio/getBalanceService');
 const buySharesServices = require('../../../services/stock/buySharesService');
 
 jest.mock('../../../db/portfolio');
 jest.mock('../../../db/stocks');
+jest.mock('../../../services/portfolio/getBalanceService');
 
 describe("Buy Share Services", () => {
     describe('Calculate New Balance', () => {
@@ -10,13 +12,12 @@ describe("Buy Share Services", () => {
             const userId='userId';
             const unitPrice=300;
             const shareUnits=3;
-            const accountBalance=100000.99;
-            const newBalance = +parseFloat(accountBalance - (unitPrice * shareUnits)).toFixed(2);
+            const account_balance=100000.99;
+            const newBalance = +parseFloat(account_balance - (unitPrice * shareUnits)).toFixed(2);
 
-            portfolioDB.getAccountBalance.mockReturnValue(accountBalance);
+            getBalanceService.getAccountBalance.mockReturnValue({ account_balance });
 
             const result = await buySharesServices.calculateNewBalance(userId, unitPrice, shareUnits);
-            
             expect(result).toEqual(newBalance);
         })
 

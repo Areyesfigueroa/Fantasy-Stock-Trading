@@ -9,6 +9,7 @@ import useToast from '../../hooks/useToast';
 import { getSavedStocks, logoutUser, getAccountBalance } from '../../http';
 import { formatNumToCurrency } from '../../utils';
 
+let _isMounted = true;
 const PortfolioPageContainer = () => {
     const userSession = useContext(UserSessionContext());
     const history = useHistory();
@@ -23,25 +24,34 @@ const PortfolioPageContainer = () => {
     const [totalAssetValue, setTotalAssetValue] = useState(0);
 
     useEffect(() => {
+        _isMounted = true;
         if (!userSession.session) history.push('/login');
         initStocksData();
+
+        return function cleanup() {
+            _isMounted = false;
+        }
     }, []);
 
     const initStocksData = async () => {
         try {
+            if(!_isMounted) return;
             const savedStocks = await getSavedStocks();
             if(savedStocks.hasExpired) logoutUser();
 
             const portfolioChart = savedStocks.map(stock => [stock.companyName, stock.holdingValue, stock.holdingValue]);
             portfolioChart.unshift(['Current Stock Value', 'Stock Value', { role: 'annotation' }]);
 
+            if(!_isMounted) return;
             setPortfolioHoldings(savedStocks);
             setPorfolioHoldingsChart(portfolioChart);
             await setAccountInfo(savedStocks);
             setLoading(false);
 
         } catch (error) {
-            toast.handleShow(<ToastErrorTitle />, error.message);
+            if(_isMounted) {
+                toast.handleShow(<ToastErrorTitle />, error.message);
+            }
         }
     }
 
@@ -56,10 +66,11 @@ const PortfolioPageContainer = () => {
             });
 
             let totalAssets = +response.account_balance + totalHoldings;
-            
+                
             setTotalHoldingValue(formatNumToCurrency(totalHoldings));
             setAccountBalance(formatNumToCurrency(response.account_balance));
             setTotalAssetValue(formatNumToCurrency(totalAssets));
+            
         } catch (error) {
             toast.handleShow(<ToastErrorTitle />, error.message);
         }
