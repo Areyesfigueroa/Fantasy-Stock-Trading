@@ -1,7 +1,7 @@
 {
-  "name": "tweetfeed",
+  "name": "Fantasy Stock Trading",
   "version": "1.0.0",
-  "description": "",
+  "description": "Stock trading application that utilizes external api's and databases.",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
