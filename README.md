@@ -1,4 +1,4 @@
-# Application ReadMe Template
+# Fantasy Stock Trading
 
 Try it out! [Application Link](https://ar-fantasy-stock-trading.herokuapp.com/)
 
