@@ -1,6 +1,6 @@
 # Fantasy Stock Trading
 
-Try it out! [Application Link](https://ar-fantasy-stock-trading.herokuapp.com/)
+Try it out! [Application Link](https://ar-fantasy-stock.herokuapp.com/)
 
 Use fake money to trade stock shares from your favorite companies. 
 
