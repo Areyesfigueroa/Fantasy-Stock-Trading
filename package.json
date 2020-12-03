@@ -1,6 +1,6 @@
 {
   "name": "fantasy-stock-trading",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Stock trading application that utilizes external api's and databases.",
   "main": "server.js",
   "scripts": {
