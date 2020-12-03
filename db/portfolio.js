@@ -2,8 +2,6 @@ const db = require('.');
 
 module.exports = {
     upsertPortfolio: async (userID, newPrice) => {
-        console.log('WARNING: Updating/Inserting into Portfolio DB');
-
         const query = `INSERT INTO portfolio (user_id, account_balance) 
         VALUES ($1, $2)
         ON CONFLICT(user_id) DO UPDATE SET account_balance = EXCLUDED.account_balance
@@ -14,8 +12,6 @@ module.exports = {
     },
 
     getAccountBalance: async (userID) => {
-        console.log('WARNING: Accessing account balance from DB');
-
         const query = `SELECT account_balance FROM portfolio WHERE user_id=$1`;
         const { rows } = await db.query(query, [userID]);
 

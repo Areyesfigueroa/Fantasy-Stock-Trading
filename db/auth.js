@@ -12,9 +12,7 @@ const doPasswordsMatch = async (email, password) => {
 };
 
 module.exports = {
-    addUser: async (email, firstName, lastName, password, termsCheck) => {
-        console.log('WARNING: Adding user to DB');
-        
+    addUser: async (email, firstName, lastName, password, termsCheck) => {        
         const saltRounds = 10;
         const salt = await bcrypt.genSalt(saltRounds);
         const hashPassword = await bcrypt.hash(password, salt);
@@ -28,8 +26,6 @@ module.exports = {
         return rows[0].exists;
     },
     getUser: async (email, password) => {
-        console.log('WARNING: Getting User from DB');
-
         const isMatch = await doPasswordsMatch(email, password);
 
         return new Promise(async (resolve, reject) => {
@@ -43,8 +39,6 @@ module.exports = {
         });
     }, 
     createUserSession: async (user) => {
-        console.log('WARNING: Creating User Session DB');
-
         const insertSessionQuery = "INSERT INTO user_sessions(user_id, expires_at) VALUES ($1, $2) RETURNING id";
         const today = new Date();
         const tomorrow = new Date(today);
@@ -80,7 +74,6 @@ module.exports = {
     },
 
     destroyUserSession: async(sessionID) => {
-        console.log('WARNING: Deleting from DB');
         await db.query("DELETE FROM user_sessions WHERE id=$1", [sessionID]);
     }
 };
