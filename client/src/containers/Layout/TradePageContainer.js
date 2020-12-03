@@ -1,7 +1,6 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router';
 
-import UserSessionContext from '../../context/UserSessionContext';
 import TradePage from '../../components/Layout/TradePage/TradePage';
 import Toast from '../../components/Toast/Toast';
 import ToastErrorTitle from '../../components/Toast/ToastTitles/ToastErrorTitle/ToastErrorTitle';
@@ -15,7 +14,6 @@ let _isMounted = true;
 
 const TradePageContainer = () => {
 
-    const userSession = useContext(UserSessionContext());
     const history = useHistory();
     const toast = useToast();
 
@@ -27,7 +25,6 @@ const TradePageContainer = () => {
 
     useEffect(() => {
         _isMounted = true;
-        if(!userSession.session) history.push('/login');
         setInitialStocks();
 
         if(!history.location.search) return;

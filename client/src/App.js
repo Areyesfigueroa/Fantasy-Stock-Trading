@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import './App.css';
 
 import {Switch, Route} from 'react-router-dom';
@@ -8,19 +8,22 @@ import SplashPageContainer from './containers/Layout/SplashPageContainer';
 import LoginPage from './components/Layout/LoginPage/LoginPage';
 import TradePageContainer from './containers/Layout/TradePageContainer';
 import PortfolioPageContainer from './containers/Layout/PortfolioPageContainer';
-import Charts from './components/Charts/Charts';
 
-// TESTING
+import UserSessionContext from './context/UserSessionContext';
+
 function App() {
+  const userSession = useContext(UserSessionContext());
+
+  const tradePageContainerComp = userSession.session ? TradePageContainer: LoginPage;
+  const portfolioPageContainerComp = userSession.session ? PortfolioPageContainer: LoginPage;
 
   return (
     <div className="App">
       <Header />
       <Switch>
         <Route path='/login' component={LoginPage} />
-        <Route path='/trade' component={TradePageContainer}/>
-        <Route path='/portfolio' component={PortfolioPageContainer} />
-        <Route path='/charts' component={Charts} /> {/* TESTING */}
+        <Route path='/trade' component={tradePageContainerComp}/>
+        <Route path='/portfolio' component={portfolioPageContainerComp} />
         <Route path='/' component={SplashPageContainer} />
       </Switch>
     </div>

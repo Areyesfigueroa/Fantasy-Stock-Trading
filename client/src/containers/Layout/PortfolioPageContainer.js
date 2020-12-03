@@ -1,7 +1,6 @@
 import React, { useEffect, useContext, useState } from 'react';
 import { useHistory } from 'react-router';
 
-import UserSessionContext from '../../context/UserSessionContext';
 import PortfolioPage from '../../components/Layout/PortfolioPage/PorfolioPage';
 import Toast from '../../components/Toast/Toast';
 import ToastErrorTitle from '../../components/Toast/ToastTitles/ToastErrorTitle/ToastErrorTitle';
@@ -11,7 +10,6 @@ import { formatNumToCurrency } from '../../utils';
 
 let _isMounted = true;
 const PortfolioPageContainer = () => {
-    const userSession = useContext(UserSessionContext());
     const history = useHistory();
     const toast = useToast();
 
@@ -25,7 +23,6 @@ const PortfolioPageContainer = () => {
 
     useEffect(() => {
         _isMounted = true;
-        if (!userSession.session) history.push('/login');
         initStocksData();
 
         return function cleanup() {
