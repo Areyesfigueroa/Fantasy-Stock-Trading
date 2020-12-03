@@ -1,8 +1,11 @@
 {
   "name": "fantasy-stock-trading",
-  "version": "1.0.1",
+  "version": "1.0.0",
   "description": "Stock trading application that utilizes external api's and databases.",
   "main": "server.js",
+  "engines": {
+    "node": "12.18.2"
+  },
   "scripts": {
     "start": "node server.js",
     "server": "nodemon server.js",
