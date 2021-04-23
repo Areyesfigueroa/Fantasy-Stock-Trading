@@ -5,7 +5,7 @@ Use fake money to trade stock shares from your favorite companies.
 # Installation Instructions for SQL Database
 
 1.) Install postgres\
-2.) Run "backup.sql" script in db/backups directory
+2.) Run `backup.sql` script in `db/backups` directory
 
 # Installation Instructions to Run App Locally
 
