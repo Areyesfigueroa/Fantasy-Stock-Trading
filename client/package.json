@@ -38,6 +38,6 @@
     ]
   },
   "devDependencies": {
-    "cra-build-watch": "^3.2.0"
+    "cra-build-watch": "^3.4.0"
   }
 }

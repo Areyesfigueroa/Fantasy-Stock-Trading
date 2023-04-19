@@ -1,0 +1,18 @@
+services:
+  postgres:
+    image: postgres:12.9
+    container_name: fantasy-stock-db
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=fantasy-stock
+    ports:
+      - '5455:5432'
+    expose:
+      - 5432
+    volumes:
+      - pg_data:/var/lib/postgresql/data/
+
+volumes:
+  pg_data:
