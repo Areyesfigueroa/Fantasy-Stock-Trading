@@ -1,22 +1,31 @@
-import React from 'react';
-import Form from 'react-bootstrap/Form';
-import Button from 'react-bootstrap/Button';
-import Input from '../Input/Input';
-import ErrorMessage from '../ErrorMessage/ErrorMessage';
+import React from 'react'
+import Form from 'react-bootstrap/Form'
+import Button from 'react-bootstrap/Button'
+import Input from '../Input/Input'
+import ErrorMessage from '../ErrorMessage/ErrorMessage'
 
-const LoginForm = (props) => {
-    return (
-        <Form style={props.style} onSubmit={props.submit}>
-            {props.submitErrorMessage ? <ErrorMessage>{props.submitErrorMessage}</ErrorMessage>: null}
+const LoginForm = ({
+  style,
+  submit,
+  submitErrorMessage,
+  formConfig,
+  change,
+  btnText
+}) => {
+  return (
+    <Form style={style} onSubmit={submit}>
+      {submitErrorMessage ? (
+        <ErrorMessage>{submitErrorMessage}</ErrorMessage>
+      ) : null}
 
-            <Input inputConfig={props.formConfig.email} change={props.change} />
-            <Input inputConfig={props.formConfig.password} change={props.change} />
+      <Input inputConfig={formConfig.email} change={change} />
+      <Input inputConfig={formConfig.password} change={change} />
 
-            <Button variant="primary" type="submit">
-                {props.btnText ? props.btnText : "Submit"}
-            </Button>
-        </Form>
-    );
-};
+      <Button variant='primary' type='submit'>
+        {btnText ? btnText : 'Submit'}
+      </Button>
+    </Form>
+  )
+}
 
-export default LoginForm;
+export default LoginForm

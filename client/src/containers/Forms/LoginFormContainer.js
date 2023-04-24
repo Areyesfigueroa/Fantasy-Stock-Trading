@@ -1,88 +1,97 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext } from 'react'
 
-import UserSessionContext from '../../context/UserSessionContext';
-import { useHistory } from 'react-router';
-import { getFormElConfig, checkValidity } from '../../formValidation';
-import LoginForm from '../../components/Forms/LoginForm/LoginForm';
-import { loginUser } from '../../http';
+import UserSessionContext from '../../context/UserSessionContext'
+import { useHistory } from 'react-router'
+import { useSelector, useDispatch } from 'react-redux'
 
-const LoginFormContainer = (props) => {
-    const history = useHistory();
-    const userSession = useContext(UserSessionContext());
+import LoginForm from '../../components/Forms/LoginForm/LoginForm'
+import { loginUser } from '../../http'
 
-    const [isFormValid, setIsFormValid] = useState(false);
-    const [submitErrorMessage, setSubmitErrorMessage] = useState('');
+import {
+  updateInputConfig,
+  updateLoginFormField,
+  validateLoginFormFields
+} from '../../store/index'
 
-    const [loginForm, setLoginForm] = useState({
-        email: getFormElConfig(
-            'email',
-            'login-email', 
-            'email',
-            props.disableLabels ? '':'Email Address', 
-            'Enter Email', 
-            props.disableHelperText ? '':"We'll never share your email with anyone else."),
-        
-        password: getFormElConfig(
-            'password',
-            'login-password', 
-            'password',
-            props.disableLabels ? '':'Password', 
-            'Enter Password')
-    });
+const LoginFormContainer = ({
+  style,
+  disableLabels,
+  disableHelperText,
+  disableFormText,
+  btnText
+}) => {
+  const history = useHistory()
+  const userSession = useContext(UserSessionContext())
 
+  const dispatch = useDispatch()
 
-    useEffect(() => {
-        if(!isFormValid) return;
-        loginUser(loginForm.email.value, loginForm.password.value)
-        .then(res => {
-            userSession.setSession(res);
-            history.push('/portfolio');
-            history.go(0);
-        })
-        .catch(error => {
-            setSubmitErrorMessage(error.message);
-            setIsFormValid(false);
-            console.log(error.message);
-        });
-    }, [isFormValid]);
+  const { loginForm } = useSelector((store) => store)
 
-    const handleChange = (event) => {
-        let form = {...loginForm};
-        form[event.target.name].value = event.target.value;
+  const [submitErrorMessage, setSubmitErrorMessage] = useState('')
 
-        setLoginForm(form);
-    }
-
-    const handleSubmit = (event) => {
-        event.preventDefault();
-        let form = { ...loginForm };
-        let isSubmittionValid = true;
-
-        for(let key in loginForm) {
-            let {valid, error} = checkValidity(loginForm[key].value, loginForm[key].validation);
-            form[key].valid = valid;
-            form[key].error = error;
-
-            isSubmittionValid = valid && isSubmittionValid;
+  useEffect(() => {
+    if (!disableLabels && !disableHelperText) return
+    dispatch(
+      updateInputConfig({
+        fieldName: loginForm.fields.email.name,
+        options: {
+          disableLabels: disableLabels,
+          disableHelperText: disableHelperText
         }
-        setLoginForm(form);
-        setIsFormValid(isSubmittionValid);
-    }
+      })
+    )
+    dispatch(
+      updateInputConfig({
+        fieldName: loginForm.fields.password.name,
+        options: {
+          disableLabels: disableLabels
+        }
+      })
+    )
+  }, [])
 
-    return (
-        <div>
-            <LoginForm 
-                style={props.style}
-                disableLabels={props.disableLabels}
-                disableFormText={props.disableFormText}
-                btnText={props.btnText}
-                formConfig={loginForm}
-                submitErrorMessage={submitErrorMessage}
-                submit={handleSubmit}
-                change={handleChange}
-            />
-        </div>
-    );
-};
+  useEffect(() => {
+    if (!loginForm.valid) return
+    loginUser(loginForm.email.value, loginForm.fields.password.value)
+      .then((res) => {
+        userSession.setSession(res)
+        history.push('/portfolio')
+        history.go(0)
+      })
+      .catch((error) => {
+        setSubmitErrorMessage(error.message)
+        console.error(error.message)
+      })
+  }, [loginForm, history, userSession])
 
-export default LoginFormContainer;
+  const handleChange = (event) => {
+    dispatch(
+      updateLoginFormField({
+        fieldName: event.target.name,
+        fieldValue: event.target.value
+      })
+    )
+  }
+
+  const handleSubmit = (event) => {
+    event.preventDefault()
+    dispatch(validateLoginFormFields())
+  }
+
+  return (
+    <div>
+      <LoginForm
+        style={style}
+        disableLabels={disableLabels}
+        disableFormText={disableFormText}
+        btnText={btnText}
+        formConfig={loginForm.fields}
+        submitErrorMessage={submitErrorMessage}
+        submit={handleSubmit}
+        change={handleChange}
+      />
+    </div>
+  )
+}
+
+export default LoginFormContainer
