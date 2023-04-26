@@ -1,15 +1,15 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useEffect, useContext } from 'react'
 
 import UserSessionContext from '../../context/UserSessionContext'
 import { useHistory } from 'react-router'
 import { useSelector, useDispatch } from 'react-redux'
 
 import LoginForm from '../../components/Forms/LoginForm/LoginForm'
-import { loginUser } from '../../http'
 
 import {
   updateInputConfig,
   updateLoginFormField,
+  useLoginMutation,
   validateLoginFormFields
 } from '../../store/index'
 
@@ -23,11 +23,10 @@ const LoginFormContainer = ({
   const history = useHistory()
   const userSession = useContext(UserSessionContext())
 
+  const [login, loginResults] = useLoginMutation()
+
   const dispatch = useDispatch()
-
   const { loginForm } = useSelector((store) => store)
-
-  const [submitErrorMessage, setSubmitErrorMessage] = useState('')
 
   useEffect(() => {
     if (!disableLabels && !disableHelperText) return
@@ -52,17 +51,19 @@ const LoginFormContainer = ({
 
   useEffect(() => {
     if (!loginForm.valid) return
-    loginUser(loginForm.email.value, loginForm.fields.password.value)
-      .then((res) => {
-        userSession.setSession(res)
-        history.push('/portfolio')
-        history.go(0)
-      })
-      .catch((error) => {
-        setSubmitErrorMessage(error.message)
-        console.error(error.message)
-      })
-  }, [loginForm, history, userSession])
+
+    const { email, password } = loginForm.fields
+    login({ email: email.value, password: password.value })
+  }, [loginForm, login])
+
+  useEffect(() => {
+    // TODO: Handle user session using redux
+    if (loginResults.status === 'fulfilled') {
+      userSession.setSession(loginResults.data)
+      history.push('/portfolio')
+      history.go(0)
+    }
+  }, [loginResults, history, userSession])
 
   const handleChange = (event) => {
     dispatch(
@@ -86,7 +87,7 @@ const LoginFormContainer = ({
         disableFormText={disableFormText}
         btnText={btnText}
         formConfig={loginForm.fields}
-        submitErrorMessage={submitErrorMessage}
+        submitErrorMessage={loginResults?.error?.data?.errorMessage ?? ''}
         submit={handleSubmit}
         change={handleChange}
       />

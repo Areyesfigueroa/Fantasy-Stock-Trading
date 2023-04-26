@@ -8,17 +8,24 @@ import {
   validateLoginFormFields,
   updateInputConfig
 } from './slices/loginFormSlice'
+
 // TODO import apis
+import { authApi } from './apis/authAPI'
 
 export const store = configureStore({
   reducer: {
-    loginForm: loginFormReducer
+    loginForm: loginFormReducer,
+    [authApi.reducerPath]: authApi.reducer
   },
   middleware: (getDefaultMiddleware) => {
-    return getDefaultMiddleware()
+    return getDefaultMiddleware().concat(authApi.middleware)
   }
 })
 
 setupListeners(store.dispatch)
 
+// Actions from slices
 export { updateLoginFormField, validateLoginFormFields, updateInputConfig }
+
+// Redux Api generated hooks
+export { useLoginMutation } from './apis/authAPI'
