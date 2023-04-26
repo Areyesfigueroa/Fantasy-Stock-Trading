@@ -88,3 +88,5 @@ const checkValidity = (value, rules) => {
     error: errorMsg
   }
 }
+
+export { getFormElConfig, checkValidity }
