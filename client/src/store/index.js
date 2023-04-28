@@ -5,9 +5,9 @@ import { setupListeners } from '@reduxjs/toolkit/query'
 import {
   loginFormReducer,
   updateLoginFormField,
-  validateLoginFormFields,
   updateInputConfig
 } from './slices/loginFormSlice'
+import { userSessionReducer } from './slices/userSessionSlice'
 
 // TODO import apis
 import { authApi } from './apis/authAPI'
@@ -15,6 +15,7 @@ import { authApi } from './apis/authAPI'
 export const store = configureStore({
   reducer: {
     loginForm: loginFormReducer,
+    userSession: userSessionReducer,
     [authApi.reducerPath]: authApi.reducer
   },
   middleware: (getDefaultMiddleware) => {
@@ -25,7 +26,7 @@ export const store = configureStore({
 setupListeners(store.dispatch)
 
 // Actions from slices
-export { updateLoginFormField, validateLoginFormFields, updateInputConfig }
+export { updateLoginFormField, updateInputConfig }
 
 // Redux Api generated hooks
 export { useLoginMutation } from './apis/authAPI'

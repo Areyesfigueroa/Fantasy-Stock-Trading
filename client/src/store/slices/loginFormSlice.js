@@ -36,28 +36,27 @@ const loginFormSlice = createSlice({
       if (options?.disableLabels) state.fields[fieldName].label = ''
       if (options?.disableHelperText) state.fields[fieldName].helperText = ''
     },
-    validateLoginFormFields(state) {
-      state.valid = !Object.keys(state.fields).some((key) => {
-        let { valid, error } = checkValidity(
-          state.fields[key].value,
-          state.fields[key].validation
-        )
-        state.fields[key].valid = valid
-        state.fields[key].error = error
-
-        return !valid
-      })
-    },
     updateLoginFormField(state, action) {
+      // Update value
       const { fieldName, fieldValue } = action.payload
       state.fields[fieldName].value = fieldValue
+
+      // Update field validity
+      let { valid, error } = checkValidity(
+        state.fields[fieldName].value,
+        state.fields[fieldName].validation
+      )
+      state.fields[fieldName].valid = valid
+      state.fields[fieldName].error = error
+
+      // Update form validity
+      state.valid = Object.keys(state.fields).every(
+        (key) => state.fields[key].valid
+      )
     }
   }
 })
 
-export const {
-  updateLoginFormField,
-  validateLoginFormFields,
-  updateInputConfig
-} = loginFormSlice.actions
+export const { updateLoginFormField, updateInputConfig } =
+  loginFormSlice.actions
 export const loginFormReducer = loginFormSlice.reducer

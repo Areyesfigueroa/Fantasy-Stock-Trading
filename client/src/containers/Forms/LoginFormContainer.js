@@ -1,6 +1,5 @@
-import React, { useEffect, useContext } from 'react'
+import React, { useEffect } from 'react'
 
-import UserSessionContext from '../../context/UserSessionContext'
 import { useHistory } from 'react-router'
 import { useSelector, useDispatch } from 'react-redux'
 
@@ -9,8 +8,7 @@ import LoginForm from '../../components/Forms/LoginForm/LoginForm'
 import {
   updateInputConfig,
   updateLoginFormField,
-  useLoginMutation,
-  validateLoginFormFields
+  useLoginMutation
 } from '../../store/index'
 
 const LoginFormContainer = ({
@@ -21,12 +19,11 @@ const LoginFormContainer = ({
   btnText
 }) => {
   const history = useHistory()
-  const userSession = useContext(UserSessionContext())
 
   const [login, loginResults] = useLoginMutation()
 
   const dispatch = useDispatch()
-  const { loginForm } = useSelector((store) => store)
+  const { loginForm, userSession } = useSelector((store) => store)
 
   useEffect(() => {
     if (!disableLabels && !disableHelperText) return
@@ -50,20 +47,10 @@ const LoginFormContainer = ({
   }, [])
 
   useEffect(() => {
-    if (!loginForm.valid) return
-
-    const { email, password } = loginForm.fields
-    login({ email: email.value, password: password.value })
-  }, [loginForm, login])
-
-  useEffect(() => {
-    // TODO: Handle user session using redux
-    if (loginResults.status === 'fulfilled') {
-      userSession.setSession(loginResults.data)
+    if (loginResults.isSuccess && !!userSession) {
       history.push('/portfolio')
-      history.go(0)
     }
-  }, [loginResults, history, userSession])
+  }, [loginResults, userSession])
 
   const handleChange = (event) => {
     dispatch(
@@ -76,7 +63,10 @@ const LoginFormContainer = ({
 
   const handleSubmit = (event) => {
     event.preventDefault()
-    dispatch(validateLoginFormFields())
+    if (loginForm.valid) {
+      const { email, password } = loginForm.fields
+      login({ email: email.value, password: password.value })
+    }
   }
 
   return (
