@@ -57,7 +57,7 @@ const text = (customName, fieldName = 'text') => {
 
 const checkbox = (customName, fieldName = 'checkbox') => {
   return check(fieldName)
-    .custom((value) => value === true)
+    .custom((value) => value === 'on')
     .withMessage(`${customName} must be checked`)
 }
 

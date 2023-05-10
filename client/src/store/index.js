@@ -5,8 +5,15 @@ import { setupListeners } from '@reduxjs/toolkit/query'
 import {
   loginFormReducer,
   updateLoginFormField,
-  updateInputConfig
+  updateLoginInputsConfig,
+  validateLoginForm
 } from './slices/loginFormSlice'
+import {
+  registerFormReducer,
+  updateRegisterFormField,
+  updateRegisterInputsConfig,
+  validateRegisterForm
+} from './slices/registerFormSlice'
 import { userSessionReducer } from './slices/userSessionSlice'
 
 // TODO import apis
@@ -15,6 +22,7 @@ import { authApi } from './apis/authAPI'
 export const store = configureStore({
   reducer: {
     loginForm: loginFormReducer,
+    registerForm: registerFormReducer,
     userSession: userSessionReducer,
     [authApi.reducerPath]: authApi.reducer
   },
@@ -26,7 +34,16 @@ export const store = configureStore({
 setupListeners(store.dispatch)
 
 // Actions from slices
-export { updateLoginFormField, updateInputConfig }
+export {
+  // Login
+  updateLoginFormField,
+  updateLoginInputsConfig,
+  validateLoginForm,
+  // Register
+  updateRegisterFormField,
+  updateRegisterInputsConfig,
+  validateRegisterForm
+}
 
 // Redux Api generated hooks
-export { useLoginMutation } from './apis/authAPI'
+export { useLoginMutation, useRegisterMutation } from './apis/authAPI'

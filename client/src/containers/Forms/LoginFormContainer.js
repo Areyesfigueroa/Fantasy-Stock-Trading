@@ -6,9 +6,10 @@ import { useSelector, useDispatch } from 'react-redux'
 import LoginForm from '../../components/Forms/LoginForm/LoginForm'
 
 import {
-  updateInputConfig,
+  updateLoginInputsConfig,
   updateLoginFormField,
-  useLoginMutation
+  useLoginMutation,
+  validateLoginForm
 } from '../../store/index'
 
 const LoginFormContainer = ({
@@ -27,23 +28,24 @@ const LoginFormContainer = ({
 
   useEffect(() => {
     if (!disableLabels && !disableHelperText) return
-    dispatch(
-      updateInputConfig({
+
+    const initInputConfigs = [
+      {
         fieldName: loginForm.fields.email.name,
         options: {
-          disableLabels: disableLabels,
-          disableHelperText: disableHelperText
+          disableLabels,
+          disableHelperText
         }
-      })
-    )
-    dispatch(
-      updateInputConfig({
+      },
+      {
         fieldName: loginForm.fields.password.name,
         options: {
-          disableLabels: disableLabels
+          disableLabels
         }
-      })
-    )
+      }
+    ]
+
+    dispatch(updateLoginInputsConfig(initInputConfigs))
   }, [])
 
   useEffect(() => {
@@ -63,10 +65,15 @@ const LoginFormContainer = ({
 
   const handleSubmit = (event) => {
     event.preventDefault()
-    if (loginForm.valid) {
-      const { email, password } = loginForm.fields
-      login({ email: email.value, password: password.value })
+    if (!loginForm.valid && !loginForm.submitErrorMessage) {
+      // We also revalidate on submission to avoid
+      // not validating when we have not made any changes to the input fields.
+      dispatch(validateLoginForm())
+      return
     }
+
+    const { email, password } = loginForm.fields
+    login({ email: email.value, password: password.value })
   }
 
   return (
@@ -77,7 +84,7 @@ const LoginFormContainer = ({
         disableFormText={disableFormText}
         btnText={btnText}
         formConfig={loginForm.fields}
-        submitErrorMessage={loginResults?.error?.data?.errorMessage ?? ''}
+        submitErrorMessage={loginForm.submitErrorMessage}
         submit={handleSubmit}
         change={handleChange}
       />

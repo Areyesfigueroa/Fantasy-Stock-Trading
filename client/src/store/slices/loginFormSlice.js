@@ -1,5 +1,11 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { checkValidity, getFormElConfig } from '../../formValidation'
+import { getFormElConfig } from '../../formValidation'
+import {
+  updateInputsConfig,
+  updateFormField,
+  validateForm
+} from '../services/reducers'
+import { authApi } from '../apis/authAPI'
 
 const loginFormSlice = createSlice({
   name: 'loginForm',
@@ -22,41 +28,26 @@ const loginFormSlice = createSlice({
       )
     },
     valid: false,
-    errorMessage: ''
+    submitErrorMessage: ''
   },
   reducers: {
-    updateInputConfig(state, action) {
-      const { fieldName, options } = action.payload
-
-      if (!fieldName) {
-        console.error('Missing Field Name for login form configuration changes')
-        return
+    updateLoginInputsConfig: updateInputsConfig,
+    updateLoginFormField: updateFormField,
+    validateLoginForm: validateForm
+  },
+  extraReducers: (builder) => {
+    builder.addMatcher(
+      authApi.endpoints.login.matchRejected,
+      (state, { payload }) => {
+        state.submitErrorMessage = payload.error.data.errorMessage
       }
-
-      if (options?.disableLabels) state.fields[fieldName].label = ''
-      if (options?.disableHelperText) state.fields[fieldName].helperText = ''
-    },
-    updateLoginFormField(state, action) {
-      // Update value
-      const { fieldName, fieldValue } = action.payload
-      state.fields[fieldName].value = fieldValue
-
-      // Update field validity
-      let { valid, error } = checkValidity(
-        state.fields[fieldName].value,
-        state.fields[fieldName].validation
-      )
-      state.fields[fieldName].valid = valid
-      state.fields[fieldName].error = error
-
-      // Update form validity
-      state.valid = Object.keys(state.fields).every(
-        (key) => state.fields[key].valid
-      )
-    }
+    )
   }
 })
 
-export const { updateLoginFormField, updateInputConfig } =
-  loginFormSlice.actions
+export const {
+  updateLoginFormField,
+  updateLoginInputsConfig,
+  validateLoginForm
+} = loginFormSlice.actions
 export const loginFormReducer = loginFormSlice.reducer
