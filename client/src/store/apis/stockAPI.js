@@ -3,7 +3,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 const stocksApi = createApi({
   reducerPath: 'stocks',
   baseQuery: fetchBaseQuery({
-    baseUrl: 'http://localhost:3000/api/stocks',
+    baseUrl: '/api/stocks',
     prepareHeaders: (headers, { getState }) => {
       const token = getState()?.userSession?.sessionId
 

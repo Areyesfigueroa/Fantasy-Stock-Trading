@@ -3,7 +3,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 const portfolioApi = createApi({
   reducerPath: 'portfolio',
   baseQuery: fetchBaseQuery({
-    baseUrl: 'http://localhost:3000/api/portfolio',
+    baseUrl: '/api/portfolio',
     prepareHeaders: (headers, { getState }) => {
       const token = getState()?.userSession?.sessionId
 
