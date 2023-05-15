@@ -1,52 +1,66 @@
-import React from 'react';
-import Title from '../../Title/Title';
-import Container from 'react-bootstrap/Container';
-import AccountData from '../../AccountData/AccountData';
-import CustomChart from '../../CustomChart/CustomChart';
-import LoadingSpinner from '../../LoadingSpinner/LoadingSpinner';
-import PortfolioCards from '../../PortfolioCards/PortfolioCards';
+import React, { useEffect } from 'react'
+import { useHistory } from 'react-router'
+import Title from '../../Title/Title'
+import Container from 'react-bootstrap/Container'
+import AccountData from '../../AccountData/AccountData'
+import CustomChart from '../../CustomChart/CustomChart'
+import PortfolioCards from '../../PortfolioCards/PortfolioCards'
+import { formatNumToCurrency } from '../../../utils'
+import {
+  getHoldingCharts,
+  getTotalAssetValue,
+  getTotalHoldingValue
+} from '../../../utils/portfolio'
 
-const PorfolioPage = (props) => {
-    const subtitle="Each account starts with $100,000 fake dollars, see how much money you can earn by trading stocks";
-    
-    const loadChart = () => {
+const PorfolioPage = ({ accountBalance, savedStocks }) => {
+  const history = useHistory()
 
-        if(props.loading) return (<p>Loading Chart</p>);
+  const formattedAccountBalance = formatNumToCurrency(accountBalance)
+  const holdingsChart = getHoldingCharts(savedStocks)
 
-        //First row is always the title
-        if(props.holdingsChart.length > 1) {
-            return (
-                <CustomChart 
-                type="ColumnChart"
-                title="Portfolio Holdings"
-                data={props.holdingsChart}
-                chartAreaWidth={"80%"}
-                hAxisTitle={"Company"}
-                vAxisTitle={"Stock Value"}
-                />
-            );
-        } else {
-            return (<p>No Share Units Purchased</p>)
-        }
-    }
-    return (
-        <div>
-            <Title subtitle={subtitle}>Portfolio</Title>
-            <Container>
-                {props.loading ? <LoadingSpinner /> :
-                <AccountData 
-                title="Account Information"
-                balance={props.accountBalance}
-                holdingValue={props.totalHoldingValue}
-                assetValue={props.totalAssetValue} />}  
-                
-                {loadChart()}
+  const totalHoldingsValue = getTotalHoldingValue(savedStocks)
+  const formattedTotalHoldingsValue = formatNumToCurrency(totalHoldingsValue)
 
-                {props.holdings ? <PortfolioCards data={props.holdings} trade={props.trade}/>: null}
+  const totalAssetValue = getTotalAssetValue(totalHoldingsValue, accountBalance)
+  const formattedTotalAssetValue = formatNumToCurrency(totalAssetValue)
 
-            </Container>
-        </div>
-    );
-};
+  const trade = (companySymbol) => {
+    history.push({
+      pathname: '/trade',
+      search: `?q=${companySymbol}`
+    })
+  }
 
-export default PorfolioPage;
+  return (
+    <div>
+      <Title subtitle='Each account starts with $100,000 fake dollars, see how much money you can earn by trading stocks'>
+        Portfolio
+      </Title>
+      <Container>
+        <AccountData
+          title='Account Information'
+          balance={formattedAccountBalance}
+          holdingValue={formattedTotalHoldingsValue}
+          assetValue={formattedTotalAssetValue}
+        />
+        {holdingsChart?.length > 1 ? (
+          <CustomChart
+            type='ColumnChart'
+            title='Portfolio Holdings'
+            data={holdingsChart}
+            chartAreaWidth={'80%'}
+            hAxisTitle={'Company'}
+            vAxisTitle={'Stock Value'}
+          />
+        ) : (
+          <p>No Share Units Purchased</p>
+        )}
+        {!!savedStocks?.length && (
+          <PortfolioCards data={savedStocks} trade={trade} />
+        )}
+      </Container>
+    </div>
+  )
+}
+
+export default PorfolioPage

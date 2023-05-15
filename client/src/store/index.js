@@ -1,7 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit'
 import { setupListeners } from '@reduxjs/toolkit/query'
 
-// TODO import reducer from slices
+// Reducers from slices
 import {
   loginFormReducer,
   updateLoginFormField,
@@ -16,18 +16,25 @@ import {
 } from './slices/registerFormSlice'
 import { userSessionReducer } from './slices/userSessionSlice'
 
-// TODO import apis
+// Redux Toolkit APIs
 import { authApi } from './apis/authAPI'
+import { portfolioApi } from './apis/portfolioAPI'
+import { stocksApi } from './apis/stockAPI'
 
 export const store = configureStore({
   reducer: {
     loginForm: loginFormReducer,
     registerForm: registerFormReducer,
     userSession: userSessionReducer,
-    [authApi.reducerPath]: authApi.reducer
+    [authApi.reducerPath]: authApi.reducer,
+    [portfolioApi.reducerPath]: portfolioApi.reducer,
+    [stocksApi.reducerPath]: stocksApi.reducer
   },
   middleware: (getDefaultMiddleware) => {
-    return getDefaultMiddleware().concat(authApi.middleware)
+    return getDefaultMiddleware()
+      .concat(authApi.middleware)
+      .concat(portfolioApi.middleware)
+      .concat(stocksApi.middleware)
   }
 })
 
@@ -47,3 +54,5 @@ export {
 
 // Redux Api generated hooks
 export { useLoginMutation, useRegisterMutation } from './apis/authAPI'
+export { useFetchBalanceQuery } from './apis/portfolioAPI'
+export { useFetchSavedStocksQuery } from './apis/stockAPI'
