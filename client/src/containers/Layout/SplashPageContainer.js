@@ -29,15 +29,15 @@ const SplashPageContainer = () => {
           Not a member? <NavLink to={'/login'}>Sign Up</NavLink>
         </p>
       )
-    } else if (showRegisterForm) {
+    }
+    if (showRegisterForm) {
       return (
         <p style={style}>
           Already have an account? <NavLink to={'/login'}>Log In</NavLink>
         </p>
       )
-    } else {
-      return null
     }
+    return null
   }
 
   return (
