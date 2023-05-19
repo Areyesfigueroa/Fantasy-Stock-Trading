@@ -16,6 +16,11 @@ const storeSessionOnLocalStorage = (_, { payload }) => {
   return payload
 }
 
+const removeSessionOnLocalStorage = (state, action) => {
+  localStorage.removeItem(USER_SESSION_NAME)
+  return null
+}
+
 const userSessionSlice = createSlice({
   name: USER_SESSION_NAME,
   initialState,
@@ -28,6 +33,11 @@ const userSessionSlice = createSlice({
     builder.addMatcher(
       authApi.endpoints.register.matchFulfilled,
       storeSessionOnLocalStorage
+    )
+
+    builder.addMatcher(
+      authApi.endpoints.logout.matchFulfilled,
+      removeSessionOnLocalStorage
     )
   }
 })

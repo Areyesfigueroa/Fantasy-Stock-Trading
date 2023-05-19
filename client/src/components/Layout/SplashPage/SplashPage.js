@@ -6,12 +6,11 @@ import Image from 'react-bootstrap/Image'
 import Button from 'react-bootstrap/Button'
 import Modal from '../../Modal/Modal'
 import Nav from 'react-bootstrap/Nav'
+import useModal from '../../../hooks/useModal'
 
 //Forms
 import RegisterFormContainer from '../../../containers/Forms/RegisterFormContainer'
 import LoginFormContainer from '../../../containers/Forms/LoginFormContainer'
-import { useDispatch, useSelector } from 'react-redux'
-import { hideModal, showModal } from '../../../store'
 
 const SplashPage = ({
   showLoginForm,
@@ -19,12 +18,7 @@ const SplashPage = ({
   handleForm,
   modalFooter
 }) => {
-  const dispatch = useDispatch()
-
-  const { show } = useSelector((store) => store.modal)
-
-  const handleCloseModal = () => dispatch(hideModal())
-  const handleShowModal = () => dispatch(showModal())
+  const { show, handleCloseModal, handleShowModal } = useModal()
 
   return (
     <div className={classes.SplashPage}>

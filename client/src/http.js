@@ -25,7 +25,7 @@ const fetchData = (url = '', bearerToken = '') => {
     referrerPolicy: 'no-referrer'
   })
 }
-
+// Done
 const registerUser = async (
   email,
   firstName,
@@ -51,6 +51,7 @@ const registerUser = async (
   return await response.json()
 }
 
+// Done
 const loginUser = async (email, password) => {
   const response = await postData(`/api/auth/login/`, { email, password })
 
@@ -61,7 +62,7 @@ const loginUser = async (email, password) => {
 
   return await response.json()
 }
-
+// Done
 const logoutUser = async () => {
   const userSession = JSON.parse(localStorage.getItem('userSession'))
 
@@ -130,6 +131,7 @@ const sellCompanyShares = async (symbol, shareUnits, unitPrice) => {
   return await response.json()
 }
 
+// Done
 const getSavedStocks = async () => {
   const userSession = JSON.parse(localStorage.getItem('userSession'))
   const response = await fetchData(`/api/stocks/all`, userSession.sessionId)
@@ -157,6 +159,7 @@ const getSavedShareUnits = async (symbol) => {
   return await response.json()
 }
 
+// Done
 const getAccountBalance = async () => {
   const userSession = JSON.parse(localStorage.getItem('userSession'))
   const response = await fetchData(

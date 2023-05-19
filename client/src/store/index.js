@@ -53,6 +53,10 @@ export {
 }
 
 // Redux Api generated hooks
-export { useLoginMutation, useRegisterMutation } from './apis/authAPI'
+export {
+  useLoginMutation,
+  useRegisterMutation,
+  useLogoutMutation
+} from './apis/authAPI'
 export { useFetchBalanceQuery } from './apis/portfolioAPI'
 export { useFetchSavedStocksQuery } from './apis/stockAPI'

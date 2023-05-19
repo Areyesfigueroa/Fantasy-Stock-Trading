@@ -4,10 +4,10 @@ import PortfolioPage from '../../components/Layout/PortfolioPage/PorfolioPage'
 import Toast from '../../components/Toast/Toast'
 import ToastErrorTitle from '../../components/Toast/ToastTitles/ToastErrorTitle/ToastErrorTitle'
 import useToast from '../../hooks/useToast'
-import { logoutUser } from '../../http'
 import {
   useFetchBalanceQuery,
-  useFetchSavedStocksQuery
+  useFetchSavedStocksQuery,
+  useLogoutMutation
 } from '../../store/index'
 import LoadingSpinner from '../../components/LoadingSpinner/LoadingSpinner'
 
@@ -26,6 +26,8 @@ const PortfolioPageContainer = () => {
     isFetching: savedStocksIsFetching
   } = useFetchSavedStocksQuery()
 
+  const { logout, logoutResults } = useLogoutMutation()
+
   // Update toast errors
   useEffect(() => {
     if (balanceError) {
@@ -35,7 +37,14 @@ const PortfolioPageContainer = () => {
     if (savedStocksError) {
       toast.handleShow(<ToastErrorTitle />, 'Saved Stocks not found')
     }
-  }, [balanceError, savedStocksError])
+
+    if (logoutResults?.error?.data?.errorMessage) {
+      toast.handleShow(
+        <ToastErrorTitle />,
+        logoutResults?.error?.data?.errorMessage
+      )
+    }
+  }, [balanceError, savedStocksError, logoutResults])
 
   if (balanceError || savedStocksError) {
     return <div>Error Occurred</div>
@@ -46,7 +55,7 @@ const PortfolioPageContainer = () => {
   }
 
   if (savedStocksData?.hasExpired || balanceData?.hasExpired) {
-    logoutUser()
+    logout()
     return <LoadingSpinner />
   }
 

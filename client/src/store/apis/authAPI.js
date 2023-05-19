@@ -5,7 +5,7 @@ const authApi = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: '/api/auth',
     prepareHeaders: (headers, { getState }) => {
-      const token = getState().auth.token
+      const token = getState().userSession.sessionId
 
       if (token) {
         headers.set('Authorization', `Bearer ${token}`)
@@ -33,10 +33,17 @@ const authApi = createApi({
             body
           }
         }
+      }),
+      logout: builder.mutation({
+        query: () => ({
+          url: '/logout',
+          method: 'POST'
+        })
       })
     }
   }
 })
 
-export const { useLoginMutation, useRegisterMutation } = authApi
+export const { useLoginMutation, useRegisterMutation, useLogoutMutation } =
+  authApi
 export { authApi }
