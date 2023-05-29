@@ -5,7 +5,7 @@ const authApi = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: '/api/auth',
     prepareHeaders: (headers, { getState }) => {
-      const token = getState().userSession.sessionId
+      const token = getState().userSession?.sessionId
 
       if (token) {
         headers.set('Authorization', `Bearer ${token}`)

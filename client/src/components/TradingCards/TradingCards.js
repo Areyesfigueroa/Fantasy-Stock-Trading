@@ -1,25 +1,72 @@
-import React from 'react';
-import TradingCard from './TradingCard/TradingCard';
+import React, { useEffect } from 'react'
+import TradingCard from './TradingCard/TradingCard'
+import {
+  useFetchSavedShareUnitsQuery,
+  useFetchStocksBySymbolQuery
+} from '../../store'
 
-const TradingCards = (props) => {
-    return (
-        <div>
-            {props.data.map((el) => (
-                <TradingCard 
-                    key={el.id}
-                    title={el.companyName}
-                    subtitle={el.symbol}
-                    price={el.currentPrice}
-                    prevPrice={el.prevClosedPrice}
-                    percentage={el.percentChange}
-                    daily={el.dailyGainLoss}
-                    sharesHeld={el.sharesHeld}
-                    buy={props.buy}
-                    sell={props.sell}
-                />
-            ))}
-        </div>
-    );
-};
+const TradingCards = ({
+  stockSymbols,
+  buy,
+  sell,
+  handleLoading,
+  handleError
+}) => {
+  return (
+    <div>
+      {stockSymbols.map((symbol) => {
+        const {
+          data: stocks,
+          isFetching: stocksIsFetching,
+          error: stocksError
+        } = useFetchStocksBySymbolQuery(symbol)
+        const {
+          data: savedSharesUnit,
+          isFetching: savedSharesUnitIsFetching,
+          error: savedSharesUnitError
+        } = useFetchSavedShareUnitsQuery(symbol)
 
-export default TradingCards;
+        useEffect(() => {
+          if (stocksIsFetching || savedSharesUnitIsFetching) {
+            handleLoading(true)
+          } else {
+            handleLoading(false)
+          }
+        }, [stocksIsFetching, savedSharesUnitIsFetching])
+
+        useEffect(() => {
+          if (stocksError) {
+            handleError(stocksError?.data?.errorMessage)
+            return
+          }
+
+          if (savedSharesUnitError) {
+            handleError(savedSharesUnitError?.data?.errorMessage)
+            return
+          }
+
+          handleError('')
+        }, [stocksError, savedSharesUnitError])
+
+        if (stocksIsFetching || savedSharesUnitIsFetching) return null
+
+        return (
+          <TradingCard
+            key={stocks.id}
+            title={stocks.companyName}
+            subtitle={stocks.symbol}
+            price={stocks.currentPrice}
+            prevPrice={stocks.prevClosedPrice}
+            percentage={stocks.percentChange}
+            daily={stocks.dailyGainLoss}
+            sharesHeld={savedSharesUnit.sharesHeld}
+            buy={buy}
+            sell={sell}
+          />
+        )
+      })}
+    </div>
+  )
+}
+
+export default TradingCards

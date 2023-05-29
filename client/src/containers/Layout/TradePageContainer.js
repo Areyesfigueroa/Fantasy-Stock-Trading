@@ -17,63 +17,24 @@ import {
   getSavedShareUnits
 } from '../../http'
 
-let _isMounted = true
-
 const TradePageContainer = () => {
   const history = useHistory()
   const toast = useToast()
 
-  const [savedStocks, setSavedStocks] = useState([]) //load stocks from database.
   const [searchResult, setSearchResult] = useState(null)
   const [stockHistory, setStockHistory] = useState(null)
-  const [loadingStocks, setLoadingStocks] = useState(true)
   const [loadingSearchRes, setLoadingSearchRes] = useState(false)
 
   useEffect(() => {
-    _isMounted = true
-    setInitialStocks()
-
     if (!history.location.search) return
 
     const params = new URLSearchParams(history.location.search)
     handleSearch(params.get('q'))
   }, [])
 
-  useEffect(() => {
-    return function cleanup() {
-      _isMounted = false
-    }
-  })
-
-  const setInitialStocks = async () => {
-    try {
-      const initialStocks = ['SPY', 'DIA', 'IWM']
-      let stocks = []
-      for (let i = 0; i < initialStocks.length; i++) {
-        stocks = savedStocks
-
-        if (!_isMounted) return
-        stocks.push(await searchBySymbol(initialStocks[i]))
-
-        if (!_isMounted) return
-        const { sharesHeld } = await getSavedShareUnits(stocks[i].id)
-        stocks[i].sharesHeld = sharesHeld
-
-        if (!_isMounted) return
-        setSavedStocks(stocks)
-      }
-      if (!_isMounted) return
-      setLoadingStocks(false)
-    } catch (error) {
-      if (_isMounted) {
-        toast.handleShow(<ToastErrorTitle />, error.message)
-      }
-    }
-  }
-
   const setSearchRes = async (searchTerm) => {
     try {
-      const res = await searchBySymbol(searchTerm)
+      const res = await searchBySymbol('')
       const { sharesHeld } = await getSavedShareUnits(searchTerm)
       res.sharesHeld = sharesHeld
 
@@ -84,6 +45,7 @@ const TradePageContainer = () => {
     }
   }
 
+  // TODO: Transfer this over to trade page
   const setStockHistoryRes = async (searchTerm) => {
     try {
       const res = await getStockHistory(searchTerm)
@@ -189,9 +151,7 @@ const TradePageContainer = () => {
       <TradePage
         search={handleSearch}
         searchResult={searchResult}
-        stocks={savedStocks}
         stockHistoryChart={stockHistory}
-        loadingStocks={loadingStocks}
         loadingSearchRes={loadingSearchRes}
         buy={buyShares}
         sell={sellShares}

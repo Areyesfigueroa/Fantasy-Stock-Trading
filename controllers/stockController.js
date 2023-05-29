@@ -15,19 +15,19 @@ require('dotenv').config()
 exports.searchBySymbol = async (request, response) => {
   try {
     const params = request.params
-    if (!params.symbol) throw new Error('Symbol cannot be empty')
 
     const res = await axios.get(
-      `stock/${params.symbol}/quote?token=${process.env.API_SECRET_TOKEN}`
+      `stock/${params.symbol ? params.symbol : ''}/quote?token=${
+        process.env.API_SECRET_TOKEN
+      }`
     )
 
     response.send(formatStockDataService.formatSearchResults(res))
   } catch (error) {
     let errorMessage = error.message
-    if (error.response) {
-      if (error.response.status === 404) {
-        errorMessage = 'Company Symbol not found.'
-      }
+    if (error.response && error.response.status === 404) {
+      errorMessage = 'Company Symbol not found.'
+      return response.status(404).send(new StockErrorHandler(errorMessage))
     }
 
     response
@@ -40,22 +40,26 @@ exports.searchBySymbol = async (request, response) => {
 exports.getShareUnits = async (request, response) => {
   try {
     const params = request.params
-    if (!params.symbol) throw new error('Symbol cannot be empty')
 
     //Get user info
     const sessionId = await authUserSessionService.authUserSession(
       request,
       response
     )
+
     const user = await authDB.getUserBySessionID(sessionId)
 
-    const sharesHeld = await stocksDB.getShareUnits(
-      user.user_id,
-      params.symbol.toUpperCase()
-    )
+    const sharesHeld = params.symbol
+      ? await stocksDB.getShareUnits(user.user_id, params.symbol.toUpperCase())
+      : 0
 
     response.send({ sharesHeld })
   } catch (error) {
+    if (error.response && error.response.status === 404) {
+      errorMessage = 'Company Symbol not found.'
+      return response.status(404).send(new StockErrorHandler(errorMessage))
+    }
+
     response
       .status(500)
       .send(
@@ -74,20 +78,22 @@ exports.getStockHistory = async (request, response) => {
     const date = utils.getLatestWeekday(yesterday) //save
 
     const res = await axios.get(
-      `stock/${params.symbol}/chart/dynamic/${date}?token=${process.env.API_SECRET_TOKEN}&chartInterval=${interval}`
+      `stock/${
+        params.symbol ? params.symbol : ''
+      }/chart/dynamic/${date}?token=${
+        process.env.API_SECRET_TOKEN
+      }&chartInterval=${interval}`
     )
     const stockHistory = formatStockDataService.formatHistoryData(res)
 
     response.send(stockHistory)
   } catch (error) {
-    let errorMessage = error.message
-    if (error.response) {
-      if (error.response.status === 404) {
-        errorMessage = 'Company Symbol not found.'
-      }
+    if (error.response && error.response.status === 404) {
+      errorMessage = 'Company Symbol not found.'
+      return response.status(404).send(new StockErrorHandler(errorMessage))
     }
 
-    response.status(500).send(new StockErrorHandler(errorMessage))
+    response.status(500).send(new StockErrorHandler(error.message))
   }
 }
 

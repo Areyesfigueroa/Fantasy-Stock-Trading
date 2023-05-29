@@ -77,6 +77,7 @@ const logoutUser = async () => {
   window.location.reload()
 }
 
+// Done
 const searchBySymbol = async (symbol) => {
   const response = await fetch(`/api/stocks/search/${symbol}`)
 
@@ -88,6 +89,7 @@ const searchBySymbol = async (symbol) => {
   return await response.json()
 }
 
+// Done
 const getStockHistory = async (symbol) => {
   const response = await fetch(`/api/stocks/search/${symbol}/history`)
 
@@ -99,6 +101,7 @@ const getStockHistory = async (symbol) => {
   return await response.json()
 }
 
+//done
 const buyCompanyShares = async (symbol, shareUnits, unitPrice) => {
   const userSession = JSON.parse(localStorage.getItem('userSession'))
   const response = await postData(
@@ -115,6 +118,7 @@ const buyCompanyShares = async (symbol, shareUnits, unitPrice) => {
   return await response.json()
 }
 
+// done
 const sellCompanyShares = async (symbol, shareUnits, unitPrice) => {
   const userSession = JSON.parse(localStorage.getItem('userSession'))
   const response = await postData(
@@ -144,6 +148,7 @@ const getSavedStocks = async () => {
   return await response.json()
 }
 
+// done
 const getSavedShareUnits = async (symbol) => {
   const userSession = JSON.parse(localStorage.getItem('userSession'))
   const response = await fetchData(

@@ -1,54 +1,132 @@
-import React from 'react';
-import classes from './TradePage.module.css';
+import React, { useEffect, useState } from 'react'
+import classes from './TradePage.module.css'
 
-import Searchbar from '../../Searchbar/Searchbar';
-import Title from '../../Title/Title';
-import Container from 'react-bootstrap/Container';
-import TradingCard from '../../TradingCards/TradingCard/TradingCard';
-import TradingCards from '../../TradingCards/TradingCards';
-import LoadingSpinner from '../../LoadingSpinner/LoadingSpinner';
-import CustomChart from '../../CustomChart/CustomChart';
+import Searchbar from '../../Searchbar/Searchbar'
+import Title from '../../Title/Title'
+import Container from 'react-bootstrap/Container'
+import TradingCard from '../../TradingCards/TradingCard/TradingCard'
+import TradingCards from '../../TradingCards/TradingCards'
+import LoadingSpinner from '../../LoadingSpinner/LoadingSpinner'
+import CustomChart from '../../CustomChart/CustomChart'
+import Toast from '../../Toast/Toast'
+import useToast from '../../../hooks/useToast'
+import ToastErrorTitle from '../../Toast/ToastTitles/ToastErrorTitle/ToastErrorTitle'
+import {
+  useFetchSavedShareUnitsQuery,
+  useFetchStockHistoryQuery,
+  useFetchStocksBySymbolQuery
+} from '../../../store'
 
-const TradePage = (props) => {
-    const subtitleText = 'Search stock symbols and use fake money to trade on the live market and test your skills';
+const TradePage = ({ buy, sell }) => {
+  const toast = useToast()
 
-    return (
-        <div className={classes.TradePage}>
-            <Title subtitle={subtitleText}>Trade</Title>
-            <Container>
-                <Searchbar search={props.search}/>
-                
-                {/* Display Search Results */}
-                {props.loadingSearchResult ? <LoadingSpinner />:null}
-                {props.searchResult ? 
-                <TradingCard 
-                    title={props.searchResult.companyName}
-                    subtitle={props.searchResult.symbol}
-                    price={props.searchResult.currentPrice}
-                    prevPrice={props.searchResult.prevClosedPrice}
-                    percentage={props.searchResult.percentChange}
-                    daily={props.searchResult.dailyGainLoss}
-                    sharesHeld={props.searchResult.sharesHeld}
-                    buy={props.buy}
-                    sell={props.sell}
-                /> : null}
+  const [searchTerm, setSearchTerm] = useState('')
+  const [tradeCardLoading, setTradeCardLoading] = useState(true)
+  const [tradeCardError, setTradeCardError] = useState('')
+  const [formattedStocksHistory, setFormattedStocksHistory] = useState()
 
-                {/* Chart */}
-                {props.stockHistoryChart && props.searchResult ? 
-                <CustomChart 
-                    type="AreaChart"
-                    title={`Daily Prices For ${props.searchResult.symbol} on ${props.stockHistoryChart.date}`}
-                    data={props.stockHistoryChart.chartData}
-                    chartAreaWidth={"70%"}
-                    hAxisTitle={"Time"}
-                    vAxisTitle={"Price"}
-                /> : null}
+  const searchStocksData = useFetchStocksBySymbolQuery(searchTerm)
+  const searchSavedSharesData = useFetchSavedShareUnitsQuery(searchTerm)
+  const searchStocksHistoryChartData = useFetchStockHistoryQuery(searchTerm)
 
-                <p>Other Recommendations</p>
-                {props.loadingStocks ? <LoadingSpinner />:<TradingCards data={props.stocks} buy={props.buy} sell={props.sell}/>}
-            </Container>
-        </div>
-    );
-};
+  const subtitleText =
+    'Search stock symbols and use fake money to trade on the live market and test your skills'
 
-export default TradePage;
+  const defaultStocks = ['SPY', 'DIA', 'IWM']
+
+  useEffect(() => {
+    if (!searchStocksHistoryChartData.data) return
+    const { data } = searchStocksHistoryChartData
+    const chartData = data.map((el) => [el.time, el.price])
+    chartData.unshift(['Time', searchTerm.toUpperCase()])
+
+    setFormattedStocksHistory({ date: data[0].date, chartData })
+  }, [searchStocksHistoryChartData])
+
+  useEffect(() => {
+    if (tradeCardError) {
+      toast.handleShow(<ToastErrorTitle />, tradeCardError)
+    }
+
+    if (searchTerm && searchStocksData.error) {
+      toast.handleShow(
+        <ToastErrorTitle />,
+        searchStocksData.error.data.errorMessage
+      )
+    }
+
+    if (searchTerm && searchSavedSharesData.error) {
+      toast.handleShow(
+        <ToastErrorTitle />,
+        searchSavedSharesData.error.data.errorMessage
+      )
+    }
+
+    if (searchTerm && searchStocksHistoryChartData.error) {
+      toast.handleShow(
+        <ToastErrorTitle />,
+        searchSavedSharesData.error.data.errorMessage
+      )
+    }
+  }, [tradeCardError, searchSavedSharesData.error, searchStocksData.error])
+
+  return (
+    <div className={classes.TradePage}>
+      <Toast show={toast.show} close={toast.handleClose} title={toast.title}>
+        {toast.message}
+      </Toast>
+      <Title subtitle={subtitleText}>Trade</Title>
+      <Container>
+        <Searchbar search={setSearchTerm} />
+
+        {/* Display Search Results */}
+        {(searchStocksData.isFetching || searchSavedSharesData.isFetching) && (
+          <LoadingSpinner />
+        )}
+        {searchStocksData.data &&
+          !searchStocksData?.error &&
+          !searchSavedSharesData?.error && (
+            <>
+              <TradingCard
+                title={searchStocksData.data.companyName}
+                subtitle={searchStocksData.data.symbol}
+                price={searchStocksData.data.currentPrice}
+                prevPrice={searchStocksData.data.prevClosedPrice}
+                percentage={searchStocksData.data.percentChange}
+                daily={searchStocksData.data.dailyGainLoss}
+                sharesHeld={searchSavedSharesData.data.sharesHeld}
+                buy={buy}
+                sell={sell}
+              />
+
+              {searchStocksHistoryChartData.data &&
+                !searchStocksHistoryChartData?.error &&
+                formattedStocksHistory && (
+                  <CustomChart
+                    type='AreaChart'
+                    title={`Daily Prices For ${searchStocksData.data.symbol} on ${formattedStocksHistory.date}`}
+                    data={formattedStocksHistory.chartData}
+                    chartAreaWidth={'70%'}
+                    hAxisTitle={'Time'}
+                    vAxisTitle={'Price'}
+                  />
+                )}
+            </>
+          )}
+
+        {/* Default Recommendations */}
+        <p>Other Recommendations</p>
+        {tradeCardLoading && <LoadingSpinner />}
+        <TradingCards
+          stockSymbols={defaultStocks}
+          buy={buy}
+          sell={sell}
+          handleLoading={setTradeCardLoading}
+          handleError={setTradeCardError}
+        />
+      </Container>
+    </div>
+  )
+}
+
+export default TradePage

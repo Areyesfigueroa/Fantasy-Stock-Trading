@@ -59,4 +59,11 @@ export {
   useLogoutMutation
 } from './apis/authAPI'
 export { useFetchBalanceQuery } from './apis/portfolioAPI'
-export { useFetchSavedStocksQuery } from './apis/stockAPI'
+export {
+  useFetchSavedStocksQuery,
+  useFetchStocksBySymbolQuery,
+  useFetchStockHistoryQuery,
+  useFetchSavedShareUnitsQuery,
+  useBuySharesMutation,
+  useSellSharesMutation
+} from './apis/stockAPI'

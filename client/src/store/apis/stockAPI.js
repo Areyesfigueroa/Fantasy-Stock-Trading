@@ -20,9 +20,48 @@ const stocksApi = createApi({
         url: '/all',
         method: 'GET'
       })
+    }),
+    fetchStocksBySymbol: builder.query({
+      query: (symbol) => ({
+        url: `/search/${symbol}`,
+        method: 'GET'
+      })
+    }),
+    fetchStockHistory: builder.query({
+      query: (symbol) => ({
+        url: `/search/${symbol}/history`,
+        method: 'GET'
+      })
+    }),
+    fetchSavedShareUnits: builder.query({
+      query: (symbol) => ({
+        url: `/${symbol}`,
+        method: 'GET'
+      })
+    }),
+    buyShares: builder.mutation({
+      query: ({ symbol, shareUnits, unitPrice }) => ({
+        url: '/transaction/buy',
+        method: 'POST',
+        body: { symbol, shareUnits, unitPrice }
+      })
+    }),
+    sellShares: builder.mutation({
+      query: ({ symbol, shareUnits, unitPrice }) => ({
+        url: '/transaction/sell',
+        method: 'POST',
+        body: { symbol, shareUnits, unitPrice }
+      })
     })
   })
 })
 
-export const { useFetchSavedStocksQuery } = stocksApi
+export const {
+  useFetchSavedStocksQuery,
+  useFetchStocksBySymbolQuery,
+  useFetchStockHistoryQuery,
+  useFetchSavedShareUnitsQuery,
+  useBuySharesMutation,
+  useSellSharesMutation
+} = stocksApi
 export { stocksApi }
