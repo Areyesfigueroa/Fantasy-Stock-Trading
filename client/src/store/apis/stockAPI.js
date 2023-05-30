@@ -14,9 +14,10 @@ const stocksApi = createApi({
       return headers
     }
   }),
-  tagTypes: ['ShareUnits'],
+  tagTypes: ['Stocks'],
   endpoints: (builder) => ({
     fetchSavedStocks: builder.query({
+      providesTags: ['Stocks'],
       query: () => ({
         url: '/all',
         method: 'GET'
@@ -35,14 +36,14 @@ const stocksApi = createApi({
       })
     }),
     fetchSavedShareUnits: builder.query({
-      providesTags: ['ShareUnits'],
+      providesTags: ['Stocks'],
       query: (symbol) => ({
         url: `/${symbol}`,
         method: 'GET'
       })
     }),
     buyShares: builder.mutation({
-      invalidatesTags: ['ShareUnits'],
+      invalidatesTags: ['Stocks'],
       query: ({ symbol, shareUnits, unitPrice }) => ({
         url: '/transaction/buy',
         method: 'POST',
@@ -50,7 +51,7 @@ const stocksApi = createApi({
       })
     }),
     sellShares: builder.mutation({
-      invalidatesTags: ['ShareUnits'],
+      invalidatesTags: ['Stocks'],
       query: ({ symbol, shareUnits, unitPrice }) => ({
         url: '/transaction/sell',
         method: 'POST',
