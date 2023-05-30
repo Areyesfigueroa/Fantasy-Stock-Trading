@@ -14,8 +14,10 @@ const portfolioApi = createApi({
       return headers
     }
   }),
+  tagTypes: ['Portfolio'],
   endpoints: (builder) => ({
     fetchBalance: builder.query({
+      providesTags: ['Portfolio'],
       query: () => ({
         url: '/balance',
         method: 'GET'
