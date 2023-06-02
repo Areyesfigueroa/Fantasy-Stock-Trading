@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { useHistory } from 'react-router'
 import Title from '../../Title/Title'
 import Container from 'react-bootstrap/Container'
@@ -24,7 +24,7 @@ const PorfolioPage = ({ accountBalance, savedStocks }) => {
   const totalAssetValue = getTotalAssetValue(totalHoldingsValue, accountBalance)
   const formattedTotalAssetValue = formatNumToCurrency(totalAssetValue)
 
-  const trade = (companySymbol) => {
+  const handleTrade = (companySymbol) => {
     history.push({
       pathname: '/trade',
       search: `?q=${companySymbol}`
@@ -56,7 +56,7 @@ const PorfolioPage = ({ accountBalance, savedStocks }) => {
           <p>No Share Units Purchased</p>
         )}
         {!!savedStocks?.length && (
-          <PortfolioCards data={savedStocks} trade={trade} />
+          <PortfolioCards data={savedStocks} trade={handleTrade} />
         )}
       </Container>
     </div>

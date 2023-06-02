@@ -26,7 +26,7 @@ const PortfolioPageContainer = () => {
     isFetching: savedStocksIsFetching
   } = useFetchSavedStocksQuery()
 
-  const { logout, logoutResults } = useLogoutMutation()
+  const [logout, logoutResults] = useLogoutMutation()
 
   // Update toast errors
   useEffect(() => {

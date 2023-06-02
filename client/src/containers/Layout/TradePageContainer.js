@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react'
-import { useHistory } from 'react-router'
 
 import TradePage from '../../components/Layout/TradePage/TradePage'
 import Toast from '../../components/Toast/Toast'
@@ -16,7 +15,6 @@ import {
 } from '../../store'
 
 const TradePageContainer = () => {
-  const history = useHistory()
   const toast = useToast()
 
   const [buyShares, buySharesResult] = useBuySharesMutation()
@@ -24,13 +22,6 @@ const TradePageContainer = () => {
   const [logout, logoutResult] = useLogoutMutation()
 
   const { refetch: refetchPortfolio } = useFetchBalanceQuery()
-
-  useEffect(() => {
-    if (!history.location.search) return
-
-    const params = new URLSearchParams(history.location.search)
-    handleSearch(params.get('q'))
-  }, [])
 
   useEffect(() => {
     if (buySharesResult.isSuccess || sellSharesResult.isSuccess) {

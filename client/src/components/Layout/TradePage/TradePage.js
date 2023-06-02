@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import { useHistory } from 'react-router'
 import classes from './TradePage.module.css'
 
 import Searchbar from '../../Searchbar/Searchbar'
@@ -18,6 +19,7 @@ import {
 } from '../../../store'
 
 const TradePage = ({ buy, sell }) => {
+  const history = useHistory()
   const toast = useToast()
 
   const [searchTerm, setSearchTerm] = useState('')
@@ -33,6 +35,13 @@ const TradePage = ({ buy, sell }) => {
     'Search stock symbols and use fake money to trade on the live market and test your skills'
 
   const defaultStocks = ['SPY', 'DIA', 'IWM']
+
+  useEffect(() => {
+    if (!history.location.search) return
+
+    const params = new URLSearchParams(history.location.search)
+    setSearchTerm(params.get('q'))
+  }, [])
 
   useEffect(() => {
     if (!searchStocksHistoryChartData.data) return

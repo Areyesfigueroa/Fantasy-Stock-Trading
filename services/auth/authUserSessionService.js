@@ -2,12 +2,15 @@ const authDB = require('../../db/auth')
 
 const authUserSession = async (request, response) => {
   try {
-    if (!request.headers.authorization)
+    if (!request.headers.authorization) {
       throw new Error('Missing Authorization Header')
+    }
 
     const sessionId = request.headers.authorization.split(' ')[1]
     const hasExpired = await authDB.hasUserSessionExpired(sessionId)
-    if (hasExpired) return response.send({ hasExpired })
+    if (hasExpired) {
+      return response.send({ hasExpired })
+    }
 
     return sessionId
   } catch (error) {
